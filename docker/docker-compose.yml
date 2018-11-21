@@ -70,6 +70,15 @@ services:
     mem_limit: 200m
 
 
+  # Use it with command: docker-compose run redis-cli
+  redis-cli:
+    container_name: lm_redis-cli
+    image: redis:4-alpine
+    links:
+      - redis
+    command: redis-cli -h redis
+
+
   order:
     build:
       context: order/php-apache
