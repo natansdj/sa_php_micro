@@ -9,12 +9,19 @@
         "laravel/lumen-framework": "5.7.*",
         "vlucas/phpdotenv": "~2.2",
         "predis/predis": "1.1.*",
-        "illuminate/redis": "~5.7"
+        "illuminate/redis": "~5.7",
+        "doctrine/dbal": "^2.8",
+        "monolog/monolog": "^1.23",
+        "league/flysystem": "^1.0",
+        "league/fractal": "^0.17.0",
+        "spatie/laravel-permission": "^2.13",
+        "tymon/jwt-auth": "1.0.*@dev"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
         "phpunit/phpunit": "~6.0",
-        "mockery/mockery": "~0.9"
+        "mockery/mockery": "~0.9",
+        "barryvdh/laravel-ide-helper": "~2.4"
     },
     "autoload": {
         "psr-4": {
@@ -33,6 +40,5 @@
         ]
     },
     "minimum-stability": "dev",
-    "prefer-stable": true,
-    "optimize-autoloader": true
+    "prefer-stable": true
 }
