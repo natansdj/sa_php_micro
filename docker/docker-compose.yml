@@ -102,6 +102,7 @@ services:
     container_name: lm_user
     volumes:
       - ../user:/var/www/html
+      - ./user/php-apache/xdebug.ini:/user/local/etc/php/conf.d/xdebug.ini
     networks:
       - webgateway
       - web
