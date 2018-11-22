@@ -13,6 +13,59 @@ class AppServiceProvider extends ServiceProvider
 	 */
 	public function register()
 	{
+		$this->setupAlias();
+		$this->setupConfig();
+		$this->registerSystem();
+		$this->registerServices();
+		$this->registerMiddleware();
+		$this->registerProviders();
+	}
+
+	/**
+	 * Load alias
+	 */
+	protected function setupAlias()
+	{
+		$aliases = [
+			//
+		];
+
+		foreach ($aliases as $key => $value) {
+			class_alias($value, $key);
+		}
+	}
+
+	/**
+	 * Load config
+	 */
+	protected function setupConfig() { }
+
+	/**
+	 * Register system providers Kernel/Console/Filesystem etc..
+	 */
+	protected function registerSystem() { }
+
+	/**
+	 * Register Services
+	 */
+	protected function registerServices() { }
+
+	/**
+	 * Register middleware
+	 */
+	protected function registerMiddleware()
+	{
+		//always when routes are called
+		$this->app->middleware([]);
+
+		$this->app->routeMiddleware([]);
+	}
+
+	/**
+	 * Register providers dependency
+	 */
+	protected function registerProviders()
+	{
 		if ($this->app->environment() !== 'production') {
 			$this->app->register(\Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class);
 		}
