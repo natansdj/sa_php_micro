@@ -47,7 +47,6 @@ class UserController extends ApiBaseController
 
 		if ($users) {
 			$data = $this->api
-				->includes('posts')
 				->serializer(new KeyArraySerializer('users'))
 				->paginate($users, new UserTransformer());
 
@@ -74,7 +73,6 @@ class UserController extends ApiBaseController
 		$user = $this->user->find($id);
 		if ($user) {
 			$data = $this->api
-				->includes('post')
 				->serializer(new KeyArraySerializer('user'))
 				->item($user, new UserTransformer);
 

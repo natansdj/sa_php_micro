@@ -8,6 +8,7 @@ return [
 		'auth'    => \Core\Providers\AuthServiceProvider::class,
 		'graphql' => \Core\Providers\GraphQLServiceProvider::class,
 		'app'     => App\Providers\AppServiceProvider::class,
+		\Intervention\Image\ImageServiceProvider::class,
 	],
 
 	/*
@@ -24,5 +25,7 @@ return [
 		//
 	],
 
-	'alias' => [],
+	'alias' => [
+		'Image' => Intervention\Image\Facades\Image::class,
+	],
 ];

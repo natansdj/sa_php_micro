@@ -13,26 +13,11 @@ class AppServiceProvider extends ServiceProvider
 	 */
 	public function register()
 	{
-		$this->setupAlias();
 		$this->setupConfig();
 		$this->registerSystem();
 		$this->registerServices();
 		$this->registerMiddleware();
 		$this->registerProviders();
-	}
-
-	/**
-	 * Load alias
-	 */
-	protected function setupAlias()
-	{
-		$aliases = [
-			//
-		];
-
-		foreach ($aliases as $key => $value) {
-			class_alias($value, $key);
-		}
 	}
 
 	/**
@@ -58,7 +43,9 @@ class AppServiceProvider extends ServiceProvider
 		//always when routes are called
 		$this->app->middleware([]);
 
-		$this->app->routeMiddleware([]);
+		$this->app->routeMiddleware([
+			'jwt.verify' => \App\Http\Middleware\JwtMiddleware::class,
+		]);
 	}
 
 	/**
@@ -67,6 +54,15 @@ class AppServiceProvider extends ServiceProvider
 	protected function registerProviders()
 	{
 		if ($this->app->environment() !== 'production') {
+			/**
+			 * To generate proper ide-helper uncomment lines below before ide-helper:generate process
+			 * comment it again after generate process is finished
+			 */
+			if ($this->app->runningInConsole()) {
+				$this->app->configure('app');
+				$this->app->configure('ide-helper');
+			}
+
 			$this->app->register(\Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class);
 		}
 	}

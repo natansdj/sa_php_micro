@@ -17,9 +17,11 @@ class UsersCreateUsers extends Migration
 			$table->increments('id');
 
 			$table->string('email')->unique();
-			$table->string('password', 60);
-			$table->string('name');
-			$table->string('surname')->nullable();
+			$table->string('password');
+			$table->string('username')->nullable();
+			$table->string('name')->nullable();
+			$table->string('phone')->nullable();
+			$table->string('address')->nullable();
 
 			$table->rememberToken();
 			$table->timestamps();

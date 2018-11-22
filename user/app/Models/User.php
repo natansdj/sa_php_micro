@@ -8,7 +8,6 @@ use Laravel\Lumen\Auth\Authorizable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
-use ResponseREST;
 use ResponseHTTP\Response\Traits\ModelREST;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Spatie\Permission\Traits\HasRoles;
@@ -37,7 +36,7 @@ class User extends Model implements
 	 *
 	 * @var array
 	 */
-	protected $hidden = ['created_at', 'updated_at'];
+	protected $hidden = ['password', 'remember_token', 'created_at', 'updated_at'];
 
 	public function __construct(array $attributes = [])
 	{
@@ -61,7 +60,7 @@ class User extends Model implements
 	{
 		$this->attributes['password'] = Hash::make($value);
 	}
-	
+
 	/**
 	 * Get the identifier that will be stored in the subject claim of the JWT.
 	 *

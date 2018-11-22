@@ -2,7 +2,6 @@
 /vendor
 Homestead.json
 Homestead.yaml
-.env
 /docker-compose/image
 .phpstorm.meta.php
 _ide_helper_models.php

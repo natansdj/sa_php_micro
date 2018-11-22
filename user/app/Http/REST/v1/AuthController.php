@@ -3,7 +3,8 @@
 namespace App\Http\REST\v1;
 
 use App\Repositories\UserRepository;
-use ACLService;
+use Core\Services\ACL\ACLService;
+use Core\Services\Auth\AuthService;
 use Illuminate\Http\Request;
 use Core\Http\REST\Controller\ApiBaseController;
 use App\Models\User;
@@ -24,6 +25,7 @@ class AuthController extends ApiBaseController
 	{
 		parent::__construct();
 		$this->model = app(UserRepository::class);
+		$this->middleware('jwt.verify', ['except' => ['authenticate', 'register', 'refresh']]);
 	}
 
 	/**

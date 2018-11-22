@@ -2,22 +2,34 @@
 
 ## Endpoints
 
-returning JSON Responses.
-
+User Authentication using JWTAuth, must include headers for every GET/POST request except for `login`:
 ```
-   # login 
-   POST /login
-   
-   #register
-   POST /register
+Authorization: Bearer {{token}}
+```
 
-   # Returns all users
-   GET /users 
+Example (get current authenticated user):
+```
+GET /api/v1/auth/authenticated HTTP/1.1
+   Host: user.lm.local
+   Accept: application/json
+   Authorization: Bearer {{token}}
+```
+
+API JSON Responses.
+```
+   # User Login
+   POST /api/v1/auth/login
+   
+   # User Register
+   POST /api/v1/auth/register
+
+   # Get Current authenticated User
+   GET /api/v1/auth/authenticated
    
    # Returns spesific user by id
    # or returns 404 'User not found'
    # if user does not exist
-   GET /users/{id}
+   GET /api/v1/users/{id}
    
    # Update user
    PUT /users/{id}
