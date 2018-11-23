@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Http\Factories\OrderFactory;
@@ -9,6 +10,7 @@ class UserController extends Controller
 {
     /**
      * @param string $user
+     *
      * @return JsonResponse
      * @internal param string $order
      * @internal param Request $request
@@ -16,8 +18,8 @@ class UserController extends Controller
     public function orders(string $user): JsonResponse
     {
         try {
-            $data = (new OrderFactory())->retrieveUserOrders($user);
-        }catch (HttpException $exception) {
+            $data = ( new OrderFactory() )->retrieveUserOrders($user);
+        } catch (HttpException $exception) {
             return new JsonResponse(
                 $exception->getMessage(),
                 $exception->getStatusCode()

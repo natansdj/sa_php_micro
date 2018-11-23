@@ -2,58 +2,58 @@
 
 
 return [
-	'prefix' => 'api/graph',
+    'prefix' => 'api/graph',
 
-	'domain' => null,
+    'domain' => null,
 
-	'routes' => '{graphql_schema?}',
+    'routes' => '{graphql_schema?}',
 
-	'controllers' => \Folklore\GraphQL\GraphQLController::class . '@query',
+    'controllers' => \Folklore\GraphQL\GraphQLController::class . '@query',
 
-	'variables_input_name' => 'variables',
+    'variables_input_name' => 'variables',
 
-	'middleware' => [],
+    'middleware' => [],
 
-	'middleware_schema' => [
-		'default' => [],
-		'v1'      => [],
-	],
+    'middleware_schema' => [
+        'default' => [],
+        'v1'      => [],
+    ],
 
-	'headers' => [],
+    'headers' => [],
 
-	'json_encoding_options' => 0,
+    'json_encoding_options' => 0,
 
-	'schema' => env('API_STABLE_VERSION', 'default'),
+    'schema' => env('API_STABLE_VERSION', 'default'),
 
-	'schemas' => [
-		'default' => [
-			'query'    => [],
-			'mutation' => []
-		],
-		//Version Graph API
-		'v1'      => [
-			'query'    => [
-				'users'           => App\Http\GraphQL\v1\Query\UsersQuery::class,
-				'usersPagination' => App\Http\GraphQL\v1\Query\UsersPaginationQuery::class,
-			],
-			'mutation' => [
-				'updateUserName' => App\Http\GraphQL\v1\Mutation\UpdateUserNameMutation::class,
-			]
-		]
-	],
+    'schemas' => [
+        'default' => [
+            'query'    => [],
+            'mutation' => []
+        ],
+        //Version Graph API
+        'v1'      => [
+            'query'    => [
+                'users'           => App\Http\GraphQL\v1\Query\UsersQuery::class,
+                'usersPagination' => App\Http\GraphQL\v1\Query\UsersPaginationQuery::class,
+            ],
+            'mutation' => [
+                'updateUserName' => App\Http\GraphQL\v1\Mutation\UpdateUserNameMutation::class,
+            ]
+        ]
+    ],
 
-	'resolvers' => [
-		'default' => [
-		],
-	],
+    'resolvers' => [
+        'default' => [
+        ],
+    ],
 
-	'defaultFieldResolver' => null,
+    'defaultFieldResolver' => null,
 
-	'error_formatter' => [\Folklore\GraphQL\GraphQL::class, 'formatError'],
+    'error_formatter' => [\Folklore\GraphQL\GraphQL::class, 'formatError'],
 
-	'security' => [
-		'query_max_complexity'  => null,
-		'query_max_depth'       => null,
-		'disable_introspection' => false
-	]
+    'security' => [
+        'query_max_complexity'  => null,
+        'query_max_depth'       => null,
+        'disable_introspection' => false
+    ]
 ];

@@ -6,5 +6,5 @@ use Core\Http\GraphQL\TypeRegistry;
 
 class MyTypeRegistry extends TypeRegistry
 {
-	//my type
+    //my type
 }

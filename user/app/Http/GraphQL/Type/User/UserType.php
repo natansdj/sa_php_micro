@@ -11,24 +11,24 @@ use App\Http\GraphQL\Type\MyTypeRegistry;
 class UserType extends GraphQLType
 {
 
-	protected $attributes = [
-		'name'        => 'User',
-		'description' => 'A user'
-	];
+    protected $attributes = [
+        'name'        => 'User',
+        'description' => 'A user'
+    ];
 
-	public function fields()
-	{
-		return [
-			'id'        => [
-				'type' => Type::nonNull(Type::string()),
-			],
-			'email'     => [
-				'type' => Type::string(),
-			],
-			'name'      => [
-				'type' => Type::string(),
-			],
-			'timestamp' => MyTypeRegistry::timestamp()
-		];
-	}
+    public function fields()
+    {
+        return [
+            'id'        => [
+                'type' => Type::nonNull(Type::string()),
+            ],
+            'email'     => [
+                'type' => Type::string(),
+            ],
+            'name'      => [
+                'type' => Type::string(),
+            ],
+            'timestamp' => MyTypeRegistry::timestamp()
+        ];
+    }
 }

@@ -25,7 +25,7 @@ class UserControllerTest extends TestCase
         $this->get('/user/' . $userId);
 
         $this->assertEquals(200, $this->response->getStatusCode());
-        $this->assertEquals(json_encode($this->users[$userId]), $this->response->getContent());
+        $this->assertEquals(json_encode($this->users[ $userId ]), $this->response->getContent());
     }
 
     public function test_if_it_returns_not_found_response_for_a_non_existed_user()

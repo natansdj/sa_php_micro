@@ -7,42 +7,42 @@ use League\Fractal\TransformerAbstract;
 
 class ProductTransformer extends TransformerAbstract
 {
-	protected $availableIncludes = [
-		'image',
-		'category',
-	];
+    protected $availableIncludes = [
+        'image',
+        'category',
+    ];
 
-	protected $defaultIncludes = [];
+    protected $defaultIncludes = [];
 
-	/**
-	 * @Request Product
-	 * @Response array
-	 */
-	public function transform(Product $model)
-	{
-		return [
-			'id'          => $model->id,
-			'name'        => $model->name,
-			'description' => $model->description,
-			'harga'       => $model->harga,
-			'stock'       => $model->stock,
-			'created_at'  => $model->created_at,
-		];
-	}
+    /**
+     * @Request Product
+     * @Response array
+     */
+    public function transform(Product $model)
+    {
+        return [
+            'id'          => $model->id,
+            'name'        => $model->name,
+            'description' => $model->description,
+            'harga'       => $model->harga,
+            'stock'       => $model->stock,
+            'created_at'  => $model->created_at,
+        ];
+    }
 
-	public function includeImage(Product $model)
-	{
-		$images = $model->image()->get();
+    public function includeImage(Product $model)
+    {
+        $images = $model->image()->get();
 
-		//resourceKey -1 if you want to exclude arrayKey from the data included by the transformer when use KeyArraySerializer
-		return $this->collection($images, new ImageTransformer, - 1);
-	}
+        //resourceKey -1 if you want to exclude arrayKey from the data included by the transformer when use KeyArraySerializer
+        return $this->collection($images, new ImageTransformer, - 1);
+    }
 
-	public function includeCategory(Product $model)
-	{
-		$categories = $model->category()->get();
+    public function includeCategory(Product $model)
+    {
+        $categories = $model->category()->get();
 
-		//resourceKey -1 if you want to exclude arrayKey from the data included by the transformer when use KeyArraySerializer
-		return $this->collection($categories, new CategoryTransformer(), - 1);
-	}
+        //resourceKey -1 if you want to exclude arrayKey from the data included by the transformer when use KeyArraySerializer
+        return $this->collection($categories, new CategoryTransformer(), - 1);
+    }
 }
