@@ -13,15 +13,15 @@ class InventoryCreateProductImage extends Migration
      */
     public function up()
     {
-	    Schema::create('product_image', function (Blueprint $table) {
-		    $table->increments('id');
+        Schema::create('product_image', function (Blueprint $table) {
+            $table->increments('id');
 
-		    $table->integer('product_id')->unsigned();
-		    $table->string('image');
+            $table->integer('product_id')->unsigned();
+            $table->string('image');
 
-		    $table->foreign('product_id')->references('id')->on('product')->onUpdate('CASCADE')->onDelete('CASCADE');
-		    $table->timestamps();
-	    });
+            $table->foreign('product_id')->references('id')->on('product')->onUpdate('CASCADE')->onDelete('CASCADE');
+            $table->timestamps();
+        });
     }
 
     /**
@@ -31,6 +31,6 @@ class InventoryCreateProductImage extends Migration
      */
     public function down()
     {
-	    Schema::dropIfExists('product_image');
+        Schema::dropIfExists('product_image');
     }
 }

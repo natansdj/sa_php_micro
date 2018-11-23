@@ -3,9 +3,9 @@
 require_once __DIR__ . '/../vendor/autoload.php';
 
 try {
-	( new Dotenv\Dotenv(__DIR__ . '/../') )->load();
+    ( new Dotenv\Dotenv(__DIR__ . '/../') )->load();
 } catch (Dotenv\Exception\InvalidPathException $e) {
-	//
+    //
 }
 
 /*
@@ -20,7 +20,7 @@ try {
 */
 
 $app = new Laravel\Lumen\Application(
-	realpath(__DIR__ . '/../')
+    realpath(__DIR__ . '/../')
 );
 
 $app->instance('path.config', app()->basePath() . DIRECTORY_SEPARATOR . 'config');
@@ -57,9 +57,9 @@ $app->register(Core\Providers\ManagerServiceProvider::class);
 |
 */
 $app->router->group([
-	'namespace' => 'App\Http\REST',
-], function ($router) {
-	require __DIR__ . '/../routes/web.php';
+    'namespace' => 'App\Http\REST',
+], function () {
+    require __DIR__ . '/../routes/web.php';
 });
 
 return $app;

@@ -19,7 +19,7 @@ $router->get('/', function () use ($router) {
 $router->group(['prefix' => 'user'], function () use ($router) {
 
     $router->get('/{user}/orders', [
-        'as' => 'get.user.orders',
+        'as'   => 'get.user.orders',
         'uses' => 'UserController@orders'
     ]);
 });

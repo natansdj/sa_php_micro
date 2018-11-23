@@ -7,20 +7,20 @@ use League\Fractal\TransformerAbstract;
 
 class ImageTransformer extends TransformerAbstract
 {
-	protected $availableIncludes = [];
+    protected $availableIncludes = [];
 
-	protected $defaultIncludes = [];
+    protected $defaultIncludes = [];
 
-	/**
-	 * @Request ProductImage
-	 * @Response array
-	 */
-	public function transform(ProductImage $model)
-	{
-		return [
-			'id'         => $model->id,
-			'image'      => \Storage::url($model->image),
-			'created_at' => $model->created_at
-		];
-	}
+    /**
+     * @Request ProductImage
+     * @Response array
+     */
+    public function transform(ProductImage $model)
+    {
+        return [
+            'id'         => $model->id,
+            'image'      => \Storage::url($model->image),
+            'created_at' => $model->created_at
+        ];
+    }
 }

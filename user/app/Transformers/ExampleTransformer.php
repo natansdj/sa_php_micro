@@ -6,13 +6,13 @@ use League\Fractal\TransformerAbstract;
 
 class ExampleTransformer extends TransformerAbstract
 {
-	protected $availableIncludes = [];
+    protected $availableIncludes = [];
 
-	protected $defaultIncludes = [];
+    protected $defaultIncludes = [];
 
-	public function transform()
-	{
-		return [];
-	}
+    public function transform()
+    {
+        return [];
+    }
 
 }

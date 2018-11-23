@@ -11,48 +11,48 @@ use App\Repositories\UserRepository as User;
 class UsersPaginationQuery extends Query
 {
 
-	public $model;
+    public $model;
 
-	protected $attributes = [
-		'name' => 'usersPaginate',
-		'uri'  => 'query=query{usersPagination(perPage:15,page:1){user{id},meta{total}}}'
-	];
+    protected $attributes = [
+        'name' => 'usersPaginate',
+        'uri'  => 'query=query{usersPagination(perPage:15,page:1){user{id},meta{total}}}'
+    ];
 
-	public function __construct($attributes = [], User $model)
-	{
-		parent::__construct($attributes);
-		$this->model = $model;
-	}
+    public function __construct($attributes = [], User $model)
+    {
+        parent::__construct($attributes);
+        $this->model = $model;
+    }
 
-	public function type()
-	{
-		return GraphQL::pagination(GraphQL::type('User'));
-	}
+    public function type()
+    {
+        return GraphQL::pagination(GraphQL::type('User'));
+    }
 
-	public function args()
-	{
-		return [
-			'page'    => [
-				'name'        => 'page',
-				'description' => 'The page',
-				'type'        => Type::int()
-			],
-			'perPage' => [
-				'name'        => 'perPage',
-				'description' => 'The count',
-				'type'        => Type::int()
-			]
-		];
-	}
+    public function args()
+    {
+        return [
+            'page'    => [
+                'name'        => 'page',
+                'description' => 'The page',
+                'type'        => Type::int()
+            ],
+            'perPage' => [
+                'name'        => 'perPage',
+                'description' => 'The count',
+                'type'        => Type::int()
+            ]
+        ];
+    }
 
-	public function resolve($root, $args)
-	{
-		$page    = array_get($args, 'page', 1);
-		$perPage = array_get($args, 'perPage', 15);
+    public function resolve($root, $args)
+    {
+        $page    = array_get($args, 'page', 1);
+        $perPage = array_get($args, 'perPage', 15);
 
-		$users = $this->model->paginate($perPage, ['*']);   //@TODO fix url page
+        $users = $this->model->paginate($perPage, ['*']);   //@TODO fix url page
 
-		return $users;
-	}
+        return $users;
+    }
 
 }

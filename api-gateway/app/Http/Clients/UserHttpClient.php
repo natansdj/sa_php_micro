@@ -28,6 +28,7 @@ class UserHttpClient
 
     /**
      * @param string $user
+     *
      * @return string
      */
     public function getUser(string $user): string

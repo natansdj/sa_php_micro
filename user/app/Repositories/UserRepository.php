@@ -9,105 +9,105 @@ use Illuminate\Support\Facades\Validator;
 
 class UserRepository extends RepositoryAbstract
 {
-	private static $rules = [
-		'email'    => 'required|email|unique:users,email|max:255',
-		'password' => 'required|min:6|max:20',
-		'username' => 'required|min:5|max:255',
-		'name'     => 'required|min:5|max:255'
-	];
+    private static $rules = [
+        'email'    => 'required|email|unique:users,email|max:255',
+        'password' => 'required|min:6|max:20',
+        'username' => 'required|min:5|max:255',
+        'name'     => 'required|min:5|max:255'
+    ];
 
-	private static $rules_update = [
-		'email'    => 'email|max:255',
-		'username' => 'min:5|max:255',
-		'name'     => 'required|min:5|max:255'
-	];
+    private static $rules_update = [
+        'email'    => 'email|max:255',
+        'username' => 'min:5|max:255',
+        'name'     => 'required|min:5|max:255'
+    ];
 
-	private static $rules_password = [
-		'password'         => 'required|min:6|max:20',
-		'confirm_password' => 'required|same:password'
-	];
+    private static $rules_password = [
+        'password'         => 'required|min:6|max:20',
+        'confirm_password' => 'required|same:password'
+    ];
 
-	/**
-	 * Specify Model class name
-	 *
-	 * @return mixed
-	 */
-	function model()
-	{
-		return 'App\Models\User';
-	}
+    /**
+     * Specify Model class name
+     *
+     * @return mixed
+     */
+    function model()
+    {
+        return 'App\Models\User';
+    }
 
-	/**
-	 * @param array $data
-	 * @param $id
-	 * @param string $attribute
-	 *
-	 * @return mixed
-	 */
-	public function updateUser(array $data, $id, $attribute = "id")
-	{
-		if (array_has($data, 'password')) {
-			data_set($data, 'password', Hash::make($data["password"]));
-		}
+    /**
+     * @param array $data
+     * @param $id
+     * @param string $attribute
+     *
+     * @return mixed
+     */
+    public function updateUser(array $data, $id, $attribute = "id")
+    {
+        if (array_has($data, 'password')) {
+            data_set($data, 'password', Hash::make($data["password"]));
+        }
 
-		$response = $this->update($data, $id, $attribute);
+        $response = $this->update($data, $id, $attribute);
 
-		return $response;
-	}
+        return $response;
+    }
 
-	/** Validate request api
-	 *
-	 * @param array $request
-	 * @param $type
-	 * @param array $rules_specific
-	 *
-	 * @return \Illuminate\Http\JsonResponse
-	 */
-	public function validateRequest(array $request, $type, array $rules_specific = [])
-	{
-		$rules = $this->rules($type, $rules_specific);
+    /** Validate request api
+     *
+     * @param array $request
+     * @param $type
+     * @param array $rules_specific
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function validateRequest(array $request, $type, array $rules_specific = [])
+    {
+        $rules = $this->rules($type, $rules_specific);
 
-		if ( ! isset($request)) {
-			return $this->response->errorNotFound();
-		}
+        if ( ! isset($request)) {
+            return $this->response->errorNotFound();
+        }
 
-		$validator = Validator::make($request, $rules);
-		if ($validator->fails()) {
-			return $this->response->addData($validator->errors()->toArray())->errorNotFound();
-		}
+        $validator = Validator::make($request, $rules);
+        if ($validator->fails()) {
+            return $this->response->addData($validator->errors()->toArray())->errorNotFound();
+        }
 
-		return $this->response->success("Rules validate success");
-	}
+        return $this->response->success("Rules validate success");
+    }
 
-	/** Use rules based on request
-	 *
-	 * @param $type
-	 * @param array $rules_specific
-	 *
-	 * @return array
-	 */
-	private function rules($type, array $rules_specific = [])
-	{
-		if ( ! empty($rules_specific)) {
-			return $rules_specific;
-		}
+    /** Use rules based on request
+     *
+     * @param $type
+     * @param array $rules_specific
+     *
+     * @return array
+     */
+    private function rules($type, array $rules_specific = [])
+    {
+        if ( ! empty($rules_specific)) {
+            return $rules_specific;
+        }
 
-		switch ($type) {
-			case "store":
-			case "create":
-				$rules = self::$rules;
-				break;
-			case "update":
-				$rules = self::$rules_update;
-				break;
-			case "password":
-				$rules = self::$rules_password;
-				break;
-			default:
-				$rules = self::$rules;
-				break;
-		}
+        switch ($type) {
+            case "store":
+            case "create":
+                $rules = self::$rules;
+                break;
+            case "update":
+                $rules = self::$rules_update;
+                break;
+            case "password":
+                $rules = self::$rules_password;
+                break;
+            default:
+                $rules = self::$rules;
+                break;
+        }
 
-		return $rules;
-	}
+        return $rules;
+    }
 }
