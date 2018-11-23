@@ -22,6 +22,12 @@ API JSON Responses.
    
    # User Register
    POST /api/v1/auth/register
+   formData : {
+        'email' => 'test@example.org',
+        'password' => '123456',
+        'name' => 'Firstname Lastname',
+        'username' => 'username'
+    }
 
    # Get Current authenticated User
    GET /api/v1/auth/authenticated
