@@ -85,6 +85,7 @@ services:
     container_name: lm_order
     volumes:
       - ../order:/var/www/html
+      - ./order/php-apache/xdebug.ini:/user/local/etc/php/conf.d/xdebug.ini
     networks:
       - webgateway
       - web
@@ -120,6 +121,7 @@ services:
     container_name: lm_inventory
     volumes:
       - ../inventory:/var/www/html
+      - ./inventory/php-apache/xdebug.ini:/user/local/etc/php/conf.d/xdebug.ini
     networks:
       - webgateway
       - web
@@ -137,6 +139,7 @@ services:
     container_name: lm_api
     volumes:
       - ../api-gateway:/var/www/html
+      - ./api-gateway/php-apache/xdebug.ini:/user/local/etc/php/conf.d/xdebug.ini
     networks:
       - webgateway
       - web
