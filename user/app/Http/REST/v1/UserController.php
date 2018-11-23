@@ -5,7 +5,7 @@ namespace App\Http\REST\v1;
 use Core\Http\REST\Controller\ApiBaseController;
 use Core\Helpers\Serializer\KeyArraySerializer;
 use App\Repositories\UserRepository as User;
-use App\Transformers\UserTransformer;
+use App\Transformers\ProductTransformer;
 use Gate;
 use Illuminate\Http\Request;
 
@@ -48,7 +48,7 @@ class UserController extends ApiBaseController
 		if ($users) {
 			$data = $this->api
 				->serializer(new KeyArraySerializer('users'))
-				->paginate($users, new UserTransformer());
+				->paginate($users, new ProductTransformer());
 
 			$response = $this->response->addModelLinks(new $this->user->model())->data($data, 200);
 
@@ -74,7 +74,7 @@ class UserController extends ApiBaseController
 		if ($user) {
 			$data = $this->api
 				->serializer(new KeyArraySerializer('user'))
-				->item($user, new UserTransformer);
+				->item($user, new ProductTransformer);
 
 			$response = $this->response->data($data, 200);
 

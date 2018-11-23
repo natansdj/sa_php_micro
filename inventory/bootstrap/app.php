@@ -23,68 +23,28 @@ $app = new Laravel\Lumen\Application(
 	realpath(__DIR__ . '/../')
 );
 
-$app->withFacades();
+$app->instance('path.config', app()->basePath() . DIRECTORY_SEPARATOR . 'config');
+$app->instance('path.storage', app()->basePath() . DIRECTORY_SEPARATOR . 'storage');
 
+$app->withFacades();
 $app->withEloquent();
 
-// Add the line below to load database config. This is required for caching to work.
-$app->configure('database');
-
 /*
 |--------------------------------------------------------------------------
-| Register Container Bindings
+| Manager Service Provider
 |--------------------------------------------------------------------------
 |
-| Now we will register a few bindings in the service container. We will
-| register the exception handler and the console kernel. You may add
-| your own bindings here if you like or you can make another file.
+| The automatic providers manager loads the providers included in config/providers.php file
+| If you want to load new providers just enter in the array(global, local, production)
+| 'name'  => \path\NameProvider::class
+| This will allow you to better manage the loading.
+| If you want to create a provider through artisan, just run:
+| php artisan create:provider
 |
 */
 
-$app->singleton(
-	Illuminate\Contracts\Debug\ExceptionHandler::class,
-	App\Exceptions\Handler::class
-);
-
-$app->singleton(
-	Illuminate\Contracts\Console\Kernel::class,
-	App\Console\Kernel::class
-);
-
-/*
-|--------------------------------------------------------------------------
-| Register Middleware
-|--------------------------------------------------------------------------
-|
-| Next, we will register the middleware with the application. These can
-| be global middleware that run before and after each request into a
-| route or middleware that'll be assigned to some specific routes.
-|
-*/
-
-// $app->middleware([
-//    App\Http\Middleware\ExampleMiddleware::class
-// ]);
-
-// $app->routeMiddleware([
-//     'auth' => App\Http\Middleware\Authenticate::class,
-// ]);
-
-/*
-|--------------------------------------------------------------------------
-| Register Service Providers
-|--------------------------------------------------------------------------
-|
-| Here we will register all of the application's service providers which
-| are used to bind services into the container. Service providers are
-| totally optional, so you are not required to uncomment this line.
-|
-*/
-
-// $app->register(App\Providers\AppServiceProvider::class);
-// $app->register(App\Providers\AuthServiceProvider::class);
-// $app->register(App\Providers\EventServiceProvider::class);
-$app->register(Illuminate\Redis\RedisServiceProvider::class);
+//Load Manager Providers of Framework
+$app->register(Core\Providers\ManagerServiceProvider::class);
 
 /*
 |--------------------------------------------------------------------------
@@ -96,9 +56,8 @@ $app->register(Illuminate\Redis\RedisServiceProvider::class);
 | can respond to, as well as the controllers that may handle them.
 |
 */
-
 $app->router->group([
-	'namespace' => 'App\Http\Controllers',
+	'namespace' => 'App\Http\REST',
 ], function ($router) {
 	require __DIR__ . '/../routes/web.php';
 });

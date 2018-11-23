@@ -7,9 +7,7 @@ use League\Fractal\TransformerAbstract;
 
 class UserTransformer extends TransformerAbstract
 {
-	protected $availableIncludes = [
-		'posts'
-	];
+	protected $availableIncludes = [];
 
 	protected $defaultIncludes = [];
 
@@ -20,17 +18,10 @@ class UserTransformer extends TransformerAbstract
 	public function transform(User $user)
 	{
 		return [
-			'id'      => $user->id,
-			'email'   => $user->email,
-			'name'    => $user->name,
-			'surname' => $user->surname,
+			'id'       => $user->id,
+			'email'    => $user->email,
+			'name'     => $user->name,
+			'username' => $user->username,
 		];
-	}
-
-	public function includePosts(User $user)
-	{
-		$posts = $user->post()->get();
-
-		return $this->collection($posts, new PostTransformer, - 1); //resourceKey -1 if you want to exclude arrayKey from the data included by the transformer when use KeyArraySerializer
 	}
 }

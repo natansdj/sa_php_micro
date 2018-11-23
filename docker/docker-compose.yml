@@ -122,6 +122,7 @@ services:
     volumes:
       - ../inventory:/var/www/html
       - ./inventory/php-apache/xdebug.ini:/user/local/etc/php/conf.d/xdebug.ini
+      - ../inventory/storage/app/public:/var/www/html/public/storage
     networks:
       - webgateway
       - web
