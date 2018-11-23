@@ -12,14 +12,14 @@ class UserRepository extends RepositoryAbstract
 	private static $rules = [
 		'email'    => 'required|email|unique:users,email|max:255',
 		'password' => 'required|min:6|max:20',
-		'name'     => 'required|min:5|max:255',
-		'surname'  => 'required|min:5|max:255'
+		'username' => 'required|min:5|max:255',
+		'name'     => 'required|min:5|max:255'
 	];
 
 	private static $rules_update = [
-		'email'   => 'email|max:255',
-		'name'    => 'required|min:5|max:255',
-		'surname' => 'min:5|max:255'
+		'email'    => 'email|max:255',
+		'username' => 'min:5|max:255',
+		'name'     => 'required|min:5|max:255'
 	];
 
 	private static $rules_password = [
@@ -73,7 +73,7 @@ class UserRepository extends RepositoryAbstract
 
 		$validator = Validator::make($request, $rules);
 		if ($validator->fails()) {
-			return $this->response->withData($validator->errors()->toArray())->errorNotFound();
+			return $this->response->addData($validator->errors()->toArray())->errorNotFound();
 		}
 
 		return $this->response->success("Rules validate success");

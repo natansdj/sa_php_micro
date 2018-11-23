@@ -89,8 +89,7 @@ return [
 	|
 	*/
 	'policies'  => [
-		\Illuminate\Http\Request::class => \App\Http\Policies\UserPolicy::class,
-		\App\Models\Post::class         => \App\Http\Policies\PostPolicy::class,
+		\Illuminate\Http\Request::class => \App\Http\Policies\ProductPolicy::class,
 	],
 
 	'defines' => [
