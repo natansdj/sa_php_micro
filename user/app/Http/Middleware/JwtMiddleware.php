@@ -9,6 +9,7 @@ use Tymon\JWTAuth\Http\Middleware\BaseMiddleware;
 
 class JwtMiddleware extends BaseMiddleware
 {
+    const CONST_ERROR = 'error';
 
     /**
      * Handle an incoming request.
@@ -20,16 +21,21 @@ class JwtMiddleware extends BaseMiddleware
      */
     public function handle($request, Closure $next)
     {
+        $return = null;
         try {
-            $user = JWTAuth::parseToken()->authenticate();
+            JWTAuth::parseToken()->authenticate();
         } catch (\Tymon\JWTAuth\Exceptions\TokenExpiredException $e) {
-            return response()->json(['error' => 'Token is Expired'], 401);
+            $return = response()->json([self::CONST_ERROR => 'Token is Expired'], 401);
         } catch (\Tymon\JWTAuth\Exceptions\TokenInvalidException $e) {
-            return response()->json(['error' => 'Token is Invalid'], 401);
+            $return = response()->json([self::CONST_ERROR => 'Token is Invalid'], 401);
         } catch (\Tymon\JWTAuth\Exceptions\JWTException $e) {
-            return response()->json(['error' => 'Authorization Token not found'], 401);
+            $return = response()->json([self::CONST_ERROR => 'Authorization Token not found'], 401);
         } catch (Exception $e) {
-            return response()->json(['error' => 'Unauthorized'], 401);
+            $return = response()->json([self::CONST_ERROR => 'Unauthorized'], 401);
+        }
+
+        if ( ! is_null($return)) {
+            return $return;
         }
 
         return $next($request);

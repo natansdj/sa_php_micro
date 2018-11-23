@@ -120,17 +120,22 @@ class ProductController extends ApiBaseController
      */
     public function update(Request $request)
     {
+        $failed = false;
         if (Gate::denies('product.update', $request)) {
-            return $this->response->errorInternal();
+            $failed = true;
         }
 
         $validator = $this->product->validateRequest($request->all(), "update");
-        if ($validator->status() == "200") {
+        if ( ! $failed && $validator->status() == "200") {
             $task = $this->product->update($request->all(), $request->id);
             if ($task) {
                 return $this->response->success("Product updated");
             }
 
+            $failed = true;
+        }
+
+        if ($failed) {
             return $this->response->errorInternal();
         }
 

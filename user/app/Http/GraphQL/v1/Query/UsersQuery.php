@@ -16,7 +16,7 @@ class UsersQuery extends Query
         'uri'  => 'query=query{users{id,name,email,timestamp{}}}}'
     ];
 
-    public function __construct($attributes = [], User $model)
+    public function __construct(User $model, $attributes = [])
     {
         parent::__construct($attributes);
         $this->model = $model;

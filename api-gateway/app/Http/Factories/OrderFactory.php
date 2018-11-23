@@ -61,7 +61,7 @@ class OrderFactory
             foreach ($this->orderClient->getUserOrders($userId) as $orderId => $order) {
                 if (array_key_exists("products", $order)) {
                     $res[ $orderId ] = $this->inventoryClient->getProducts($order["products"])->toArray();
-                };
+                }
             }
             $data["orders"] = $res;
 

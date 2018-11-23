@@ -1,7 +1,5 @@
 <?php
 
-define('CONST_REDIS', 'redis');
-
 return [
     'default' => env('CACHE_DRIVER', CONST_REDIS),
 

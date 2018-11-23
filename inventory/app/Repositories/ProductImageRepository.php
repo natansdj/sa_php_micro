@@ -15,12 +15,12 @@ class ProductImageRepository extends RepositoryAbstract
 {
     private static $rules = [
         'product_id' => 'required|exists:product,id',
-        'image'      => 'required|image',
+        CONST_IMAGE  => 'required|image',
     ];
 
     private static $rules_update = [
         'product_id' => 'exists:product,id',
-        'image'      => 'image',
+        CONST_IMAGE  => 'image',
     ];
 
     /**
@@ -43,13 +43,13 @@ class ProductImageRepository extends RepositoryAbstract
      */
     public function validateRequest(array $request, $type = "", array $rules_specific = [])
     {
-        $rules = $this->rules($type, $rules_specific);
+        $modelRules = $this->rules($type, $rules_specific);
 
         if ( ! isset($request)) {
             return $this->response->errorNotFound();
         }
 
-        $validator = Validator::make($request, $rules);
+        $validator = Validator::make($request, $modelRules);
         if ($validator->fails()) {
             return $this->response->addData($validator->errors()->toArray())->errorNotFound();
         }
@@ -73,16 +73,16 @@ class ProductImageRepository extends RepositoryAbstract
         switch ($type) {
             case "store":
             case "create":
-                $rules = self::$rules;
+                $modelRules = self::$rules;
                 break;
             case "update":
-                $rules = self::$rules_update;
+                $modelRules = self::$rules_update;
                 break;
             default:
-                $rules = self::$rules;
+                $modelRules = self::$rules;
                 break;
         }
 
-        return $rules;
+        return $modelRules;
     }
 }

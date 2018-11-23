@@ -6,6 +6,9 @@ use Illuminate\Database\Migrations\Migration;
 
 class UsersCreatePermission extends Migration
 {
+    const CONST_PERMISSION_ID = 'permission_id';
+    const CONST_ROLE_ID = 'role_id';
+
     /**
      * Run the migrations.
      *
@@ -30,44 +33,44 @@ class UsersCreatePermission extends Migration
         });
 
         Schema::create($tableNames['model_has_permissions'], function (Blueprint $table) use ($tableNames) {
-            $table->unsignedInteger('permission_id');
+            $table->unsignedInteger(self::CONST_PERMISSION_ID);
             $table->morphs('model');
 
-            $table->foreign('permission_id')
+            $table->foreign(self::CONST_PERMISSION_ID)
                   ->references('id')
                   ->on($tableNames['permissions'])
                   ->onDelete('cascade');
 
-            $table->primary(['permission_id', 'model_id', 'model_type'], 'model_has_permissions_permission_model_type_primary');
+            $table->primary([self::CONST_PERMISSION_ID, 'model_id', 'model_type'], 'model_has_permissions_permission_model_type_primary');
         });
 
         Schema::create($tableNames['model_has_roles'], function (Blueprint $table) use ($tableNames) {
-            $table->unsignedInteger('role_id');
+            $table->unsignedInteger(self::CONST_ROLE_ID);
             $table->morphs('model');
 
-            $table->foreign('role_id')
+            $table->foreign(self::CONST_ROLE_ID)
                   ->references('id')
                   ->on($tableNames['roles'])
                   ->onDelete('cascade');
 
-            $table->primary(['role_id', 'model_id', 'model_type']);
+            $table->primary([self::CONST_ROLE_ID, 'model_id', 'model_type']);
         });
 
         Schema::create($tableNames['role_has_permissions'], function (Blueprint $table) use ($tableNames) {
-            $table->unsignedInteger('permission_id');
-            $table->unsignedInteger('role_id');
+            $table->unsignedInteger(self::CONST_PERMISSION_ID);
+            $table->unsignedInteger(self::CONST_ROLE_ID);
 
-            $table->foreign('permission_id')
+            $table->foreign(self::CONST_PERMISSION_ID)
                   ->references('id')
                   ->on($tableNames['permissions'])
                   ->onDelete('cascade');
 
-            $table->foreign('role_id')
+            $table->foreign(self::CONST_ROLE_ID)
                   ->references('id')
                   ->on($tableNames['roles'])
                   ->onDelete('cascade');
 
-            $table->primary(['permission_id', 'role_id']);
+            $table->primary([self::CONST_PERMISSION_ID, self::CONST_ROLE_ID]);
 
             app('cache')->forget('spatie.permission.cache');
         });

@@ -23,20 +23,23 @@ class User extends Model implements
     JWTSubject
 {
     use Authenticatable, Authorizable, HasRoles, ModelREST;
+
+    const CONST_PASSWORD = 'password';
+
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'email', 'name', 'password', 'username', 'phone', 'address'
+        'email', 'name', self::CONST_PASSWORD, 'username', 'phone', 'address'
     ];
     /**
      * The attributes excluded from the model's JSON form.
      *
      * @var array
      */
-    protected $hidden = ['password', 'remember_token', 'created_at', 'updated_at'];
+    protected $hidden = [self::CONST_PASSWORD, 'remember_token', 'created_at', 'updated_at'];
 
     public function __construct(array $attributes = [])
     {
@@ -58,7 +61,7 @@ class User extends Model implements
 
     public function setPasswordAttribute($value)
     {
-        $this->attributes['password'] = Hash::make($value);
+        $this->attributes[ self::CONST_PASSWORD ] = Hash::make($value);
     }
 
     /**

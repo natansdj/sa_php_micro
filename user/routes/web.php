@@ -10,11 +10,7 @@
 | and give it the Closure to call when that URI is requested.
 |
 */
-
-$router->get('/', function () use ($router) {
-    return $router->app->version() . 'user app';
-});
-
+/** @var \Laravel\Lumen\Routing\Router $router */
 $router->group(['prefix' => 'api/v1'], function () use ($router) {
     /**
      * Authentication route

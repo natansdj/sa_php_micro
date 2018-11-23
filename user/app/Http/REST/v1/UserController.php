@@ -16,6 +16,8 @@ use Illuminate\Http\Request;
  */
 class UserController extends ApiBaseController
 {
+    const CONST_PASSWORD = 'password';
+
     /**
      * @var User
      */
@@ -43,16 +45,14 @@ class UserController extends ApiBaseController
      */
     public function index()
     {
-        $users = $this->user->paginate();
+        $models = $this->user->paginate();
 
-        if ($users) {
+        if ($models) {
             $data = $this->api
                 ->serializer(new KeyArraySerializer('users'))
-                ->paginate($users, new ProductTransformer());
+                ->paginate($models, new ProductTransformer());
 
-            $response = $this->response->addModelLinks(new $this->user->model())->data($data, 200);
-
-            return $response;
+            return $this->response->addModelLinks(new $this->user->model())->data($data, 200);
         }
 
         return $this->response->errorNotFound();
@@ -70,15 +70,13 @@ class UserController extends ApiBaseController
      */
     public function show($id)
     {
-        $user = $this->user->find($id);
-        if ($user) {
+        $model = $this->user->find($id);
+        if ($model) {
             $data = $this->api
                 ->serializer(new KeyArraySerializer('user'))
-                ->item($user, new ProductTransformer);
+                ->item($model, new ProductTransformer);
 
-            $response = $this->response->data($data, 200);
-
-            return $response;
+            return $this->response->data($data, 200);
         }
 
         return $this->response->errorNotFound();
@@ -96,17 +94,22 @@ class UserController extends ApiBaseController
      */
     public function update(Request $request)
     {
+        $failed = false;
         if (Gate::denies('users.update', $request)) {
-            return $this->response->errorInternal();
+            $failed = true;
         }
 
-        $validator = $this->user->validateRequest($request->all(), "update");
-        if ($validator->status() == "200") {
+        $validator = $this->user->validateRequest($request->all(), 'update');
+        if ($validator->status() == '200') {
             $task = $this->user->updateUser($request->all(), $request->id);
             if ($task) {
-                return $this->response->success("User updated");
+                return $this->response->success('User updated');
             }
 
+            $failed = true;
+        }
+
+        if ($failed) {
             return $this->response->errorInternal();
         }
 
@@ -129,12 +132,12 @@ class UserController extends ApiBaseController
             return $this->response->errorInternal();
         }
 
-        $validator = $this->user->validateRequest($request->only(['password', 'confirm_password']), "password");
+        $validator = $this->user->validateRequest($request->only([self::CONST_PASSWORD, 'confirm_password']), self::CONST_PASSWORD);
 
-        if ($validator->status() == "200") {
-            $task = $this->user->updateUser($request->only('password'), $request->id);
+        if ($validator->status() == '200') {
+            $task = $this->user->updateUser($request->only(self::CONST_PASSWORD), $request->id);
             if ($task) {
-                return $this->response->success("User updated");
+                return $this->response->success('User updated');
             }
 
             return $this->response->errorInternal();
@@ -161,7 +164,7 @@ class UserController extends ApiBaseController
 
         $task = $this->user->delete($request->id);
         if ($task) {
-            return $this->response->success("User deleted");
+            return $this->response->success('User deleted');
         }
 
         return $this->response->errorInternal();

@@ -11,11 +11,7 @@
 |
 */
 
-$router->get('/', function () use ($router) {
-    return $router->app->version() . ' api app';
-});
-
-
+/** @var \Laravel\Lumen\Routing\Router $router */
 $router->group(['prefix' => 'user'], function () use ($router) {
 
     $router->get('/{user}/orders', [
