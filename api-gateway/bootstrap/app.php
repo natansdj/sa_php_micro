@@ -8,6 +8,16 @@ try {
     //
 }
 
+if ( ! defined('CONST_REDIS')) {
+    define('CONST_REDIS', 'redis');
+}
+if ( ! defined('CONST_MYSQL')) {
+    define('CONST_MYSQL', 'mysql');
+}
+if ( ! defined('CONST_IMAGE')) {
+    define('CONST_IMAGE', 'image');
+}
+
 /*
 |--------------------------------------------------------------------------
 | Create The Application

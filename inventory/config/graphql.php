@@ -1,5 +1,8 @@
 <?php
 
+if ( ! defined('CONST_DEFAULT')) {
+    define('CONST_DEFAULT', 'default');
+}
 
 return [
     'prefix' => 'api/graph',
@@ -15,39 +18,34 @@ return [
     'middleware' => [],
 
     'middleware_schema' => [
-        'default' => [],
-        'v1'      => [],
+        CONST_DEFAULT => [],
+        'v1'          => [],
     ],
 
     'headers' => [],
 
     'json_encoding_options' => 0,
 
-    'schema' => env('API_STABLE_VERSION', 'default'),
+    'schema' => env('API_STABLE_VERSION', CONST_DEFAULT),
 
     'schemas' => [
-        'default' => [
+        CONST_DEFAULT => [
             'query'    => [],
             'mutation' => []
         ],
         //Version Graph API
-        'v1'      => [
+        'v1'          => [
             'query'    => [
-                'users'           => App\Http\GraphQL\v1\Query\UsersQuery::class,
-                'usersPagination' => App\Http\GraphQL\v1\Query\UsersPaginationQuery::class,
-                'usersWithPost'   => App\Http\GraphQL\v1\Query\UsersWithPostQuery::class,
-                'posts'           => App\Http\GraphQL\v1\Query\PostsQuery::class,
-                'postsWithUser'   => App\Http\GraphQL\v1\Query\PostWithUserQuery::class,
-                'postsPagination' => App\Http\GraphQL\v1\Query\PostsPaginationQuery::class,
+                //
             ],
             'mutation' => [
-                'updateUserName' => App\Http\GraphQL\v1\Mutation\UpdateUserNameMutation::class,
+                //
             ]
         ]
     ],
 
     'resolvers' => [
-        'default' => [
+        CONST_DEFAULT => [
         ],
     ],
 

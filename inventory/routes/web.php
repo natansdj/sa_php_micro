@@ -11,12 +11,16 @@
 |
 */
 
+if ( ! defined('CONST_PREFIX')) {
+    define('CONST_PREFIX', 'prefix');
+}
+
 /** @var \Laravel\Lumen\Routing\Router $router */
-$router->group(['prefix' => 'api/v1'], function () use ($router) {
+$router->group([CONST_PREFIX => 'api/v1'], function () use ($router) {
     /**
      * Category routes
      */
-    $router->group(['prefix' => 'category'], function () use ($router) {
+    $router->group([CONST_PREFIX => 'category'], function () use ($router) {
         $router->get('/', 'v1\CategoryController@index');
         $router->get('/{id}', 'v1\CategoryController@show');
     });
@@ -24,7 +28,7 @@ $router->group(['prefix' => 'api/v1'], function () use ($router) {
     /**
      * Product routes
      */
-    $router->group(['prefix' => 'product'], function () use ($router) {
+    $router->group([CONST_PREFIX => 'product'], function () use ($router) {
         $router->get('/', 'v1\ProductController@index');
         $router->get('/{id}', 'v1\ProductController@show');
     });

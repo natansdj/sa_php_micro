@@ -34,7 +34,7 @@ class UserRepository extends RepositoryAbstract
      *
      * @return mixed
      */
-    function model()
+    public function model()
     {
         return 'App\Models\User';
     }

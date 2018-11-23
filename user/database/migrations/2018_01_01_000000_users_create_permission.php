@@ -41,7 +41,9 @@ class UsersCreatePermission extends Migration
                   ->on($tableNames['permissions'])
                   ->onDelete('cascade');
 
-            $table->primary([self::CONST_PERMISSION_ID, 'model_id', 'model_type'], 'model_has_permissions_permission_model_type_primary');
+            $table->primary(
+                [self::CONST_PERMISSION_ID, 'model_id', 'model_type']
+                , 'model_has_permissions_permission_model_type_primary');
         });
 
         Schema::create($tableNames['model_has_roles'], function (Blueprint $table) use ($tableNames) {

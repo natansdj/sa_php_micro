@@ -1,5 +1,15 @@
 <?php
 
+if ( ! defined('CONST_PUBLIC')) {
+    define('CONST_PUBLIC', 'public');
+}
+if ( ! defined('CONST_LOCAL')) {
+    define('CONST_LOCAL', 'local');
+}
+if ( ! defined('CONST_DRIVER')) {
+    define('CONST_DRIVER', 'driver');
+}
+
 return [
 
     /*
@@ -13,7 +23,7 @@ return [
     |
     */
 
-    'default' => env('FILESYSTEM_DRIVER', 'public'),
+    'default' => env('FILESYSTEM_DRIVER', CONST_PUBLIC),
 
     /*
     |--------------------------------------------------------------------------
@@ -42,27 +52,27 @@ return [
     */
 
     'disks' => [
-        'local'   => [
-            'driver' => 'local',
-            'root'   => storage_path('app'),
+        CONST_LOCAL  => [
+            CONST_DRIVER => CONST_LOCAL,
+            'root'       => storage_path('app'),
         ],
-        'public'  => [
-            'driver'     => 'local',
+        CONST_PUBLIC => [
+            CONST_DRIVER => CONST_LOCAL,
             'root'       => storage_path('app/public'),
             'url'        => env('APP_URL') . '/storage',
-            'visibility' => 'public',
+            'visibility' => CONST_PUBLIC,
         ],
-        'root'    => [
-            'driver' => 'local',
-            'root'   => '.',
+        'root'       => [
+            CONST_DRIVER => CONST_LOCAL,
+            'root'       => '.',
         ],
-        'command' => [
-            'driver' => 'local',
-            'root'   => '.',
+        'command'    => [
+            CONST_DRIVER => CONST_LOCAL,
+            'root'       => '.',
         ],
-        'logs'    => [
-            'driver' => 'local',
-            'root'   => storage_path('logs'),
+        'logs'       => [
+            CONST_DRIVER => CONST_LOCAL,
+            'root'       => storage_path('logs'),
         ],
     ]
 

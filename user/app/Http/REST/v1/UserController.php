@@ -2,10 +2,10 @@
 
 namespace App\Http\REST\v1;
 
-use Core\Http\REST\Controller\ApiBaseController;
-use Core\Helpers\Serializer\KeyArraySerializer;
 use App\Repositories\UserRepository as User;
 use App\Transformers\ProductTransformer;
+use Core\Helpers\Serializer\KeyArraySerializer;
+use Core\Http\REST\Controller\ApiBaseController;
 use Gate;
 use Illuminate\Http\Request;
 
@@ -16,7 +16,7 @@ use Illuminate\Http\Request;
  */
 class UserController extends ApiBaseController
 {
-    const CONST_PASSWORD = 'password';
+    const CONST_WORD = 'password';
 
     /**
      * @var User
@@ -132,10 +132,10 @@ class UserController extends ApiBaseController
             return $this->response->errorInternal();
         }
 
-        $validator = $this->user->validateRequest($request->only([self::CONST_PASSWORD, 'confirm_password']), self::CONST_PASSWORD);
+        $validator = $this->user->validateRequest($request->only([self::CONST_WORD, 'confirm_password']), self::CONST_WORD);
 
         if ($validator->status() == '200') {
-            $task = $this->user->updateUser($request->only(self::CONST_PASSWORD), $request->id);
+            $task = $this->user->updateUser($request->only(self::CONST_WORD), $request->id);
             if ($task) {
                 return $this->response->success('User updated');
             }
