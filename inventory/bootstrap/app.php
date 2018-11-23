@@ -8,6 +8,10 @@ try {
     //
 }
 
+define('CONST_REDIS', 'redis');
+define('CONST_MYSQL', 'mysql');
+define('CONST_IMAGE', 'image');
+
 /*
 |--------------------------------------------------------------------------
 | Create The Application
@@ -58,7 +62,12 @@ $app->register(Core\Providers\ManagerServiceProvider::class);
 */
 $app->router->group([
     'namespace' => 'App\Http\REST',
-], function () {
+], function ($router) {
+    /** @var \Laravel\Lumen\Routing\Router $router */
+    $router->get('/', function () use ($router) {
+        return $router->app->version() . 'inventory app';
+    });
+
     require __DIR__ . '/../routes/web.php';
 });
 

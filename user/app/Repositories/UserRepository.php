@@ -9,17 +9,19 @@ use Illuminate\Support\Facades\Validator;
 
 class UserRepository extends RepositoryAbstract
 {
+    const CONST_REQ_STR_MIN_MAX = 'required|min:5|max:255';
+
     private static $rules = [
         'email'    => 'required|email|unique:users,email|max:255',
         'password' => 'required|min:6|max:20',
-        'username' => 'required|min:5|max:255',
-        'name'     => 'required|min:5|max:255'
+        'username' => self::CONST_REQ_STR_MIN_MAX,
+        'name'     => self::CONST_REQ_STR_MIN_MAX
     ];
 
     private static $rules_update = [
         'email'    => 'email|max:255',
         'username' => 'min:5|max:255',
-        'name'     => 'required|min:5|max:255'
+        'name'     => self::CONST_REQ_STR_MIN_MAX
     ];
 
     private static $rules_password = [
@@ -50,9 +52,7 @@ class UserRepository extends RepositoryAbstract
             data_set($data, 'password', Hash::make($data["password"]));
         }
 
-        $response = $this->update($data, $id, $attribute);
-
-        return $response;
+        return $this->update($data, $id, $attribute);
     }
 
     /** Validate request api
@@ -65,13 +65,13 @@ class UserRepository extends RepositoryAbstract
      */
     public function validateRequest(array $request, $type, array $rules_specific = [])
     {
-        $rules = $this->rules($type, $rules_specific);
+        $modelRules = $this->rules($type, $rules_specific);
 
         if ( ! isset($request)) {
             return $this->response->errorNotFound();
         }
 
-        $validator = Validator::make($request, $rules);
+        $validator = Validator::make($request, $modelRules);
         if ($validator->fails()) {
             return $this->response->addData($validator->errors()->toArray())->errorNotFound();
         }
@@ -95,19 +95,19 @@ class UserRepository extends RepositoryAbstract
         switch ($type) {
             case "store":
             case "create":
-                $rules = self::$rules;
+                $modelRules = self::$rules;
                 break;
             case "update":
-                $rules = self::$rules_update;
+                $modelRules = self::$rules_update;
                 break;
             case "password":
-                $rules = self::$rules_password;
+                $modelRules = self::$rules_password;
                 break;
             default:
-                $rules = self::$rules;
+                $modelRules = self::$rules;
                 break;
         }
 
-        return $rules;
+        return $modelRules;
     }
 }

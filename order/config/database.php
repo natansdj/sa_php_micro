@@ -21,7 +21,7 @@ return [
     | you may use many connections at once using the Database library.
     |
     */
-    'default'     => env('DB_CONNECTION', 'mysql'),
+    'default'     => env('DB_CONNECTION', CONST_MYSQL),
     /*
     |--------------------------------------------------------------------------
     | Database Connections
@@ -38,9 +38,9 @@ return [
     |
     */
     'connections' => [
-        'mysql' => [
-            'driver'    => 'mysql',
-            'host'      => env('DB_HOST', 'mysql'),
+        CONST_MYSQL => [
+            'driver'    => CONST_MYSQL,
+            'host'      => env('DB_HOST', 'rdbms'),
             'port'      => env('DB_PORT', 3306),
             'database'  => env('DB_DATABASE', 'dev'),
             'username'  => env('DB_USERNAME', 'dev'),

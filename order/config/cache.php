@@ -1,15 +1,15 @@
 <?php
 
 return [
-    'default' => env('CACHE_DRIVER', 'redis'),
+    'default' => env('CACHE_DRIVER', CONST_REDIS),
 
     'stores' => [
-        'file'  => [
+        'file'      => [
             'driver' => 'file',
             'path'   => storage_path('framework/cache'),
         ],
-        'redis' => [
-            'driver'     => 'redis',
+        CONST_REDIS => [
+            'driver'     => CONST_REDIS,
             'connection' => 'default',
         ],
     ],

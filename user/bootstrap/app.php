@@ -8,6 +8,8 @@ try {
     //
 }
 
+define('CONST_MYSQL', 'mysql');
+define('CONST_REDIS', 'redis');
 
 /*
 |--------------------------------------------------------------------------
@@ -59,7 +61,12 @@ $app->register(Core\Providers\ManagerServiceProvider::class);
 */
 $app->router->group([
     'namespace' => 'App\Http\REST',
-], function () {
+], function ($router) {
+    /** @var \Laravel\Lumen\Routing\Router $router */
+    $router->get('/', function () use ($router) {
+        return $router->app->version() . 'user app';
+    });
+
     require __DIR__ . '/../routes/web.php';
 });
 

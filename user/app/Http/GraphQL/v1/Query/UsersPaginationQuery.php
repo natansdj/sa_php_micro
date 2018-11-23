@@ -18,7 +18,7 @@ class UsersPaginationQuery extends Query
         'uri'  => 'query=query{usersPagination(perPage:15,page:1){user{id},meta{total}}}'
     ];
 
-    public function __construct($attributes = [], User $model)
+    public function __construct(User $model, $attributes = [])
     {
         parent::__construct($attributes);
         $this->model = $model;
@@ -47,12 +47,10 @@ class UsersPaginationQuery extends Query
 
     public function resolve($root, $args)
     {
-        $page    = array_get($args, 'page', 1);
+//        $page    = array_get($args, 'page', 1);
         $perPage = array_get($args, 'perPage', 15);
 
-        $users = $this->model->paginate($perPage, ['*']);   //@TODO fix url page
-
-        return $users;
+        return $this->model->paginate($perPage, ['*']);
     }
 
 }
