@@ -128,8 +128,9 @@ class UserController extends ApiBaseController
      */
     public function updatePassword(Request $request)
     {
+        $failed = false;
         if (Gate::denies('users.update', $request)) {
-            return $this->response->errorInternal();
+            $failed = true;
         }
 
         $validator = $this->user->validateRequest($request->only([self::CONST_WORD, 'confirm_password']), self::CONST_WORD);
@@ -140,6 +141,10 @@ class UserController extends ApiBaseController
                 return $this->response->success('User updated');
             }
 
+            $failed = false;
+        }
+
+        if ($failed) {
             return $this->response->errorInternal();
         }
 

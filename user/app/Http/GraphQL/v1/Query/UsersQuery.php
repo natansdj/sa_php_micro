@@ -2,13 +2,14 @@
 
 namespace App\Http\GraphQL\v1\Query;
 
+use App\Repositories\UserRepository as User;
+use Folklore\GraphQL\Support\Query;
 use GraphQL;
 use GraphQL\Type\Definition\Type;
-use Folklore\GraphQL\Support\Query;
-use App\Repositories\UserRepository as User;
 
 class UsersQuery extends Query
 {
+    const CONST_EMAIL = 'email';
 
     public $model;
     protected $attributes = [
@@ -30,9 +31,9 @@ class UsersQuery extends Query
     public function args()
     {
         return [
-            'id'    => ['name' => 'id', 'type' => Type::int()],
-            'email' => ['name' => 'email', 'type' => Type::string()],
-            'name'  => ['name' => 'name', 'type' => Type::string()],
+            'id'              => ['name' => 'id', 'type' => Type::int()],
+            self::CONST_EMAIL => ['name' => self::CONST_EMAIL, 'type' => Type::string()],
+            'name'            => ['name' => 'name', 'type' => Type::string()],
         ];
     }
 
@@ -40,8 +41,8 @@ class UsersQuery extends Query
     {
         if (isset($args['id'])) {
             return array($this->model->find($args['id']));
-        } else if (isset($args['email'])) {
-            return array($this->model->findBy('email', $args['email']));
+        } else if (isset($args[ self::CONST_EMAIL ])) {
+            return array($this->model->findBy(self::CONST_EMAIL, $args[ self::CONST_EMAIL ]));
         } else {
             return $this->model->all();
         }

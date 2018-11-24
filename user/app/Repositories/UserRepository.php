@@ -10,12 +10,13 @@ use Illuminate\Support\Facades\Validator;
 class UserRepository extends RepositoryAbstract
 {
     const CONST_REQ_STR_MIN_MAX = 'required|min:5|max:255';
+    const CONST_WORD = 'password';
 
     private static $rules = [
-        'email'    => 'required|email|unique:users,email|max:255',
-        'password' => 'required|min:6|max:20',
-        'username' => self::CONST_REQ_STR_MIN_MAX,
-        'name'     => self::CONST_REQ_STR_MIN_MAX
+        'email'          => 'required|email|unique:users,email|max:255',
+        self::CONST_WORD => 'required|min:6|max:20',
+        'username'       => self::CONST_REQ_STR_MIN_MAX,
+        'name'           => self::CONST_REQ_STR_MIN_MAX
     ];
 
     private static $rules_update = [
@@ -25,7 +26,7 @@ class UserRepository extends RepositoryAbstract
     ];
 
     private static $rules_password = [
-        'password'         => 'required|min:6|max:20',
+        self::CONST_WORD   => 'required|min:6|max:20',
         'confirm_password' => 'required|same:password'
     ];
 
@@ -46,10 +47,10 @@ class UserRepository extends RepositoryAbstract
      *
      * @return mixed
      */
-    public function updateUser(array $data, $id, $attribute = "id")
+    public function updateUser(array $data, $id, $attribute = 'id')
     {
-        if (array_has($data, 'password')) {
-            data_set($data, 'password', Hash::make($data["password"]));
+        if (array_has($data, self::CONST_WORD)) {
+            data_set($data, self::CONST_WORD, Hash::make($data[ self::CONST_WORD ]));
         }
 
         return $this->update($data, $id, $attribute);
@@ -76,7 +77,7 @@ class UserRepository extends RepositoryAbstract
             return $this->response->addData($validator->errors()->toArray())->errorNotFound();
         }
 
-        return $this->response->success("Rules validate success");
+        return $this->response->success('Rules validate success');
     }
 
     /** Use rules based on request
@@ -93,14 +94,14 @@ class UserRepository extends RepositoryAbstract
         }
 
         switch ($type) {
-            case "store":
-            case "create":
+            case 'store':
+            case 'create':
                 $modelRules = self::$rules;
                 break;
-            case "update":
+            case 'update':
                 $modelRules = self::$rules_update;
                 break;
-            case "password":
+            case self::CONST_WORD:
                 $modelRules = self::$rules_password;
                 break;
             default:

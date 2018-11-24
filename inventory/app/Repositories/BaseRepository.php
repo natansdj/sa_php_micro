@@ -20,7 +20,7 @@ abstract class BaseRepository extends RepositoryAbstract
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function validateRequest(array $request, $type = "", array $rules_specific = [])
+    public function validateRequest(array $request, $type = '', array $rules_specific = [])
     {
         $modelRules = $this->rules($type, $rules_specific);
 
@@ -33,7 +33,7 @@ abstract class BaseRepository extends RepositoryAbstract
             return $this->response->addData($validator->errors()->toArray())->errorNotFound();
         }
 
-        return $this->response->success("Rules validate success");
+        return $this->response->success('Rules validate success');
     }
 
     /** Use rules based on request
@@ -50,11 +50,11 @@ abstract class BaseRepository extends RepositoryAbstract
         }
 
         switch ($type) {
-            case "store":
-            case "create":
+            case 'store':
+            case 'create':
                 $modelRules = self::$rules;
                 break;
-            case "update":
+            case 'update':
                 $modelRules = self::$rules_update;
                 break;
             default:

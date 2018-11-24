@@ -45,9 +45,17 @@ class UsersPaginationQuery extends Query
         ];
     }
 
+    /**
+     * note: to get page argument:
+     * $page    = array_get($args, 'page', 1);
+     * 
+     * @param $root
+     * @param $args
+     *
+     * @return mixed
+     */
     public function resolve($root, $args)
     {
-//        $page    = array_get($args, 'page', 1);
         $perPage = array_get($args, 'perPage', 15);
 
         return $this->model->paginate($perPage, ['*']);

@@ -1,12 +1,15 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class UsersCreatePermission extends Migration
 {
     const CONST_PERMISSION_ID = 'permission_id';
+    const CONST_PERMISSION = 'permissions';
+    const CONST_ROLES = 'roles';
+    const CONST_CASCADE = 'cascade';
     const CONST_ROLE_ID = 'role_id';
 
     /**
@@ -18,14 +21,14 @@ class UsersCreatePermission extends Migration
     {
         $tableNames = config('permission.table_names');
 
-        Schema::create($tableNames['permissions'], function (Blueprint $table) {
+        Schema::create($tableNames[ self::CONST_PERMISSION ], function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
             $table->string('guard_name');
             $table->timestamps();
         });
 
-        Schema::create($tableNames['roles'], function (Blueprint $table) {
+        Schema::create($tableNames[ self::CONST_ROLES ], function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
             $table->string('guard_name');
@@ -38,8 +41,8 @@ class UsersCreatePermission extends Migration
 
             $table->foreign(self::CONST_PERMISSION_ID)
                   ->references('id')
-                  ->on($tableNames['permissions'])
-                  ->onDelete('cascade');
+                  ->on($tableNames[ self::CONST_PERMISSION ])
+                  ->onDelete(self::CONST_CASCADE);
 
             $table->primary(
                 [self::CONST_PERMISSION_ID, 'model_id', 'model_type']
@@ -52,8 +55,8 @@ class UsersCreatePermission extends Migration
 
             $table->foreign(self::CONST_ROLE_ID)
                   ->references('id')
-                  ->on($tableNames['roles'])
-                  ->onDelete('cascade');
+                  ->on($tableNames[ self::CONST_ROLES ])
+                  ->onDelete(self::CONST_CASCADE);
 
             $table->primary([self::CONST_ROLE_ID, 'model_id', 'model_type']);
         });
@@ -64,13 +67,13 @@ class UsersCreatePermission extends Migration
 
             $table->foreign(self::CONST_PERMISSION_ID)
                   ->references('id')
-                  ->on($tableNames['permissions'])
-                  ->onDelete('cascade');
+                  ->on($tableNames[ self::CONST_PERMISSION ])
+                  ->onDelete(self::CONST_CASCADE);
 
             $table->foreign(self::CONST_ROLE_ID)
                   ->references('id')
-                  ->on($tableNames['roles'])
-                  ->onDelete('cascade');
+                  ->on($tableNames[ self::CONST_ROLES ])
+                  ->onDelete(self::CONST_CASCADE);
 
             $table->primary([self::CONST_PERMISSION_ID, self::CONST_ROLE_ID]);
 
@@ -90,7 +93,7 @@ class UsersCreatePermission extends Migration
         Schema::drop($tableNames['role_has_permissions']);
         Schema::drop($tableNames['model_has_roles']);
         Schema::drop($tableNames['model_has_permissions']);
-        Schema::drop($tableNames['roles']);
-        Schema::drop($tableNames['permissions']);
+        Schema::drop($tableNames[ self::CONST_ROLES ]);
+        Schema::drop($tableNames[ self::CONST_PERMISSION ]);
     }
 }
