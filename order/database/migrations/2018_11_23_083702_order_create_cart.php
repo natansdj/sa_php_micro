@@ -17,14 +17,30 @@ class OrderCreateCart extends Migration
             $table->increments('id');
 
             $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'))
-                ->attributes(DB::raw('on update CURRENT_TIMESTAMP'))
-                ->extra(DB::raw('ON UPDATE CURRENT_TIMESTAMP'));
+                  ->attributes(DB::raw('on update CURRENT_TIMESTAMP'))
+                  ->extra(DB::raw('ON UPDATE CURRENT_TIMESTAMP'));
+
             $table->double('total');
             $table->string('status');
-            $table->string('product_id');
-            $table->integer('user_id');
+            $table->integer('product_id')->unsigned();
+            $table->integer('user_id')->unsigned();
             $table->integer('stock');
-            $table->integer('invoice_id');
+            $table->integer('invoice_id')->unsigned();
+
+            $table->foreign('product_id')
+                  ->references('id')->on('product')
+                  ->onUpdate('CASCADE')
+                  ->onDelete('CASCADE');
+
+            $table->foreign('user_id')
+                  ->references('id')->on('users')
+                  ->onUpdate('CASCADE')
+                  ->onDelete('CASCADE');
+
+            $table->foreign('invoice_id')
+                  ->references('id')->on('invoice')
+                  ->onUpdate('CASCADE')
+                  ->onDelete('CASCADE');
         });
     }
 

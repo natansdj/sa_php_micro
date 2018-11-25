@@ -15,15 +15,21 @@ class OrderCreateInvoice extends Migration
     {
         Schema::create('invoice', function (Blueprint $table) {
             $table->increments('id');
-            
+
             $table->double('total');
-            $table->integer('user_id');
+            $table->integer('user_id')->unsigned();
             $table->text('address');
             $table->string('status');
             $table->string('method');
+
             $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'))
-                ->attributes(DB::raw('on update CURRENT_TIMESTAMP'))
-                ->extra(DB::raw('ON UPDATE CURRENT_TIMESTAMP'));
+                  ->attributes(DB::raw('on update CURRENT_TIMESTAMP'))
+                  ->extra(DB::raw('ON UPDATE CURRENT_TIMESTAMP'));
+
+            $table->foreign('user_id')
+                  ->references('id')->on('users')
+                  ->onUpdate('CASCADE')
+                  ->onDelete('CASCADE');
         });
     }
 
