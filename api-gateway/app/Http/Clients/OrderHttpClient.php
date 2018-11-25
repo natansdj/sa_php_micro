@@ -29,6 +29,7 @@ class OrderHttpClient
 
     /**
      * @param string $user
+     *
      * @return Collection
      */
     public function getUserOrders(string $user): Collection

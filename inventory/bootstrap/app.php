@@ -3,9 +3,19 @@
 require_once __DIR__ . '/../vendor/autoload.php';
 
 try {
-	( new Dotenv\Dotenv(__DIR__ . '/../') )->load();
+    ( new Dotenv\Dotenv(__DIR__ . '/../') )->load();
 } catch (Dotenv\Exception\InvalidPathException $e) {
-	//
+    //
+}
+
+if ( ! defined('CONST_REDIS')) {
+    define('CONST_REDIS', 'redis');
+}
+if ( ! defined('CONST_MYSQL')) {
+    define('CONST_MYSQL', 'mysql');
+}
+if ( ! defined('CONST_IMAGE')) {
+    define('CONST_IMAGE', 'image');
 }
 
 /*
@@ -20,7 +30,7 @@ try {
 */
 
 $app = new Laravel\Lumen\Application(
-	realpath(__DIR__ . '/../')
+    realpath(__DIR__ . '/../')
 );
 
 $app->instance('path.config', app()->basePath() . DIRECTORY_SEPARATOR . 'config');
@@ -57,9 +67,14 @@ $app->register(Core\Providers\ManagerServiceProvider::class);
 |
 */
 $app->router->group([
-	'namespace' => 'App\Http\REST',
+    'namespace' => 'App\Http\REST',
 ], function ($router) {
-	require __DIR__ . '/../routes/web.php';
+    /** @var \Laravel\Lumen\Routing\Router $router */
+    $router->get('/', function () use ($router) {
+        return $router->app->version() . 'inventory app';
+    });
+
+    require __DIR__ . '/../routes/web.php';
 });
 
 return $app;

@@ -29,16 +29,17 @@ class InventoryHttpClient
 
     /**
      * @param array $products
+     *
      * @return Collection
      */
     public function getProducts(array $products): Collection
     {
         try {
             $res = [];
-            foreach ($products as $product){
-              $res[$product] = json_decode($this->client->get(sprintf('product/%d', $product))
-                  ->getBody()
-                  ->getContents());
+            foreach ($products as $product) {
+                $res[ $product ] = json_decode($this->client->get(sprintf('product/%d', $product))
+                                                            ->getBody()
+                                                            ->getContents());
             }
         } catch (BadResponseException $exception) {
             throw new HttpException(

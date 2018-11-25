@@ -11,11 +11,8 @@
 |
 */
 
-$router->get('/', function () use ($router) {
-    return $router->app->version() . 'order app';
-});
 
-
+/** @var \Laravel\Lumen\Routing\Router $router */
 $router->group(['prefix' => 'order'], function () use ($router) {
 
     $router->get('/', [

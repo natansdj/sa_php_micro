@@ -6,32 +6,34 @@ use Illuminate\Database\Migrations\Migration;
 
 class InventoryCreateProductCategory extends Migration
 {
-	/**
-	 * Run the migrations.
-	 *
-	 * @return void
-	 */
-	public function up()
-	{
-		Schema::create('product_category', function (Blueprint $table) {
-			$table->increments('id');
+    const CONST_CASCADE = 'CASCADE';
 
-			$table->integer('product_id')->unsigned();
-			$table->integer('category_id')->unsigned();
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::create('product_category', function (Blueprint $table) {
+            $table->increments('id');
 
-			$table->foreign('product_id')->references('id')->on('product')->onUpdate('CASCADE')->onDelete('CASCADE');
-			$table->foreign('category_id')->references('id')->on('category')->onUpdate('CASCADE')->onDelete('CASCADE');
-			$table->timestamps();
-		});
-	}
+            $table->integer('product_id')->unsigned();
+            $table->integer('category_id')->unsigned();
 
-	/**
-	 * Reverse the migrations.
-	 *
-	 * @return void
-	 */
-	public function down()
-	{
-		Schema::dropIfExists('product_category');
-	}
+            $table->foreign('product_id')->references('id')->on('product')->onUpdate(self::CONST_CASCADE)->onDelete(self::CONST_CASCADE);
+            $table->foreign('category_id')->references('id')->on('category')->onUpdate(self::CONST_CASCADE)->onDelete(self::CONST_CASCADE);
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::dropIfExists('product_category');
+    }
 }

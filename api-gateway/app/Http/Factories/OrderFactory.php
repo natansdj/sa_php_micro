@@ -35,13 +35,14 @@ class OrderFactory
      */
     public function __construct()
     {
-        $this->userClient = new UserHttpClient();
-        $this->orderClient = new OrderHttpClient();
+        $this->userClient      = new UserHttpClient();
+        $this->orderClient     = new OrderHttpClient();
         $this->inventoryClient = new InventoryHttpClient();
     }
 
     /**
      * @param string $userId
+     *
      * @return Collection
      */
     public function retrieveUserOrders(string $userId): Collection
@@ -49,8 +50,8 @@ class OrderFactory
         try {
             $data = [];
 
-            $user=[];
-            $user["id"] = $userId;
+            $user         = [];
+            $user["id"]   = $userId;
             $user["name"] = $this->userClient->getUser($userId);
             $data["user"] = $user;
 
@@ -59,12 +60,12 @@ class OrderFactory
             $res = [];
             foreach ($this->orderClient->getUserOrders($userId) as $orderId => $order) {
                 if (array_key_exists("products", $order)) {
-                    $res[$orderId] = $this->inventoryClient->getProducts($order["products"])->toArray();
-                };
+                    $res[ $orderId ] = $this->inventoryClient->getProducts($order["products"])->toArray();
+                }
             }
             $data["orders"] = $res;
 
-        }catch (HttpException $exception) {
+        } catch (HttpException $exception) {
             throw new HttpException($exception->getStatusCode(), $exception->getMessage());
         }
 

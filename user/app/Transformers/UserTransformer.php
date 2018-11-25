@@ -7,21 +7,21 @@ use League\Fractal\TransformerAbstract;
 
 class UserTransformer extends TransformerAbstract
 {
-	protected $availableIncludes = [];
+    protected $availableIncludes = [];
 
-	protected $defaultIncludes = [];
+    protected $defaultIncludes = [];
 
-	/**
-	 * @Request User
-	 * @Response array
-	 */
-	public function transform(User $user)
-	{
-		return [
-			'id'       => $user->id,
-			'email'    => $user->email,
-			'name'     => $user->name,
-			'username' => $user->username,
-		];
-	}
+    /**
+     * @Request User
+     * @Response array
+     */
+    public function transform(User $user)
+    {
+        return [
+            'id'       => $user->id,
+            'email'    => $user->email,
+            'name'     => $user->name,
+            'username' => $user->username,
+        ];
+    }
 }

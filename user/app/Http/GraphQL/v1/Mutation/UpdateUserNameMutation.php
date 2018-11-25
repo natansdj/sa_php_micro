@@ -9,41 +9,41 @@ use App\Models\User;
 
 class UpdateUserNameMutation extends Mutation
 {
-	protected $attributes = [
-		'name' => 'updateUserName'
-	];
+    protected $attributes = [
+        'name' => 'updateUserName'
+    ];
 
-	public function type()
-	{
-		return GraphQL::type('User');
-	}
+    public function type()
+    {
+        return GraphQL::type('User');
+    }
 
-	public function args()
-	{
-		return [
-			'id'   => ['name' => 'id', 'type' => Type::string()],
-			'name' => ['name' => 'name', 'type' => Type::string()]
-		];
-	}
+    public function args()
+    {
+        return [
+            'id'   => ['name' => 'id', 'type' => Type::string()],
+            'name' => ['name' => 'name', 'type' => Type::string()]
+        ];
+    }
 
-	public function rules()
-	{
-		return [
-			'id'   => ['required'],
-			'name' => ['required']
-		];
-	}
+    public function rules()
+    {
+        return [
+            'id'   => ['required'],
+            'name' => ['required']
+        ];
+    }
 
-	public function resolve($root, $args)
-	{
-		$user = User::find($args['id']);
-		if ( ! $user) {
-			return null;
-		}
+    public function resolve($root, $args)
+    {
+        $user = User::find($args['id']);
+        if ( ! $user) {
+            return null;
+        }
 
-		$user->name = $args['name'];
-		$user->save();
+        $user->name = $args['name'];
+        $user->save();
 
-		return $user;
-	}
+        return $user;
+    }
 }
