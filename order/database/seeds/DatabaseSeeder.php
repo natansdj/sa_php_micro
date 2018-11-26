@@ -14,6 +14,10 @@ class DatabaseSeeder extends Seeder
         // Disable foreign key checking because truncate() will fail
         DB::statement('SET FOREIGN_KEY_CHECKS = 0');
 
+        \App\Models\Invoice::truncate();
+        \App\Models\Cart::truncate();
+        
+
         // Enable it back
         DB::statement('SET FOREIGN_KEY_CHECKS = 1');
     }

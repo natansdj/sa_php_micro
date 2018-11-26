@@ -11,7 +11,7 @@ namespace App\Repositories;
 use Core\Repository\Eloquent\RepositoryAbstract;
 use Illuminate\Support\Facades\Validator;
 
-class ProductRepository extends RepositoryAbstract
+class InvoiceRepository extends RepositoryAbstract
 {
 	private static $rules = [
 		'user_id' => 'required|exists:users,id',
@@ -34,7 +34,7 @@ class ProductRepository extends RepositoryAbstract
 	 */
 	function model()
 	{
-		return 'App\Models\Product';
+		return 'App\Models\Invoice';
 	}
 
 	/** Validate request api

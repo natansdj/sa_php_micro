@@ -39,7 +39,7 @@ class InvoiceController extends ApiBaseController
      *
      * @Get("/invoice")
      * @Versions({"v1"})
-     * @Response(200, body={"id":1,"name":"Invoice Name","description":"Invoice Description","harga":100000,"stock":5})
+     * @Response(200, body={"id":1,"total":1500000,"user_id":1,"address":"ship address","status":"status name","method":"method name"})
      */
     public function index()
     {
@@ -65,7 +65,7 @@ class InvoiceController extends ApiBaseController
      * @Get("/invoice/{id}")
      * @Versions({"v1"})
      * @Request({"id": "1"})
-     * @Response(200, body={"id":1,"name":"Invoice Name","description":"Invoice Description","harga":100000,"stock":5})
+     * @Response(200, body={"id":1,"total":1500000,"user_id":1,"address":"ship address","status":"status name","method":"method name"})
      */
     public function show($id)
     {
