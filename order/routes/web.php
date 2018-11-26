@@ -23,6 +23,7 @@ $router->group([CONST_PREFIX => 'api/v1'], function () use ($router) {
     $router->group([CONST_PREFIX => 'cart'], function () use ($router) {
         $router->get('/', 'v1\CartController@index');
         $router->get('/{id}', 'v1\CartController@show');
+        $router->post('/', 'v1\CartController@store');
     });
 
     /**
@@ -31,5 +32,6 @@ $router->group([CONST_PREFIX => 'api/v1'], function () use ($router) {
     $router->group([CONST_PREFIX => 'invoice'], function () use ($router) {
         $router->get('/', 'v1\InvoiceController@index');
         $router->get('/{id}', 'v1\InvoiceController@show');
+        $router->post('/', 'v1\InvoiceController@store');
     });
 });
