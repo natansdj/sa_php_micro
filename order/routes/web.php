@@ -11,23 +11,25 @@
 |
 */
 
+if ( ! defined('CONST_PREFIX')) {
+    define('CONST_PREFIX', 'prefix');
+}
 
 /** @var \Laravel\Lumen\Routing\Router $router */
-$router->group(['prefix' => 'order'], function () use ($router) {
+$router->group([CONST_PREFIX => 'api/v1'], function () use ($router) {
+    /**
+     * Cart routes
+     */
+    $router->group([CONST_PREFIX => 'cart'], function () use ($router) {
+        $router->get('/', 'v1\CartController@index');
+        $router->get('/{id}', 'v1\CartController@show');
+    });
 
-    $router->get('/', [
-        'as' => 'get.orders',
-        'uses' => 'OrderController@index'
-    ]);
-
-    $router->get('/{order}', [
-        'as' => 'get.order',
-        'uses' => 'OrderController@show'
-    ]);
-
-    $router->get('/user/{user}', [
-        'as' => 'get.user.orders',
-        'uses' => 'OrderController@showByUser'
-    ]);
-
+    /**
+     * Invoice routes
+     */
+    $router->group([CONST_PREFIX => 'invoice'], function () use ($router) {
+        $router->get('/', 'v1\InvoiceController@index');
+        $router->get('/{id}', 'v1\InvoiceController@show');
+    });
 });
