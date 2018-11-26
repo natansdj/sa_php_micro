@@ -55,6 +55,6 @@ class Invoice extends Model
      */
     public function cart()
     {
-        return $this->hasMany(\App\Models\Cart::class, 'cart');
+        return $this->hasMany(\App\Models\Cart::class);
     }
 }

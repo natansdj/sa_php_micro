@@ -26,7 +26,6 @@ class CartTransformer extends TransformerAbstract
             'user_id'       => $model->user_id,
             'stock'         => $model->stock,
             'invoice_id'    => $model->invoice_id,
-
         ];
     }
 }
