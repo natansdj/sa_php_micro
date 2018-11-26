@@ -27,6 +27,8 @@ class Invoice extends Model
      */
     protected $hidden = ['created_at'];
 
+    public $timestamps = false;
+
     public function __construct(array $attributes = [])
     {
         $this->bootREST();

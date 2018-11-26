@@ -89,7 +89,7 @@ class InvoiceController extends ApiBaseController
      *
      * @Post("/invoice")
      * @Versions({"v1"})
-     * @Request(array -> {"id":1,"name":"Invoice Name","description":"Invoice Description","harga":100000,"stock":5})
+     * @Request(array -> {"total":1200000,"user_id":1,"address":"ship address","status":"status name","method":"method name"})
      * @Response(200, success or error)
      */
     public function store(Request $request)
@@ -115,7 +115,7 @@ class InvoiceController extends ApiBaseController
      *
      * @Put("/invoice/{id}")
      * @Versions({"v1"})
-     * @Request(array -> {"id":1,"name":"Invoice Name","description":"Invoice Description","harga":100000,"stock":5}, id)
+     * @Request(array -> {"total":1200000,"user_id":1,"address":"ship address","status":"status name","method":"method name"}, id)
      * @Response(200, success or error)
      */
     public function update(Request $request)
