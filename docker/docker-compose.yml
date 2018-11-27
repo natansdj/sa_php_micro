@@ -1,0 +1,161 @@
+version: '2'
+
+services:
+  proxy:
+    image: traefik:alpine
+    command: --web --docker --docker.domain=lm.local --docker.exposedbydefault=false --logLevel=DEBUG --configFile=/etc/traefik/traefik.toml
+    container_name: lm_proxy    
+    networks:
+      - webgateway
+    ports:
+      - "80:80"
+      - "8080:8080"
+    restart: always
+    mem_limit: 200m
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./traefik/traefik.toml:/etc/traefik/traefik.toml
+      - ./traefik/log:/log
+
+
+  rdbms:
+    container_name: lm_rdbms
+    restart: always
+    mem_limit: 1g
+    networks:
+      - webgateway
+      - web
+    #############
+    ### MYSQL ###
+    #############
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: dev
+      MYSQL_USER: dev
+      MYSQL_PASSWORD: secret
+    volumes:
+      - ./rdbms/data:/var/lib/mysql
+      - ./rdbms/mysql-57-docker.cnf:/etc/mysql/conf.d/docker.cnf
+
+
+  adminer:
+    image: hardware/adminer
+    container_name: lm_adminer
+    depends_on:
+      - rdbms
+    restart: always
+    mem_limit: 100m
+    networks:
+      - webgateway
+      - web
+    labels:
+      - "traefik.enable=true"
+      - "traefik.frontend.rule=Host:adminer.lm.local"
+      - "traefik.backend=adminer"
+      - "traefik.backend.port=8888"
+      - "traefik.port=8888"
+      - "traefik.docker.network=webgateway"
+
+
+  redis:
+    image: redis:4-alpine
+    container_name: lm_redis
+    networks:
+      - webgateway
+      - web
+    volumes:
+      - ./redis/data:/data
+    restart: always
+    mem_limit: 200m
+
+
+  # Use it with command: docker-compose run redis-cli
+  redis-cli:
+    container_name: lm_redis-cli
+    image: redis:4-alpine
+    links:
+      - redis
+    command: redis-cli -h redis
+
+
+  order:
+    build:
+      context: order/php-apache
+    container_name: lm_order
+    volumes:
+      - ../order:/var/www/html
+      - ./order/php-apache/xdebug.ini:/user/local/etc/php/conf.d/xdebug.ini
+    networks:
+      - webgateway
+      - web
+    restart: always
+    labels:
+      - "traefik.enable=true"
+      - "traefik.frontend.rule=Host:order.lm.local"
+      - "traefik.backend=order"
+      - "traefik.docker.network=webgateway"
+
+
+  user:
+    build:
+      context: user/php-apache
+    container_name: lm_user
+    volumes:
+      - ../user:/var/www/html
+      - ./user/php-apache/xdebug.ini:/user/local/etc/php/conf.d/xdebug.ini
+    networks:
+      - webgateway
+      - web
+    restart: always
+    labels:
+      - "traefik.enable=true"
+      - "traefik.frontend.rule=Host:user.lm.local"
+      - "traefik.backend=user"
+      - "traefik.docker.network=webgateway"
+
+
+  inventory:
+    build:
+      context: inventory/php-apache
+    container_name: lm_inventory
+    volumes:
+      - ../inventory:/var/www/html
+      - ./inventory/php-apache/xdebug.ini:/user/local/etc/php/conf.d/xdebug.ini
+      - ../inventory/storage/app/public:/var/www/html/public/storage
+    networks:
+      - webgateway
+      - web
+    restart: always
+    labels:
+      - "traefik.enable=true"
+      - "traefik.frontend.rule=Host:inventory.lm.local"
+      - "traefik.backend=inventory"
+      - "traefik.docker.network=webgateway"
+
+
+  api:
+    build:
+      context: api-gateway/php-apache
+    container_name: lm_api
+    volumes:
+      - ../api-gateway:/var/www/html
+      - ./api-gateway/php-apache/xdebug.ini:/user/local/etc/php/conf.d/xdebug.ini
+    networks:
+      - webgateway
+      - web
+    restart: always
+    labels:
+      - "traefik.enable=true"
+      - "traefik.frontend.rule=Host:api.lm.local"
+      - "traefik.backend=api"
+      - "traefik.docker.network=webgateway"
+
+
+networks:
+  webgateway:
+    external:
+      name: webgateway
+  web:
+    external:
+      name: traefik
