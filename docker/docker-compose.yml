@@ -3,7 +3,7 @@ version: '2'
 services:
   proxy:
     image: traefik:alpine
-    command: --web --docker --docker.domain=lm.local --docker.exposedbydefault=false --logLevel=DEBUG --configFile=/etc/traefik/traefik.toml
+    command: --web --docker --docker.domain=sa-php.indovti.com --docker.exposedbydefault=false --logLevel=DEBUG --configFile=/etc/traefik/traefik.toml
     container_name: lm_proxy    
     networks:
       - webgateway
@@ -51,7 +51,7 @@ services:
       - web
     labels:
       - "traefik.enable=true"
-      - "traefik.frontend.rule=Host:adminer.lm.local"
+      - "traefik.frontend.rule=Host:adminer.sa-php.indovti.com"
       - "traefik.backend=adminer"
       - "traefik.backend.port=8888"
       - "traefik.port=8888"
@@ -76,6 +76,8 @@ services:
     image: redis:4-alpine
     links:
       - redis
+    networks:
+      - web
     command: redis-cli -h redis
 
 
@@ -92,7 +94,7 @@ services:
     restart: always
     labels:
       - "traefik.enable=true"
-      - "traefik.frontend.rule=Host:order.lm.local"
+      - "traefik.frontend.rule=Host:order.sa-php.indovti.com"
       - "traefik.backend=order"
       - "traefik.docker.network=webgateway"
 
@@ -110,7 +112,7 @@ services:
     restart: always
     labels:
       - "traefik.enable=true"
-      - "traefik.frontend.rule=Host:user.lm.local"
+      - "traefik.frontend.rule=Host:user.sa-php.indovti.com"
       - "traefik.backend=user"
       - "traefik.docker.network=webgateway"
 
@@ -129,7 +131,7 @@ services:
     restart: always
     labels:
       - "traefik.enable=true"
-      - "traefik.frontend.rule=Host:inventory.lm.local"
+      - "traefik.frontend.rule=Host:inventory.sa-php.indovti.com"
       - "traefik.backend=inventory"
       - "traefik.docker.network=webgateway"
 
@@ -147,7 +149,7 @@ services:
     restart: always
     labels:
       - "traefik.enable=true"
-      - "traefik.frontend.rule=Host:api.lm.local"
+      - "traefik.frontend.rule=Host:api.sa-php.indovti.com"
       - "traefik.backend=api"
       - "traefik.docker.network=webgateway"
 

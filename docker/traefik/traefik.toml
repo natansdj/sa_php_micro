@@ -145,7 +145,7 @@ defaultEntryPoints = ["http"]
 # Optional
 # Default: ""
 #
-domain = "lm.local"
+domain = "sa-php.indovti.com"
 
 # Expose containers by default in traefik
 #
