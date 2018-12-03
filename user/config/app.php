@@ -20,7 +20,7 @@ return [
         'Event'        => Illuminate\Support\Facades\Event::class,
         'File'         => Illuminate\Support\Facades\File::class,
         'Gate'         => Illuminate\Support\Facades\Gate::class,
-        'Hash'         => KoenHoeijmakers\LaravelArgon2\HashServiceProvider::class
+        'Hash'         => KoenHoeijmakers\LaravelArgon2\HashServiceProvider::class,
         'Lang'         => Illuminate\Support\Facades\Lang::class,
         'Log'          => Illuminate\Support\Facades\Log::class,
         'Mail'         => Illuminate\Support\Facades\Mail::class,
