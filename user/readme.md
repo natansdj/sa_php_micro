@@ -35,7 +35,19 @@ API JSON Responses.
 
    # Get Current authenticated User
    GET /api/v1/auth/authenticated
+     
+   # Invalidate User Token
+   GET /api/v1/auth/invalidate
+   HEADERS : {
+    Authorization: 'Bearer {{token}}'
+   }
    
+   # Refresh JWT Token
+   GET /api/v1/auth/refresh
+   HEADERS : {
+       Authorization: 'Bearer {{token}}'
+   }
+      
    # Returns spesific user by id
    # or returns 404 'User not found'
    # if user does not exist
