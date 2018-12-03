@@ -47,8 +47,8 @@ class CategoryController extends ApiBaseController
     {
         $models = $this->category->all();
         if ($models) {
-            $data     = $this->api
-                ->includes('product')
+            $data = $this->api
+                //->includes('product')
                 ->serializer(new KeyArraySerializer('category'))
                 ->collection($models, new CategoryTransformer);
             return $this->response->addModelLinks(new $this->category->model())->data($data, 200);
