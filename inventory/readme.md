@@ -4,11 +4,26 @@
 
 API JSON Responses.
 ```
+   # Create Category
+   POST /api/v1/category
+   formData : {
+        'name' => 'some category name'
+    }
+
    # Get all categories
    GET /api/v1/category
    
    # Get category by ID
    GET /api/v1/category/{id}
+
+   # Create Product
+   POST /api/v1/product
+   formData : {
+        'name' => 'some product name',
+        'description' => 'some product description',
+        'harga' => '1000000',
+        'stock' => '5',
+    }
 
    # Get all products
    GET /api/v1/product
@@ -18,6 +33,14 @@ API JSON Responses.
 ```
 
 **JSON Output** Sample
+```
+   # Create Category
+   POST /api/v1/category
+   {
+       "success": "Category created"
+   }
+```
+   
 ```
    # Get all categories
    GET /api/v1/category
@@ -155,6 +178,14 @@ API JSON Responses.
     }
 ```
 
+```
+   # Create Product
+   POST /api/v1/product
+   {
+       "success": "Product created"
+   }
+```
+   
 ```
    # Get all products
    GET /api/v1/product
