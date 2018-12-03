@@ -19,6 +19,10 @@ API JSON Responses.
 ```
    # User Login
    POST /api/v1/auth/login
+   formData : {
+        'email' => 'test@example.org',
+        'password' => '123456',
+    }
    
    # User Register
    POST /api/v1/auth/register
