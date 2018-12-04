@@ -164,4 +164,60 @@ class CartController extends ApiBaseController
         return $this->response->errorInternal();
     }
 
+    /**
+     * Set cart status to order
+     *
+     * Get a JSON representation of update cart.
+     *
+     * @Put("/cart/setpending/{user_id}")
+     * @Versions({"v1"})
+     * @Request(array -> {"status":"pending"}, id)
+     * @Response(200, success or error)
+     */
+    public function setPending(Request $request)
+    {
+        $request->request->add([
+            'status' => 'pending',
+            'invoice_id' => $request->invoice_id
+        ]);
+
+        $model = $this->cart->model->where([
+            ['status', '=', 'incomplete'],
+            ['user_id', '=', $request->user_id],
+        ])->get();
+
+        if ($numberOfCart = $model->count()) {
+            foreach($model as $k => $v) {
+                $request->id = $v->id;
+                
+                $failed = false;
+                /*if (Gate::denies('cart.update', $request)) {
+                    $failed = true;
+                }*/
+
+                $validator = $this->cart->validateRequest($request->all(), "update");
+                if ( ! $failed && $validator->status() == "200") {
+                    $task = $this->cart->update($request->all(), $request->id);
+
+                    if ($task) {
+                        if ($k == ($numberOfCart-1)) {
+                            return $this->response->success("Cart status set to pending");
+                        }
+                        continue;
+                    }
+
+                    $failed = true;
+                }
+
+                if ($failed) {
+                    return $this->response->errorInternal();
+                }
+
+                return $validator;
+            }
+        }
+
+        return $this->response->errorBadRequest();
+    }
+
 }

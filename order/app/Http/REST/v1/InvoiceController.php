@@ -4,6 +4,7 @@ namespace App\Http\REST\v1;
 
 use Core\Http\REST\Controller\ApiBaseController;
 use Core\Helpers\Serializer\KeyArraySerializer;
+
 use App\Repositories\InvoiceRepository as Invoice;
 use App\Transformers\InvoiceTransformer;
 use Gate;
@@ -118,12 +119,14 @@ class InvoiceController extends ApiBaseController
      * @Request(array -> {"total":1200000,"user_id":1,"address":"ship address","status":"status name","method":"method name"}, id)
      * @Response(200, success or error)
      */
-    public function update(Request $request)
+    public function update(Request $request, $id = null)
     {
+        $request->id = ($request->id) ? $request->id : $id;
+
         $failed = false;
-        if (Gate::denies('invoice.update', $request)) {
+        /*if (Gate::denies('invoice.update', $request)) {
             $failed = true;
-        }
+        }*/
 
         $validator = $this->invoice->validateRequest($request->all(), "update");
         if ( ! $failed && $validator->status() == "200") {
@@ -167,18 +170,18 @@ class InvoiceController extends ApiBaseController
     }
 
     /**
-     * Update invoice
+     * Set invoice status to lock
      *
      * Get a JSON representation of update invoice.
      *
-     * @Put("/invoice/order/{id}")
+     * @Put("/invoice/setlock/{id}")
      * @Versions({"v1"})
-     * @Request(array -> {"status":"order"}, id)
+     * @Request(array -> {"status":"lock"}, id)
      * @Response(200, success or error)
      */
-    public function setOrder(Request $request)
+    public function setLock(Request $request)
     {
-        $request->request->add(['status' => 'order']);
+        $request->request->add(['status' => 'lock']);
 
         $failed = false;
         /*if (Gate::denies('invoice.update', $request)) {
@@ -189,7 +192,7 @@ class InvoiceController extends ApiBaseController
         if ( ! $failed && $validator->status() == "200") {
             $task = $this->invoice->update($request->all(), $request->id);
             if ($task) {
-                return $this->response->success("Invoice status set to order");
+                return $this->response->success("Invoice status set to lock");
             }
 
             $failed = true;
@@ -201,4 +204,29 @@ class InvoiceController extends ApiBaseController
 
         return $validator;
     }
+
+    /**
+     * Create or update a new invoice
+     *
+     * Get a JSON representation of new invoice.
+     *
+     * @Post("/invoice/checkout")
+     * @Versions({"v1"})
+     * @Request(array -> {"total":1200000,"user_id":1,"address":"ship address","method":"transfer"})
+     * @Response(200, success or error)
+     */
+    public function checkout(Request $request)
+    {
+        $model = $this->invoice->model->where([
+            ['status', '=', 'open'],
+            ['user_id', '=', $request->user_id],
+        ])->first();
+
+        if ($model) {
+            return $this->update($request, $model->id);
+        } else {
+            return $this->store($request);
+        }
+    }
+
 }

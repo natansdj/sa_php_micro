@@ -24,7 +24,7 @@ class Cart extends Model
      *
      * @var array
      */
-    protected $hidden = ['status', 'invoice_id', 'created_at'];
+    protected $hidden = ['created_at'];
 
     public $timestamps = false;
 

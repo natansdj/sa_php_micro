@@ -25,7 +25,7 @@ class Invoice extends Model
      *
      * @var array
      */
-    protected $hidden = ['status', 'created_at'];
+    protected $hidden = ['created_at'];
 
     public $timestamps = false;
 
