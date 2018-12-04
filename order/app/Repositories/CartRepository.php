@@ -24,7 +24,7 @@ class CartRepository extends RepositoryAbstract
 
     private static $rules_update = [
         'total' => 'numeric',
-        'status' => 'min:5|max:255',
+        'status' => 'min:3|max:255',
         'product_id' => 'exists:product,id',
         'user_id' => 'exists:users,id',
         'stock' => 'numeric',

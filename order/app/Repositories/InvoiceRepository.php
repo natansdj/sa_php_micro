@@ -25,7 +25,7 @@ class InvoiceRepository extends RepositoryAbstract
         'total' => 'numeric',
         'user_id' => 'exists:users,id',
         'address' => 'min:5',
-        'status' => 'min:5|max:255',
+        'status' => 'min:3|max:255',
         'method' => 'min:5|max:255',
     ];
 
