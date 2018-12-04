@@ -165,4 +165,40 @@ class InvoiceController extends ApiBaseController
 
         return $this->response->errorInternal();
     }
+
+    /**
+     * Update invoice
+     *
+     * Get a JSON representation of update invoice.
+     *
+     * @Put("/invoice/order/{id}")
+     * @Versions({"v1"})
+     * @Request(array -> {"status":"order"}, id)
+     * @Response(200, success or error)
+     */
+    public function setOrder(Request $request)
+    {
+        $request->request->add(['status' => 'order']);
+
+        $failed = false;
+        /*if (Gate::denies('invoice.update', $request)) {
+            $failed = true;
+        }*/
+
+        $validator = $this->invoice->validateRequest($request->all(), "update");
+        if ( ! $failed && $validator->status() == "200") {
+            $task = $this->invoice->update($request->all(), $request->id);
+            if ($task) {
+                return $this->response->success("Invoice status set to order");
+            }
+
+            $failed = true;
+        }
+
+        if ($failed) {
+            return $this->response->errorInternal();
+        }
+
+        return $validator;
+    }
 }

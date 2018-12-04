@@ -16,7 +16,7 @@ class Cart extends Model
      * @var array
      */
     protected $fillable = [
-        'total', 'status', 'product_id', 'user_id', 'stock', 'invoice_id'
+        'total', 'product_id', 'user_id', 'stock'
     ];
 
     /**
@@ -24,7 +24,7 @@ class Cart extends Model
      *
      * @var array
      */
-    protected $hidden = ['created_at'];
+    protected $hidden = ['status', 'invoice_id', 'created_at'];
 
     public $timestamps = false;
 

@@ -21,11 +21,12 @@ class OrderCreateCart extends Migration
                   ->extra(DB::raw('ON UPDATE CURRENT_TIMESTAMP'));
 
             $table->double('total');
-            $table->string('status');
+            $table->string('status')->default('incomplete');
             $table->integer('product_id')->unsigned();
             $table->integer('user_id')->unsigned();
             $table->integer('stock');
-            $table->integer('invoice_id')->unsigned();
+            $table->integer('invoice_id')->unsigned()
+                  ->nullable();
 
             $table->foreign('product_id')
                   ->references('id')->on('product')
