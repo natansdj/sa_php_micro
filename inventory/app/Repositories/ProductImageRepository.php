@@ -4,6 +4,11 @@ namespace App\Repositories;
 
 class ProductImageRepository extends BaseRepository
 {
+    /**
+     * @var \App\Models\ProductImage|\Illuminate\Database\Eloquent\Model
+     */
+    public $model;
+    
     protected static $rules = [
         'product_id' => 'required|exists:product,id',
         CONST_IMAGE  => 'required|image',

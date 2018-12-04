@@ -4,6 +4,12 @@ namespace App\Repositories;
 
 class ProductRepository extends BaseRepository
 {
+
+    /**
+     * @var \App\Models\Product|\Illuminate\Database\Eloquent\Model
+     */
+    public $model;
+    
     protected static $rules = [
         'user_id'     => 'required|exists:users,id',
         'name'        => 'required|min:5|max:255',

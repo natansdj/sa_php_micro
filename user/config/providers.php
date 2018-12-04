@@ -25,6 +25,6 @@ return [
     ],
 
     'alias' => [
-        //
+        'Eloquent' => Illuminate\Database\Eloquent\Model::class,
     ],
 ];
