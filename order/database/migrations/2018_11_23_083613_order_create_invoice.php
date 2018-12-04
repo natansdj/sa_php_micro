@@ -19,7 +19,7 @@ class OrderCreateInvoice extends Migration
             $table->double('total');
             $table->integer('user_id')->unsigned();
             $table->text('address');
-            $table->string('status');
+            $table->string('status')->default('open');
             $table->string('method');
 
             $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'))

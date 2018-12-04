@@ -15,11 +15,11 @@ class CartRepository extends RepositoryAbstract
 {
     private static $rules = [
         'total' => 'required|numeric',
-        'status' => 'required|min:5|max:255',
+        'status' => 'min:3|max:255',
         'product_id' => 'required|exists:product,id',
         'user_id' => 'required|exists:users,id',
         'stock' => 'required|numeric',
-        'invoice_id' => 'required|exists:invoice,id'
+        'invoice_id' => 'exists:invoice,id'
     ];
 
     private static $rules_update = [

@@ -17,7 +17,7 @@ class Invoice extends Model
      * @var array
      */
     protected $fillable = [
-        'total', 'user_id', 'address', 'status', 'method'
+        'total', 'user_id', 'address', 'method'
     ];
 
     /**
@@ -25,7 +25,7 @@ class Invoice extends Model
      *
      * @var array
      */
-    protected $hidden = ['created_at'];
+    protected $hidden = ['status', 'created_at'];
 
     public $timestamps = false;
 

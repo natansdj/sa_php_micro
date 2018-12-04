@@ -47,7 +47,7 @@ class CartController extends ApiBaseController
     {
         $models = $this->cart->all();
         if ($models) {
-            $data     = $this->api
+            $data = $this->api
                 ->serializer(new KeyArraySerializer('cart'))
                 ->collection($models, new CartTransformer);
             return $this->response->addModelLinks(new $this->cart->model())->data($data, 200);
@@ -87,7 +87,7 @@ class CartController extends ApiBaseController
      *
      * @Post("/cart")
      * @Versions({"v1"})
-     * @Request(array -> {"total":1200000,"status":"status name","product_id":1,"user_id":1,"stock":1,"invoice_id":1})
+     * @Request(array -> {"total":1200000,"status":"status name","product_id":1,"user_id":1,"stock":1})
      * @Response(200, success or error)
      */
     public function store(Request $request)
