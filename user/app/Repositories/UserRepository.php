@@ -12,6 +12,11 @@ class UserRepository extends RepositoryAbstract
     const CONST_REQ_STR_MIN_MAX = 'required|min:5|max:255';
     const CONST_WORD = 'password';
 
+    /**
+     * @var \App\Models\User|\Illuminate\Database\Eloquent\Model
+     */
+    public $model;
+    
     private static $rules = [
         'email'          => 'required|email|unique:users,email|max:255',
         self::CONST_WORD => 'required|min:6|max:20',

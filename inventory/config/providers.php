@@ -26,6 +26,7 @@ return [
     ],
 
     'alias' => [
-        'Image' => Intervention\Image\Facades\Image::class,
+        'Image'    => Intervention\Image\Facades\Image::class,
+        'Eloquent' => Illuminate\Database\Eloquent\Model::class,
     ],
 ];

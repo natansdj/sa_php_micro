@@ -4,6 +4,11 @@ namespace App\Repositories;
 
 class CategoryRepository extends BaseRepository
 {
+    /**
+     * @var \App\Models\Category|\Illuminate\Database\Eloquent\Model
+     */
+    public $model;
+
     protected static $rules = [
         'name' => 'required|min:5|max:255',
     ];
@@ -21,5 +26,5 @@ class CategoryRepository extends BaseRepository
     {
         return 'App\Models\Category';
     }
-    
+
 }
