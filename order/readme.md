@@ -1,32 +1,32 @@
-# Simple order web service
+# Order Microservice Lumen
 
-A simple order web service build on Laravel Lumen.
+## Endpoints
 
-Data
------------
-It holds 3 orders hardcoded in the `OrderController`:
-```php
-    [
-        "1" => ["user" => "1", "products" => ["1", "2"]],
-        "2" => ["user" => "1", "products" => ["3"] ],
-        "3" => ["user" => "2", "products" => ["1", "3"]],
-    ]
+API JSON Responses.
 ```
+   # All Cart
+   GET /api/v1/cart
+   RESPONSES (200, body={"id":1,"total":1500000,"status":"status name","product_id":1,"user_id":1,"stock":1,"invoice_id":1})
 
-Endpoints
------------
-There are 3 endpoints which are returning JSON Responses.
+   # Show Cart
+   GET /api/v1/cart/{id}
+   RESPONSE (200, body={"id":1,"total":1500000,"status":"status name","product_id":1,"user_id":1,"stock":1,"invoice_id":1})
+   
+   # Add item to Cart
+   POST /api/v1/cart/
+   formData : {"total":1200000,"status":"status name","product_id":1,"user_id":1,"stock":1,"invoice_id":1}
 
-```
-   # Returns all orders
-   GET /order 
+
+
+   # All Invoice
+   GET /api/v1/invoice
+   RESPONSES (200, body={"id":1,"total":1500000,"user_id":1,"address":"ship address","status":"status name","method":"method name"})
+
+   # Show Invoice
+   GET /api/v1/invoice/{id}
+   RESPONSE (200, body={"id":1,"total":1500000,"user_id":1,"address":"ship address","status":"status name","method":"method name"}
    
-   # Returns spesific order by id
-   # or returns 404 'Order not found'
-   # if order does not exist
-   GET /order/{id}
-   
-   # Returns all orders of a spesific user
-   # or returns 404 'No orders found for this user'
-   GET /order/user/{user}
+   # Create new Invoice
+   POST /api/v1/invoice/
+   formData : {"total":1200000,"user_id":1,"address":"ship address","status":"status name","method":"method name"}
 ```

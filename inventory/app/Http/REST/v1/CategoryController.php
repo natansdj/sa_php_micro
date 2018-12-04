@@ -47,8 +47,8 @@ class CategoryController extends ApiBaseController
     {
         $models = $this->category->all();
         if ($models) {
-            $data     = $this->api
-                ->includes('product')
+            $data = $this->api
+                //->includes('product')
                 ->serializer(new KeyArraySerializer('category'))
                 ->collection($models, new CategoryTransformer);
             return $this->response->addModelLinks(new $this->category->model())->data($data, 200);
@@ -80,6 +80,90 @@ class CategoryController extends ApiBaseController
         }
 
         return $this->response->errorNotFound();
+    }
+
+    /**
+     * Create a new category
+     *
+     * Get a JSON representation of new category.
+     *
+     * @Post("/category")
+     * @Versions({"v1"})
+     * @Request(array -> {"name":"Category Name"})
+     * @Response(200, success or error)
+     */
+    public function store(Request $request)
+    {
+        $validator = $this->category->validateRequest($request->all());
+
+        if ($validator->status() == "200") {
+            $task = $this->category->create($request->all());
+            if ($task) {
+                return $this->response->success("Category created");
+            }
+
+            return $this->response->errorInternal();
+        }
+
+        return $validator;
+    }
+
+    /**
+     * Update category
+     *
+     * Get a JSON representation of update category.
+     *
+     * @Put("/category/{id}")
+     * @Versions({"v1"})
+     * @Request(array -> {"name":"Category Name"}, id)
+     * @Response(200, success or error)
+     */
+    public function update(Request $request)
+    {
+        $failed = false;
+        if (Gate::denies('category.update', $request)) {
+            $failed = true;
+        }
+
+        $validator = $this->category->validateRequest($request->all(), "update");
+        if ( ! $failed && $validator->status() == "200") {
+            $task = $this->category->update($request->all(), $request->id);
+            if ($task) {
+                return $this->response->success("Category updated");
+            }
+
+            $failed = true;
+        }
+
+        if ($failed) {
+            return $this->response->errorInternal();
+        }
+
+        return $validator;
+    }
+
+    /**
+     * Delete a specific category
+     *
+     * Get a JSON representation of get category.
+     *
+     * @Delete("/category/{id}")
+     * @Versions({"v1"})
+     * @Request({"id": "1"})
+     * @Response(200, success or error)
+     */
+    public function delete(Request $request)
+    {
+        if (Gate::denies('category.delete', $request)) {
+            return $this->response->errorInternal();
+        }
+
+        $task = $this->category->delete($request->id);
+        if ($task) {
+            return $this->response->success("Category deleted");
+        }
+
+        return $this->response->errorInternal();
     }
 
 }
