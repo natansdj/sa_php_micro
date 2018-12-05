@@ -6,7 +6,7 @@ API JSON Responses.
 ```
 
   # All Cart
-  GET /api/v1/cart
+  GET /api/v1/trolley/{user_id}
 
   # Show Cart
   GET /api/v1/cart/{id}
@@ -25,7 +25,7 @@ API JSON Responses.
    
 
   # All Invoice
-  GET /api/v1/invoice
+  GET /api/v1/invoice/history/{user_id}
 
   # Show Invoice
   GET /api/v1/invoice/{id}
@@ -49,7 +49,7 @@ API JSON Responses.
 ```
 
   # All Cart
-  GET /api/v1/cart
+  GET /api/v1/trolley/{user_id}
   {
     "data": {
       "cart": [
@@ -115,7 +115,7 @@ API JSON Responses.
    
 
   # All Invoice
-  GET /api/v1/invoice
+  GET /api/v1/invoice/history/{user_id}
   {
     "data": {
       "invoice": [
@@ -124,7 +124,7 @@ API JSON Responses.
           "total": 1200000,
           "user_id": 2,
           "address": "Jl. Pasteur",
-          "status": "order",
+          "status": "lock",
           "method": "transfer",
           "created_at": "2018-12-04 01:26:06",
           "cart": [
@@ -132,7 +132,7 @@ API JSON Responses.
               "id": 2,
               "created_at": "2018-12-04 02:41:51",
               "total": 2000,
-              "status": "incomplete",
+              "status": "pending",
               "product_id": 1,
               "user_id": 2,
               "stock": 1,
@@ -142,7 +142,7 @@ API JSON Responses.
               "id": 3,
               "created_at": "2018-12-04 02:43:31",
               "total": 1000000,
-              "status": "incomplete",
+              "status": "pending",
               "product_id": 2,
               "user_id": 2,
               "stock": 1,
@@ -195,7 +195,7 @@ API JSON Responses.
         "total": 4000,
         "user_id": 2,
         "address": "Jl. Pasteur",
-        "status": "order",
+        "status": "lock",
         "method": "transfer",
         "created_at": "2018-12-04 01:26:06",
         "cart": [

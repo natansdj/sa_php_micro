@@ -38,13 +38,16 @@ class InvoiceController extends ApiBaseController
      *
      * Get a JSON representation of all invoice.
      *
-     * @Get("/invoice")
+     * @Get("/invoice/history/{user_id}")
      * @Versions({"v1"})
      * @Response(200, body={"id":1,"total":1500000,"user_id":1,"address":"ship address","status":"status name","method":"method name"})
      */
-    public function index()
+    public function index(Request $request)
     {
-        $models = $this->invoice->paginate();
+        $models = $this->invoice->model->where([
+            ['status', '!=', 'open'],
+            ['user_id', '=', $request->user_id],
+        ])->paginate();
 
         if ($models) {
             $data = $this->api
