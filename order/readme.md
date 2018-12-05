@@ -227,12 +227,17 @@ API JSON Responses.
   # Create new Invoice or update Invoice (status field by default is 'open')
   POST /api/v1/invoice/checkout
   {
-    "success": "Invoice created"
-  }
-
-  POST /api/v1/invoice/checkout
-  {
-    "success": "Invoice updated"
+    "data": {
+      "invoice": {
+        "id": 7,
+        "total": 1200002,
+        "user_id": 3,
+        "address": "Jl. Pasteur",
+        "status": "open",
+        "method": "transfer",
+        "created_at": "2018-12-05 10:09:41"
+      }
+    }
   }
 
   # Set status Invoice to 'lock'
