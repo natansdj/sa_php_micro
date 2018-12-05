@@ -71,14 +71,16 @@ class InvoiceController extends ApiBaseController
      * @Request({"id": "1"})
      * @Response(200, body={"id":1,"total":1500000,"user_id":1,"address":"ship address","status":"status name","method":"method name"})
      */
-    public function show($id)
+    public function show($id, $include_cart = true)
     {
         $model = $this->invoice->find($id);
         if ($model) {
-            $data = $this->api
-                ->includes(['cart'])
-                ->serializer(new KeyArraySerializer('invoice'))
-                ->item($model, new InvoiceTransformer);
+            $data = $this->api;
+            if ($include_cart) {
+                $data = $data->includes(['cart']);
+            }
+            $data = $data->serializer(new KeyArraySerializer('invoice'))
+                         ->item($model, new InvoiceTransformer);
 
             return $this->response->data($data, 200);
         }
@@ -91,7 +93,7 @@ class InvoiceController extends ApiBaseController
      *
      * Get a JSON representation of new invoice.
      *
-     * @Post("/invoice")
+     * @Post("/invoice/store")
      * @Versions({"v1"})
      * @Request(array -> {"total":1200000,"user_id":1,"address":"ship address","status":"status name","method":"method name"})
      * @Response(200, success or error)
@@ -103,7 +105,7 @@ class InvoiceController extends ApiBaseController
         if ($validator->status() == "200") {
             $task = $this->invoice->create($request->all());
             if ($task) {
-                return $this->response->success("Invoice created");
+                return $this->show($task->id, false);
             }
 
             return $this->response->errorInternal();
@@ -117,7 +119,7 @@ class InvoiceController extends ApiBaseController
      *
      * Get a JSON representation of update invoice.
      *
-     * @Put("/invoice/{id}")
+     * @Put("/invoice/update/{id}")
      * @Versions({"v1"})
      * @Request(array -> {"total":1200000,"user_id":1,"address":"ship address","status":"status name","method":"method name"}, id)
      * @Response(200, success or error)
@@ -133,12 +135,8 @@ class InvoiceController extends ApiBaseController
 
         $validator = $this->invoice->validateRequest($request->all(), "update");
         if ( ! $failed && $validator->status() == "200") {
-            $task = $this->invoice->update($request->all(), $request->id);
-            if ($task) {
-                return $this->response->success("Invoice updated");
-            }
-
-            $failed = true;
+            $this->invoice->update($request->all(), $request->id);
+            return $this->show($request->id, false);
         }
 
         if ($failed) {
