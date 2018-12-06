@@ -20,27 +20,21 @@ API JSON Responses.
     "stock":1
   }
 
-  # Set status Cart to 'pending'
-  PUT /api/v1/cart/setpending/{invoice_id}/{user_id}
-   
+  # Update item on Cart
+  POST /api/v1/cart/update/{id}
+  formData : {
+    "stock":1
+  }
+
+  # Delete item on Cart
+  GET /api/v1/cart/delete/{id}
+
 
   # All Invoice
   GET /api/v1/invoice/history/{user_id}
 
   # Show Invoice
   GET /api/v1/invoice/{id}
-
-  # Create new Invoice or update Invoice (status field by default is 'open')
-  POST /api/v1/invoice/checkout
-  formData : {
-    "total":1200000,
-    "user_id":1,
-    "address":"ship address",
-    "method":"method name"
-  }
-
-  # Set status Invoice to 'lock'
-  PUT /api/v1/invoice/setlock/{id}
 
    
 ```
@@ -105,12 +99,6 @@ API JSON Responses.
   POST /api/v1/cart/
   {
     "success": "Cart created"
-  }
-
-  # Set status Cart to 'pending'
-  PUT /api/v1/cart/setpending/{invoice_id}/{user_id}
-  {
-    "success": "Cart status set to pending"
   }
    
 
@@ -222,28 +210,6 @@ API JSON Responses.
         ]
       }
     }
-  }
-
-  # Create new Invoice or update Invoice (status field by default is 'open')
-  POST /api/v1/invoice/checkout
-  {
-    "data": {
-      "invoice": {
-        "id": 7,
-        "total": 1200002,
-        "user_id": 3,
-        "address": "Jl. Pasteur",
-        "status": "open",
-        "method": "transfer",
-        "created_at": "2018-12-05 10:09:41"
-      }
-    }
-  }
-
-  # Set status Invoice to 'lock'
-  PUT /api/v1/invoice/setlock/{id}
-  {
-    "success": "Invoice status set to lock"
   }
 
 
