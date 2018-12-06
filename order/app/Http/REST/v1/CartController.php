@@ -124,9 +124,9 @@ class CartController extends ApiBaseController
     public function update(Request $request)
     {
         $failed = false;
-        if (Gate::denies('cart.update', $request)) {
+        /*if (Gate::denies('cart.update', $request)) {
             $failed = true;
-        }
+        }*/
 
         $validator = $this->cart->validateRequest($request->all(), "update");
         if ( ! $failed && $validator->status() == "200") {
@@ -157,9 +157,9 @@ class CartController extends ApiBaseController
      */
     public function delete(Request $request)
     {
-        if (Gate::denies('cart.delete', $request)) {
+        /*if (Gate::denies('cart.delete', $request)) {
             return $this->response->errorInternal();
-        }
+        }*/
 
         $task = $this->cart->delete($request->id);
         if ($task) {

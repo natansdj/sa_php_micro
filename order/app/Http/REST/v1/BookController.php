@@ -210,6 +210,16 @@ class BookController extends ApiBaseController
         return $this->response->errorBadRequest();
     }
 
+    /**
+     * Checkout
+     *
+     * Get a JSON representation of new/updated Invoice.
+     *
+     * @Post("/book/checkout")
+     * @Versions({"v1"})
+     * @Request(array -> {"total":1200000,"user_id":1,"address":"ship address","method":"pay method"})
+     * @Response(200, success or error)
+     */
     public function checkout(Request $request)
     {
         $model = $this->invoice->model->where([
@@ -238,6 +248,16 @@ class BookController extends ApiBaseController
         return $this->response->errorInternal();
     }
 
+    /**
+     * Confirm
+     *
+     * Get a JSON representation of updated Invoice.
+     *
+     * @Post("/book/confirm/{id}")
+     * @Versions({"v1"})
+     * @Request(array -> {"address":"another ship address","method":"another pay method"})
+     * @Response(200, success or error)
+     */
     public function confirm(Request $request)
     {
         // update invoice
@@ -251,6 +271,15 @@ class BookController extends ApiBaseController
         return $this->response->errorInternal();
     }
 
+    /**
+     * Commit
+     *
+     * Set invoice status to lock, also cart status to pending
+     *
+     * @PUT("/book/confirm/{id}")
+     * @Versions({"v1"})
+     * @Response(200, success or error)
+     */
     public function commit(Request $request)
     {
         // set invoice to lock

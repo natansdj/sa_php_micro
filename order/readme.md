@@ -5,13 +5,7 @@
 API JSON Responses.
 ```
 
-  # All Cart
-  GET /api/v1/trolley/{user_id}
-
-  # Show Cart
-  GET /api/v1/cart/{id}
-
-  # Add item to Cart (status field by default is 'incomplete')
+  # Add item to cart (status field by default is 'incomplete')
   POST /api/v1/cart/
   formData : {
     "total":1200000,
@@ -20,14 +14,20 @@ API JSON Responses.
     "stock":1
   }
 
-  # Update item on Cart
+  # Update item in cart
   POST /api/v1/cart/update/{id}
   formData : {
-    "stock":1
+    "stock":12
   }
 
-  # Delete item on Cart
+  # Delete item in cart
   GET /api/v1/cart/delete/{id}
+
+  # Get all item in cart
+  GET /api/v1/trolley/{user_id}
+
+  # Show detail item in cart
+  GET /api/v1/cart/{id}
 
 
   # All Invoice
@@ -36,13 +36,51 @@ API JSON Responses.
   # Show Invoice
   GET /api/v1/invoice/{id}
 
+
+  # Checkout (create or update invoice)
+  POST /api/v1/book/checkout
+  formData : {
+    "user_id":2,
+    "total":1500000,
+    "address":"Jl. Gunung Batu",
+    "method":"Transfer ATM",
+  }
+
+  # Confirm by invoice id
+  POST /api/v1/book/confirm/{id}
+  formData : {
+    "address":"Jl. Surya Sumantri",
+    "method":"internet banking",
+  }
+
+  # Commit by invoice id
+  PUT /api/v1/book/commit/{id}
+
    
 ```
 
 **JSON Output** Sample
 ```
 
-  # All Cart
+  # Add item to cart (status field by default is 'incomplete')
+  POST /api/v1/cart/
+  {
+    "success": "Cart created"
+  }
+
+  # Update item in cart
+  POST /api/v1/cart/update/{id}
+  {
+    "success": "Cart updated"
+  }
+
+  # Delete item in cart
+  GET /api/v1/cart/delete/{id}
+  {
+    "success": "Cart deleted"
+  }
+
+  # Get all item in cart
   GET /api/v1/trolley/{user_id}
   {
     "data": {
@@ -78,7 +116,7 @@ API JSON Responses.
     ]
   }
 
-  # Show Cart
+  # Show detail item in cart
   GET /api/v1/cart/{id}
   {
     "data": {
@@ -95,12 +133,6 @@ API JSON Responses.
     }
   }
 
-  # Add item to Cart (status field by default is 'incomplete')
-  POST /api/v1/cart/
-  {
-    "success": "Cart created"
-  }
-   
 
   # All Invoice
   GET /api/v1/invoice/history/{user_id}
@@ -212,4 +244,86 @@ API JSON Responses.
     }
   }
 
+
+  # Checkout (create or update invoice)
+  POST /api/v1/book/checkout
+  {
+    "data": {
+        "invoice": {
+            "id": 4,
+            "total": 12345678,
+            "user_id": 3,
+            "address": "Jl. Pasteur",
+            "status": "open",
+            "method": "internet banking",
+            "created_at": "2018-12-06 09:38:36",
+            "cart": [
+                {
+                    "id": 5,
+                    "created_at": "2018-12-06 04:58:06",
+                    "total": 1200000,
+                    "status": "incomplete",
+                    "product_id": 1,
+                    "user_id": 3,
+                    "stock": 1,
+                    "invoice_id": 4
+                },
+                {
+                    "id": 8,
+                    "created_at": "2018-12-06 09:38:08",
+                    "total": 1200000,
+                    "status": "incomplete",
+                    "product_id": 2,
+                    "user_id": 3,
+                    "stock": 1,
+                    "invoice_id": 4
+                }
+            ]
+        }
+    }
+  }
+
+  # Confirm by invoice id
+  POST /api/v1/book/confirm/{id}
+  {
+    "data": {
+        "invoice": {
+            "id": 4,
+            "total": 12345678,
+            "user_id": 3,
+            "address": "Jl. Surya Sumantri",
+            "status": "open",
+            "method": "transfer atm",
+            "created_at": "2018-12-06 09:38:36",
+            "cart": [
+                {
+                    "id": 5,
+                    "created_at": "2018-12-06 04:58:06",
+                    "total": 1200000,
+                    "status": "incomplete",
+                    "product_id": 1,
+                    "user_id": 3,
+                    "stock": 1,
+                    "invoice_id": 4
+                },
+                {
+                    "id": 8,
+                    "created_at": "2018-12-06 09:38:08",
+                    "total": 1200000,
+                    "status": "incomplete",
+                    "product_id": 2,
+                    "user_id": 3,
+                    "stock": 1,
+                    "invoice_id": 4
+                }
+            ]
+        }
+    }
+  }
+
+  # Commit by invoice id
+  PUT /api/v1/book/commit/{id}
+  {
+    "success": "OK"
+  }
 
