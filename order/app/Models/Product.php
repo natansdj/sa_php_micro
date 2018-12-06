@@ -1,22 +1,23 @@
 <?php
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use ResponseHTTP\Response\Traits\ModelREST;
 
-class Cart extends Model
+class Product extends Model
 {
     use ModelREST;
-    
-    protected $table = 'cart';
-    
+
+    protected $table = 'product';
+
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'total', 'product_id', 'user_id', 'invoice_id'
+        'name', 'description', 'harga', 'stock'
     ];
 
     /**
@@ -24,9 +25,7 @@ class Cart extends Model
      *
      * @var array
      */
-    protected $hidden = ['created_at'];
-
-    public $timestamps = false;
+    protected $hidden = ['created_at', 'updated_at'];
 
     public function __construct(array $attributes = [])
     {
@@ -39,6 +38,11 @@ class Cart extends Model
         $this->setBasicPath();
         $this->setLinks([
             [
+                $this->rel('category'),
+                $this->href('category'),
+                $this->method('GET')
+            ],
+            [
                 'self',
                 $this->href(),
                 $this->method('GET')
@@ -47,10 +51,18 @@ class Cart extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function product()
+    public function category()
     {
-        return $this->belongsTo(\App\Models\Product::class);
+        return $this->belongsToMany(\App\Models\Category::class, 'product_category');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function image()
+    {
+        return $this->hasMany(\App\Models\ProductImage::class);
     }
 }

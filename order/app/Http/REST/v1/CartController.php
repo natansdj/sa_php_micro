@@ -39,7 +39,7 @@ class CartController extends ApiBaseController
      *
      * Get a JSON representation of all cart.
      *
-     * @Get("/cart/{user_id}")
+     * @Get("/trolley/{user_id}")
      * @Versions({"v1"})
      * @Response(200, body={"id":1,"total":1500000,"status":"status name","product_id":1,"user_id":1,"stock":1,"invoice_id":1})
      */
@@ -52,6 +52,7 @@ class CartController extends ApiBaseController
 
         if ($models) {
             $data = $this->api
+                ->includes('product')
                 ->serializer(new KeyArraySerializer('cart'))
                 ->collection($models, new CartTransformer);
 
@@ -76,6 +77,7 @@ class CartController extends ApiBaseController
         $model = $this->cart->find($id);
         if ($model) {
             $data = $this->api
+                ->includes('product')
                 ->serializer(new KeyArraySerializer('cart'))
                 ->item($model, new CartTransformer);
 
