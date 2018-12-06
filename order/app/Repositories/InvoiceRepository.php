@@ -16,9 +16,9 @@ class InvoiceRepository extends RepositoryAbstract
     private static $rules = [
         'total' => 'required|numeric',
         'user_id' => 'required|exists:users,id',
-        'address' => 'required|min:5',
+        'address' => 'min:5',
         'status' => 'min:3|max:255',
-        'method' => 'required|min:5|max:255',
+        'method' => 'min:5|max:255',
     ];
 
     private static $rules_update = [

@@ -17,7 +17,7 @@ class CartRepository extends RepositoryAbstract
         'total' => 'required|numeric',
         'status' => 'min:3|max:255',
         'product_id' => 'required|exists:product,id',
-        'user_id' => 'required|exists:users,id',
+        'user_id' => 'exists:users,id',
         'stock' => 'required|numeric',
         'invoice_id' => 'exists:invoice,id'
     ];

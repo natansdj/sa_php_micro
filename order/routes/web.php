@@ -26,7 +26,8 @@ $router->group([CONST_PREFIX => 'api/v1'], function () use ($router) {
     $router->group([CONST_PREFIX => 'cart'], function () use ($router) {
         $router->get('/{id}', 'v1\CartController@show');
         $router->post('/', 'v1\CartController@store');
-        $router->put('/setpending/{invoice_id}/{user_id}', 'v1\CartController@setPending');
+        $router->post('/update/{id}', 'v1\CartController@update');
+        $router->get('/delete/{id}', 'v1\CartController@delete');
     });
 
     /**
@@ -35,7 +36,14 @@ $router->group([CONST_PREFIX => 'api/v1'], function () use ($router) {
     $router->group([CONST_PREFIX => 'invoice'], function () use ($router) {
         $router->get('/history/{user_id}', 'v1\InvoiceController@index');
         $router->get('/{id}', 'v1\InvoiceController@show');
-        $router->post('/checkout', 'v1\InvoiceController@checkout');
-        $router->put('/setlock/{id}', 'v1\InvoiceController@setLock');
+    });
+
+    /**
+     * Book routes
+     */
+    $router->group([CONST_PREFIX => 'book'], function () use ($router) {
+        $router->post('/checkout', 'v1\BookController@checkout');
+        $router->post('/confirm/{id}', 'v1\BookController@confirm');
+        $router->put('/commit/{id}', 'v1\BookController@commit');
     });
 });
