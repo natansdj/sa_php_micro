@@ -99,6 +99,23 @@ class CartController extends ApiBaseController
      */
     public function store(Request $request)
     {
+        $models = $this->cart->model->where([
+            ['status', '=', 'incomplete'],
+            ['user_id', '=', $request->user_id],
+            ['product_id', '=', $request->product_id],
+        ])->first();
+
+        // update
+        if ($models) {
+            $task = $this->cart->update([
+                'stock' => ((int) $models->stock + 1)
+            ], $models->id);
+            if ($task) {
+                return $this->response->success("Cart updated");
+            }
+        }
+
+        // create
         $validator = $this->cart->validateRequest($request->all());
 
         if ($validator->status() == "200") {
