@@ -11,6 +11,9 @@ use App\Transformers\InvoiceTransformer;
 use App\Repositories\CartRepository as Cart;
 use App\Transformers\CartTransformer;
 
+use App\Repositories\UserRepository as User;
+use App\Transformers\UserTransformer;
+
 use Gate;
 use Illuminate\Http\Request;
 
@@ -32,16 +35,24 @@ class BookController extends ApiBaseController
     private $cart;
 
     /**
+     * @var User
+     */
+    private $user;
+
+    /**
      * UserController constructor.
      *
      * @param Invoice $invoice
      * @param Cart $cart
+     * @param User $user
      */
-    public function __construct(Invoice $invoice, Cart $cart)
+    public function __construct(Invoice $invoice, Cart $cart, User $user)
     {
         parent::__construct();
+
         $this->invoice = $invoice;
         $this->cart = $cart;
+        $this->user = $user;
     }
 
     public function showInvoice($id)
@@ -210,42 +221,52 @@ class BookController extends ApiBaseController
         return $this->response->errorBadRequest();
     }
 
+    public function getUser($id)
+    {
+        $model = $this->user->find($id);
+        if ($model) {
+            $data = $this->api
+                ->serializer(new KeyArraySerializer('user'))
+                ->item($model, new UserTransformer);
+
+            return $data;
+        }
+
+        return array();
+    }
+
     /**
      * Checkout
      *
      * Get a JSON representation of new/updated Invoice.
      *
-     * @Post("/book/checkout")
+     * @Post("/book/checkout/{user_id}")
      * @Versions({"v1"})
      * @Request(array -> {"total":1200000,"user_id":1,"address":"ship address","method":"pay method"})
      * @Response(200, success or error)
      */
     public function checkout(Request $request)
     {
-        $model = $this->invoice->model->where([
-            ['status', '=', 'open'],
+        $models = $this->cart->model->where([
+            ['status', '=', 'incomplete'],
             ['user_id', '=', $request->user_id],
-        ])->first();
+        ])->get();
 
-        $invoice_id = null;
+        $user = $this->getUser($request->user_id);
 
-        if ($model) {
-            // update invoice
-            $invoice_id = $this->updateInvoice($request, $model->id);
-        } else {
-            // create invoice
-            $invoice_id = $this->storeInvoice($request);
+        if ($models && $user) {
+            $data = $this->api
+                ->includes('product')
+                ->serializer(new KeyArraySerializer('cart'))
+                ->collection($models, new CartTransformer);
+
+            return $this->response->data(
+                array_merge($data, $user),
+                200
+            );
         }
 
-        if (is_int($invoice_id)) {
-            // update cart
-            $this->assignCartInvoice($invoice_id, $request->user_id);
-
-            // show invoice
-            return $this->showInvoice($invoice_id);
-        }
-
-        return $this->response->errorInternal();
+        return $this->response->errorNotFound();
     }
 
     /**
