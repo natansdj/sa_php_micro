@@ -43,6 +43,6 @@ $router->group([CONST_PREFIX => 'api/v1'], function () use ($router) {
      */
     $router->group([CONST_PREFIX => 'book'], function () use ($router) {
         $router->get('/checkout/{user_id}', 'v1\BookController@checkout');
-        $router->put('/commit/{id}', 'v1\BookController@commit');
+        $router->post('/commit/{user_id}', 'v1\BookController@commit');
     });
 });

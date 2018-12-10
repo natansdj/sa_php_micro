@@ -19,7 +19,7 @@ class OrderCreateInvoice extends Migration
             $table->double('total');
             $table->integer('user_id')->unsigned();
             $table->text('address')->nullable();
-            $table->string('status')->default('open')
+            $table->string('status')->default('waiting payment')
                   ->comment = 'waiting payment, packaging, sent, returned';
             $table->string('method')->nullable();
 

@@ -40,7 +40,8 @@ class InvoiceController extends ApiBaseController
      *
      * @Get("/invoice/history/{user_id}")
      * @Versions({"v1"})
-     * @Response(200, body={"id":1,"total":1500000,"user_id":1,"address":"ship address","status":"packaging","method":"transfer atm"})
+     * @Request({"user_id": "1"})
+     * @Response(200, body=[{"id":1,"total":1500000,"user_id":1,"address":"ship address","status":"packaging","method":"transfer atm"}])
      */
     public function index(Request $request)
     {

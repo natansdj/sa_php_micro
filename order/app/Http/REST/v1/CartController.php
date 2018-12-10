@@ -46,6 +46,7 @@ class CartController extends ApiBaseController
      *
      * @Get("/trolley/{user_id}")
      * @Versions({"v1"})
+     * @Request({"user_id": "1"})
      * @Response(200, body={"id":1,"total":1500000,"status":"status name","product_id":1,"user_id":1,"stock":1,"invoice_id":1})
      */
     public function index(Request $request)
@@ -99,7 +100,7 @@ class CartController extends ApiBaseController
      *
      * @Post("/cart")
      * @Versions({"v1"})
-     * @Request(array -> {"total":1200000,"status":"status name","product_id":1,"user_id":1,"stock":1})
+     * @Request(array -> {"user_id":1,"product_id":1,"qty":1})
      * @Response(200, success or error)
      */
     public function store(Request $request)
