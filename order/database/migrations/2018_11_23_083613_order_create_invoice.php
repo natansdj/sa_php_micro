@@ -20,7 +20,7 @@ class OrderCreateInvoice extends Migration
             $table->integer('user_id')->unsigned();
             $table->text('address')->nullable();
             $table->string('status')->default('open')
-                  ->comment = 'open, lock, packaging, sent, finished, canceled';
+                  ->comment = 'waiting payment, packaging, sent, returned';
             $table->string('method')->nullable();
 
             $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'))

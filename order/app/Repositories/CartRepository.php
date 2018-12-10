@@ -14,20 +14,20 @@ use Illuminate\Support\Facades\Validator;
 class CartRepository extends RepositoryAbstract
 {
     private static $rules = [
-        'total' => 'required|numeric',
+        'price' => 'required|numeric',
         'status' => 'min:3|max:255',
         'product_id' => 'required|exists:product,id',
         'user_id' => 'exists:users,id',
-        'stock' => 'required|numeric',
+        'qty' => 'required|numeric',
         'invoice_id' => 'exists:invoice,id'
     ];
 
     private static $rules_update = [
-        'total' => 'numeric',
+        'price' => 'numeric',
         'status' => 'min:3|max:255',
         'product_id' => 'exists:product,id',
         'user_id' => 'exists:users,id',
-        'stock' => 'numeric',
+        'qty' => 'numeric',
         'invoice_id' => 'exists:invoice,id'
     ];
 

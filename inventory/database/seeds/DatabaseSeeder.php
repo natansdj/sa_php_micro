@@ -27,9 +27,9 @@ class DatabaseSeeder extends Seeder
         \App\Models\ProductImage::truncate();
         \App\Models\ProductCategory::truncate();
 
-        factory(\App\Models\Category::class, 5)->create()->each(
+        factory(\App\Models\Category::class, 20)->create()->each(
             function ($category) {
-                factory(\App\Models\Product::class, 2)->create()->each(
+                factory(\App\Models\Product::class, 50)->create()->each(
                     function ($product) use ($category) {
                         factory(App\Models\ProductImage::class)->create(['product_id' => $product->id]);
                         factory(\App\Models\ProductCategory::class)->create([
