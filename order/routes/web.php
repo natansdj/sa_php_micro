@@ -42,8 +42,7 @@ $router->group([CONST_PREFIX => 'api/v1'], function () use ($router) {
      * Book routes
      */
     $router->group([CONST_PREFIX => 'book'], function () use ($router) {
-        $router->post('/checkout', 'v1\BookController@checkout');
-        $router->post('/confirm/{id}', 'v1\BookController@confirm');
-        $router->put('/commit/{id}', 'v1\BookController@commit');
+        $router->get('/checkout/{user_id}', 'v1\BookController@checkout');
+        $router->post('/commit/{user_id}', 'v1\BookController@commit');
     });
 });

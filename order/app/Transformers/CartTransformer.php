@@ -22,11 +22,11 @@ class CartTransformer extends TransformerAbstract
         return [
             'id'            => $model->id,
             'created_at'    => $model->created_at,
-            'total'         => $model->total,
+            'price'         => $model->price,
             'status'        => $model->status,
             'product_id'    => $model->product_id,
             'user_id'       => $model->user_id,
-            'stock'         => $model->stock,
+            'qty'           => $model->qty,
             'invoice_id'    => $model->invoice_id,
         ];
     }

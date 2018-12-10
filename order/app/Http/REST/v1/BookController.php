@@ -11,6 +11,9 @@ use App\Transformers\InvoiceTransformer;
 use App\Repositories\CartRepository as Cart;
 use App\Transformers\CartTransformer;
 
+use App\Repositories\UserRepository as User;
+use App\Transformers\UserTransformer;
+
 use Gate;
 use Illuminate\Http\Request;
 
@@ -32,16 +35,24 @@ class BookController extends ApiBaseController
     private $cart;
 
     /**
+     * @var User
+     */
+    private $user;
+
+    /**
      * UserController constructor.
      *
      * @param Invoice $invoice
      * @param Cart $cart
+     * @param User $user
      */
-    public function __construct(Invoice $invoice, Cart $cart)
+    public function __construct(Invoice $invoice, Cart $cart, User $user)
     {
         parent::__construct();
+
         $this->invoice = $invoice;
         $this->cart = $cart;
+        $this->user = $user;
     }
 
     public function showInvoice($id)
@@ -74,33 +85,6 @@ class BookController extends ApiBaseController
         return $validator;
     }
 
-    public function updateInvoice(Request $request, $id)
-    {
-        $request->id = $id;
-
-        $failed = false;
-        /*if (Gate::denies('invoice.update', $request)) {
-            $failed = true;
-        }*/
-
-        $validator = $this->invoice->validateRequest($request->all(), "update");
-        if ( ! $failed && $validator->status() == "200") {
-            $task = $this->invoice->update($request->all(), $request->id);
-
-            if ($task) {
-                return (int) $request->id;
-            }
-
-            $failed = true;
-        }
-
-        if ($failed) {
-            return $this->response->errorInternal();
-        }
-
-        return $validator;
-    }
-
     public function assignCartInvoice($invoice_id, $user_id)
     {
         $model = $this->cart->model->where([
@@ -110,6 +94,7 @@ class BookController extends ApiBaseController
 
         if ($numberOfCart = $model->count()) {
             $request_all = array(
+                'status' => 'pending',
                 'invoice_id' => $invoice_id
             );
             foreach($model as $k => $v) {
@@ -134,141 +119,52 @@ class BookController extends ApiBaseController
         return $this->response->errorBadRequest();
     }
 
-    public function setInvoiceLock(Request $request, $id)
+    public function getUser($id)
     {
-        $request->id = $id;
+        $model = $this->user->find($id);
+        if ($model) {
+            $data = $this->api
+                ->serializer(new KeyArraySerializer('user'))
+                ->item($model, new UserTransformer);
 
-        $request->request->add([
-            'status' => 'lock'
-        ]);
-
-        $failed = false;
-        /*if (Gate::denies('invoice.update', $request)) {
-            $failed = true;
-        }*/
-
-        $validator = $this->invoice->validateRequest($request->all(), "update");
-        if ( ! $failed && $validator->status() == "200") {
-            $task = $this->invoice->update($request->all(), $request->id);
-            if ($task) {
-                return (int) $request->id;
-            }
-
-            $failed = true;
+            return $data;
         }
 
-        if ($failed) {
-            return $this->response->errorInternal();
-        }
-
-        return $validator;
-    }
-
-    public function setCartPending(Request $request, $id)
-    {
-        $model = $this->invoice->find($id);
-
-        $data = $this->api->includes(['cart'])
-            ->serializer(new KeyArraySerializer('invoice'))
-            ->item($model, new InvoiceTransformer);
-
-        $request->request->add([
-            'status' => 'pending'
-        ]);
-
-        if ($numberOfCart = count($data['invoice']['cart'])) {
-            foreach($data['invoice']['cart'] as $k => $v) {
-                $request->id = $v['id'];
-                
-                $failed = false;
-                /*if (Gate::denies('cart.update', $request)) {
-                    $failed = true;
-                }*/
-
-                $validator = $this->cart->validateRequest($request->all(), "update");
-                if ( ! $failed && $validator->status() == "200") {
-                    $task = $this->cart->update($request->all(), $request->id);
-
-                    if ($task) {
-                        if ($k == ($numberOfCart-1)) {
-                            return (int) $numberOfCart;
-                        }
-                        continue;
-                    }
-
-                    $failed = true;
-                }
-
-                if ($failed) {
-                    return $this->response->errorInternal();
-                }
-
-                return $validator;
-            }
-        }
-
-        return $this->response->errorBadRequest();
+        return array();
     }
 
     /**
      * Checkout
      *
-     * Get a JSON representation of new/updated Invoice.
+     * Get a JSON representation of new/updated Cart.
      *
-     * @Post("/book/checkout")
+     * @GET("/book/checkout/{user_id}")
      * @Versions({"v1"})
-     * @Request(array -> {"total":1200000,"user_id":1,"address":"ship address","method":"pay method"})
-     * @Response(200, success or error)
+     * @Request({"user_id": "1"})
+     * @Response(200, body={"cart":[{"id": 1,"created_at": "2018-12-10 06:08:57","price": 67728,"status": "incomplete","product_id": 1,"user_id": 3,"qty": 1,"invoice_id": null,"product": {"id": 1,"name": "Ergonomic Linen Bottle","description": "Adventures, till she was coming to, but it makes me grow larger, I can say.' This was such a nice.","harga": 67728,"stock": 20}}], "user":{"id": 3,"email": "isai.wiza@example.org","name": "Marisa Gerlach","username": "christ43","phone": "09876543","address": "Street no. 3"}})
      */
     public function checkout(Request $request)
     {
-        $model = $this->invoice->model->where([
-            ['status', '=', 'open'],
+        $models = $this->cart->model->where([
+            ['status', '=', 'incomplete'],
             ['user_id', '=', $request->user_id],
-        ])->first();
+        ])->get();
 
-        $invoice_id = null;
+        $user = $this->getUser($request->user_id);
 
-        if ($model) {
-            // update invoice
-            $invoice_id = $this->updateInvoice($request, $model->id);
-        } else {
-            // create invoice
-            $invoice_id = $this->storeInvoice($request);
+        if ($models && $user) {
+            $data = $this->api
+                ->includes('product')
+                ->serializer(new KeyArraySerializer('cart'))
+                ->collection($models, new CartTransformer);
+
+            return $this->response->data(
+                array_merge($data, $user),
+                200
+            );
         }
 
-        if (is_int($invoice_id)) {
-            // update cart
-            $this->assignCartInvoice($invoice_id, $request->user_id);
-
-            // show invoice
-            return $this->showInvoice($invoice_id);
-        }
-
-        return $this->response->errorInternal();
-    }
-
-    /**
-     * Confirm
-     *
-     * Get a JSON representation of updated Invoice.
-     *
-     * @Post("/book/confirm/{id}")
-     * @Versions({"v1"})
-     * @Request(array -> {"address":"another ship address","method":"another pay method"})
-     * @Response(200, success or error)
-     */
-    public function confirm(Request $request)
-    {
-        // update invoice
-        $invoice_id = $this->updateInvoice($request, $request->id);
-
-        if (is_int($invoice_id)) {
-            // show invoice
-            return $this->showInvoice($invoice_id);
-        }
-
-        return $this->response->errorInternal();
+        return $this->response->errorNotFound();
     }
 
     /**
@@ -276,20 +172,37 @@ class BookController extends ApiBaseController
      *
      * Set invoice status to lock, also cart status to pending
      *
-     * @PUT("/book/confirm/{id}")
+     * @POST("/book/commit/{user_id}")
      * @Versions({"v1"})
-     * @Response(200, success or error)
+     * @Request({"user_id": "1"})
+     * @Response(200, body={"id": 1,"total": 93356,"user_id": 3,"address": "Street no. A","status": "waiting payment","method": "transfer atm","created_at": "2018-12-10 06:37:21","cart": [{"id": 1,"created_at": "2018-12-10 06:08:57","price": 67728,"status": "pending","product_id": 1,"user_id": 3,"qty": 1,"invoice_id": 1}]})
      */
     public function commit(Request $request)
     {
-        // set invoice to lock
-        $setLock = $this->setInvoiceLock($request, $request->id);
-        
-        // set cart to pending
-        $setPending = $this->setCartPending($request, $request->id);
+        $cart = $this->cart->model->where([
+            ['status', '=', 'incomplete'],
+            ['user_id', '=', $request->user_id],
+        ])->get();
 
-        if ($setLock && $setPending) {
-            return $this->response->success();
+        $total = 0;
+        foreach($cart as $v) {
+            $total += (float) $v->price * (int) $v->qty;
+        }
+
+        $request->request->add([
+            'user_id' => $request->user_id,
+            'total' => $total,
+        ]);
+
+        // create invoice
+        $invoice_id = $this->storeInvoice($request);
+
+        if (is_int($invoice_id)) {
+            // update cart
+            $this->assignCartInvoice($invoice_id, $request->user_id);
+
+            // show invoice
+            return $this->showInvoice($invoice_id);
         }
 
         return $this->response->errorInternal();

@@ -7,6 +7,10 @@ use Core\Helpers\Serializer\KeyArraySerializer;
 
 use App\Repositories\CartRepository as Cart;
 use App\Transformers\CartTransformer;
+
+use App\Repositories\ProductRepository as Product;
+use App\Transformers\ProductTransformer;
+
 use Illuminate\Http\Request;
 use Gate;
 
@@ -28,10 +32,11 @@ class CartController extends ApiBaseController
      * @Request Cart
      *
      */
-    public function __construct(Cart $cart)
+    public function __construct(Cart $cart, Product $product)
     {
         parent::__construct();
         $this->cart = $cart;
+        $this->product = $product;
     }
 
     /**
@@ -41,6 +46,7 @@ class CartController extends ApiBaseController
      *
      * @Get("/trolley/{user_id}")
      * @Versions({"v1"})
+     * @Request({"user_id": "1"})
      * @Response(200, body={"id":1,"total":1500000,"status":"status name","product_id":1,"user_id":1,"stock":1,"invoice_id":1})
      */
     public function index(Request $request)
@@ -94,21 +100,27 @@ class CartController extends ApiBaseController
      *
      * @Post("/cart")
      * @Versions({"v1"})
-     * @Request(array -> {"total":1200000,"status":"status name","product_id":1,"user_id":1,"stock":1})
+     * @Request(array -> {"user_id":1,"product_id":1,"qty":1})
      * @Response(200, success or error)
      */
     public function store(Request $request)
     {
+        $product = $this->product->find($request->product_id);
+
         $models = $this->cart->model->where([
-            ['status', '=', 'incomplete'],
             ['user_id', '=', $request->user_id],
-            ['product_id', '=', $request->product_id],
+            ['product_id', '=', $request->product_id]
         ])->first();
+
+        $request->request->add([
+            'price' => $product->harga
+        ]);
 
         // update
         if ($models) {
+            $request->qty = ($request->qty) ? $request->qty : 1;
             $task = $this->cart->update([
-                'stock' => ((int) $models->stock + 1)
+                'qty' => ((int) $models->qty + (int) $request->qty)
             ], $models->id);
             if ($task) {
                 return $this->response->success("Cart updated");

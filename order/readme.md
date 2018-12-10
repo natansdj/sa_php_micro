@@ -37,24 +37,15 @@ API JSON Responses.
   GET /api/v1/invoice/{id}
 
 
-  # Checkout (create or update invoice)
-  POST /api/v1/book/checkout
-  formData : {
-    "user_id":2,
-    "total":1500000,
-    "address":"Jl. Gunung Batu",
-    "method":"Transfer ATM",
-  }
+  # Checkout
+  GET /api/v1/book/checkout/{user_id}
 
-  # Confirm by invoice id
-  POST /api/v1/book/confirm/{id}
+  # Commit
+  POST /api/v1/book/commit/{user_id}
   formData : {
-    "address":"Jl. Surya Sumantri",
-    "method":"internet banking",
+    "address":"Street no. 1A",
+    "method":"internet banking"
   }
-
-  # Commit by invoice id
-  PUT /api/v1/book/commit/{id}
 
    
 ```
@@ -245,85 +236,106 @@ API JSON Responses.
   }
 
 
-  # Checkout (create or update invoice)
-  POST /api/v1/book/checkout
+  # Checkout
+  GET /api/v1/book/checkout
   {
     "data": {
-        "invoice": {
-            "id": 4,
-            "total": 12345678,
-            "user_id": 3,
-            "address": "Jl. Pasteur",
-            "status": "open",
-            "method": "internet banking",
-            "created_at": "2018-12-06 09:38:36",
-            "cart": [
-                {
-                    "id": 5,
-                    "created_at": "2018-12-06 04:58:06",
-                    "total": 1200000,
-                    "status": "incomplete",
-                    "product_id": 1,
-                    "user_id": 3,
-                    "stock": 1,
-                    "invoice_id": 4
-                },
-                {
-                    "id": 8,
-                    "created_at": "2018-12-06 09:38:08",
-                    "total": 1200000,
-                    "status": "incomplete",
-                    "product_id": 2,
-                    "user_id": 3,
-                    "stock": 1,
-                    "invoice_id": 4
-                }
-            ]
+        "cart": [
+            {
+                "id": 1,
+                "created_at": "2018-12-10 06:08:57",
+                "price": 67728,
+                "status": "incomplete",
+                "product_id": 1,
+                "user_id": 3,
+                "qty": 1,
+                "invoice_id": null,
+                "product": [
+                    {
+                        "id": 1,
+                        "name": "Ergonomic Linen Bottle",
+                        "description": "Adventures, till she was coming to, but it makes me grow larger, I can say.' This was such a nice.",
+                        "harga": 67728,
+                        "stock": 20,
+                        "created_at": {
+                            "date": "2018-12-07 06:03:14.000000",
+                            "timezone_type": 3,
+                            "timezone": "UTC"
+                        }
+                    }
+                ]
+            },
+            {
+                "id": 2,
+                "created_at": "2018-12-10 06:09:05",
+                "price": 12814,
+                "status": "incomplete",
+                "product_id": 3,
+                "user_id": 3,
+                "qty": 2,
+                "invoice_id": null,
+                "product": [
+                    {
+                        "id": 3,
+                        "name": "Sleek Wooden Pants",
+                        "description": "Alice, thinking it was very likely true.) Down, down, down. Would the fall was over. However, when.",
+                        "harga": 12814,
+                        "stock": 16,
+                        "created_at": {
+                            "date": "2018-12-07 06:03:14.000000",
+                            "timezone_type": 3,
+                            "timezone": "UTC"
+                        }
+                    }
+                ]
+            }
+        ],
+        "user": {
+            "id": 3,
+            "email": "isai.wiza@example.org",
+            "name": "Marisa Gerlach",
+            "username": "christ43",
+            "phone": "09876543",
+            "address": "Street no. 3"
         }
     }
   }
 
-  # Confirm by invoice id
-  POST /api/v1/book/confirm/{id}
+  # Commit
+  POST /api/v1/book/commit/{user_id}
   {
     "data": {
         "invoice": {
-            "id": 4,
-            "total": 12345678,
+            "id": 1,
+            "total": 93356,
             "user_id": 3,
-            "address": "Jl. Surya Sumantri",
-            "status": "open",
+            "address": "Street no. A",
+            "status": "waiting payment",
             "method": "transfer atm",
-            "created_at": "2018-12-06 09:38:36",
+            "created_at": "2018-12-10 06:37:21",
             "cart": [
                 {
-                    "id": 5,
-                    "created_at": "2018-12-06 04:58:06",
-                    "total": 1200000,
-                    "status": "incomplete",
+                    "id": 1,
+                    "created_at": "2018-12-10 06:08:57",
+                    "price": 67728,
+                    "status": "pending",
                     "product_id": 1,
                     "user_id": 3,
-                    "stock": 1,
-                    "invoice_id": 4
+                    "qty": 1,
+                    "invoice_id": 1
                 },
                 {
-                    "id": 8,
-                    "created_at": "2018-12-06 09:38:08",
-                    "total": 1200000,
-                    "status": "incomplete",
-                    "product_id": 2,
+                    "id": 2,
+                    "created_at": "2018-12-10 06:09:05",
+                    "price": 12814,
+                    "status": "pending",
+                    "product_id": 3,
                     "user_id": 3,
-                    "stock": 1,
-                    "invoice_id": 4
+                    "qty": 2,
+                    "invoice_id": 1
                 }
             ]
         }
     }
-  }
-
-  # Commit by invoice id
-  PUT /api/v1/book/commit/{id}
-  {
-    "success": "OK"
   }
 
