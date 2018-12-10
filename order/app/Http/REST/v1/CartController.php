@@ -108,6 +108,7 @@ class CartController extends ApiBaseController
         $product = $this->product->find($request->product_id);
 
         $models = $this->cart->model->where([
+            ['status', '=', 'incomplete'],
             ['user_id', '=', $request->user_id],
             ['product_id', '=', $request->product_id]
         ])->first();
