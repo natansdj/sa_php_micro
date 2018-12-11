@@ -62,30 +62,22 @@ class CartController extends ApiBaseController
         ])->get();
 
         if ($models) {
-            /*$data = $this->api
-                ->includes('product')
+            $data = $this->api
+                ->includes(['product', 'image', 'category'])
                 ->serializer(new KeyArraySerializer('cart'))
                 ->collection($models, new CartTransformer);
 
-            return $this->response->addModelLinks(new $this->cart->model())->data($data, 200);*/
-
-            $records = $this->api
-                ->serializer(new KeyArraySerializer('cart'))
-                ->collection($models, new CartTransformer);
-
-            $data = array();
-
-            foreach($records['cart'] as $k => $v) {
-                $productModel = $this->product->find($v['product_id']);
-                $productData = $this->api
-                    ->includes(['image', 'category'])
-                    ->serializer(new KeyArraySerializer('product'))
-                    ->item($productModel, new ProductTransformer);
-
-                $data['cart'][$k] = array_merge($v, $productData);
+            // reformat output
+            $new_data = array();
+            foreach($data['cart'] as $k => $v) {
+                $new_data['cart'][$k] = $v;
+                $new_data['cart'][$k]['product'][0]['image'] = $v['image'];
+                $new_data['cart'][$k]['product'][0]['category'] = $v['category'];
+                unset($new_data['cart'][$k]['image']);
+                unset($new_data['cart'][$k]['category']);
             }
 
-            return $this->response->addModelLinks(new $this->cart->model())->data($data, 200);
+            return $this->response->addModelLinks(new $this->cart->model())->data($new_data, 200);
         }
 
         return $this->response->errorNotFound();
@@ -106,9 +98,15 @@ class CartController extends ApiBaseController
         $model = $this->cart->find($id);
         if ($model) {
             $data = $this->api
-                ->includes('product')
+                ->includes(['product', 'image', 'category'])
                 ->serializer(new KeyArraySerializer('cart'))
                 ->item($model, new CartTransformer);
+
+            // reformat output
+            $data['cart']['product'][0]['image'] = $data['cart']['image'];
+            $data['cart']['product'][0]['category'] = $data['cart']['category'];
+            unset($data['cart']['image']);
+            unset($data['cart']['category']);
 
             return $this->response->data($data, 200);
         }
