@@ -53,4 +53,28 @@ class Cart extends Model
     {
         return $this->belongsTo(\App\Models\Product::class);
     }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\hasMany
+     */
+    public function image()
+    {
+        return $this->hasMany(\App\Models\ProductImage::class, 'id', 'product_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function category()
+    {
+        return $this->BelongsToMany(\App\Models\Category::class, 'product_category', 'product_id', 'category_id', 'product_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function user()
+    {
+        return $this->belongsTo(\App\Models\User::class);
+    }
 }

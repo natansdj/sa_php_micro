@@ -76,7 +76,8 @@ class InvoiceController extends ApiBaseController
     {
         $model = $this->invoice->find($id);
         if ($model) {
-            $data = $this->api->includes(['cart'])
+            $data = $this->api
+                ->includes(['cart'])
                 ->serializer(new KeyArraySerializer('invoice'))
                 ->item($model, new InvoiceTransformer);
 

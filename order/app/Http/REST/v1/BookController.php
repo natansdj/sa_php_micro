@@ -150,18 +150,26 @@ class BookController extends ApiBaseController
             ['user_id', '=', $request->user_id],
         ])->get();
 
-        $user = $this->getUser($request->user_id);
-
-        if ($models && $user) {
+        if ($models) {
             $data = $this->api
-                ->includes('product')
+                ->includes(['product', 'image', 'category', 'user'])
                 ->serializer(new KeyArraySerializer('cart'))
                 ->collection($models, new CartTransformer);
 
-            return $this->response->data(
-                array_merge($data, $user),
-                200
-            );
+            $user = array('user' => $data['cart'][0]['user']);
+
+            // retransform output
+            $new_data = array();
+            foreach($data['cart'] as $k => $v) {
+                unset($v['user']);
+                $new_data['cart'][$k] = $v;
+                $new_data['cart'][$k]['product'][0]['image'] = $v['image'];
+                $new_data['cart'][$k]['product'][0]['category'] = $v['category'];
+                unset($new_data['cart'][$k]['image']);
+                unset($new_data['cart'][$k]['category']);
+            }
+
+            return $this->response->data(array_merge($new_data, $user), 200);
         }
 
         return $this->response->errorNotFound();

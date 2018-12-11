@@ -8,7 +8,10 @@ use League\Fractal\TransformerAbstract;
 class CartTransformer extends TransformerAbstract
 {
     protected $availableIncludes = [
-        'product'
+        'product',
+        'image',
+        'category',
+        'user'
     ];
 
     protected $defaultIncludes = [];
@@ -37,5 +40,29 @@ class CartTransformer extends TransformerAbstract
 
         //resourceKey -1 if you want to exclude arrayKey from the data included by the transformer when use KeyArraySerializer
         return $this->collection($products, new ProductTransformer, - 1);
+    }
+
+    public function includeImage(Cart $model)
+    {
+        $images = $model->image()->get();
+
+        //resourceKey -1 if you want to exclude arrayKey from the data included by the transformer when use KeyArraySerializer
+        return $this->collection($images, new ImageTransformer, - 1);
+    }
+
+    public function includeCategory(Cart $model)
+    {
+        $categories = $model->category()->get();
+
+        //resourceKey -1 if you want to exclude arrayKey from the data included by the transformer when use KeyArraySerializer
+        return $this->collection($categories, new CategoryTransformer(), - 1);
+    }
+
+    public function includeUser(Cart $model)
+    {
+        $users = $model->user()->get();
+
+        //resourceKey -1 if you want to exclude arrayKey from the data included by the transformer when use KeyArraySerializer
+        return $this->collection($users, new UserTransformer, - 1);
     }
 }
