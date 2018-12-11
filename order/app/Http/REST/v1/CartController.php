@@ -27,6 +27,11 @@ class CartController extends ApiBaseController
     private $cart;
 
     /**
+     * @var Product
+     */
+    private $product;
+
+    /**
      * Initialize @var Cart
      *
      * @Request Cart
@@ -57,10 +62,28 @@ class CartController extends ApiBaseController
         ])->get();
 
         if ($models) {
-            $data = $this->api
+            /*$data = $this->api
                 ->includes('product')
                 ->serializer(new KeyArraySerializer('cart'))
                 ->collection($models, new CartTransformer);
+
+            return $this->response->addModelLinks(new $this->cart->model())->data($data, 200);*/
+
+            $records = $this->api
+                ->serializer(new KeyArraySerializer('cart'))
+                ->collection($models, new CartTransformer);
+
+            $data = array();
+
+            foreach($records['cart'] as $k => $v) {
+                $productModel = $this->product->find($v['product_id']);
+                $productData = $this->api
+                    ->includes(['image', 'category'])
+                    ->serializer(new KeyArraySerializer('product'))
+                    ->item($productModel, new ProductTransformer);
+
+                $data['cart'][$k] = array_merge($v, $productData);
+            }
 
             return $this->response->addModelLinks(new $this->cart->model())->data($data, 200);
         }

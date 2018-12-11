@@ -43,7 +43,7 @@ class ProductController extends ApiBaseController
      */
     public function index()
     {
-        $models = $this->product->paginate();
+        $models = $this->product->paginate(20);
 
         if ($models) {
             $data = $this->api
