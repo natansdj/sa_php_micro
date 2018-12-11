@@ -10,7 +10,8 @@ class CartTransformer extends TransformerAbstract
     protected $availableIncludes = [
         'product',
         'image',
-        'category'
+        'category',
+        'user'
     ];
 
     protected $defaultIncludes = [];
@@ -55,5 +56,13 @@ class CartTransformer extends TransformerAbstract
 
         //resourceKey -1 if you want to exclude arrayKey from the data included by the transformer when use KeyArraySerializer
         return $this->collection($categories, new CategoryTransformer(), - 1);
+    }
+
+    public function includeUser(Cart $model)
+    {
+        $users = $model->user()->get();
+
+        //resourceKey -1 if you want to exclude arrayKey from the data included by the transformer when use KeyArraySerializer
+        return $this->collection($users, new UserTransformer, - 1);
     }
 }

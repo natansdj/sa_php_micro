@@ -67,7 +67,7 @@ class CartController extends ApiBaseController
                 ->serializer(new KeyArraySerializer('cart'))
                 ->collection($models, new CartTransformer);
 
-            // reformat output
+            // retransform output
             $new_data = array();
             foreach($data['cart'] as $k => $v) {
                 $new_data['cart'][$k] = $v;
@@ -102,7 +102,7 @@ class CartController extends ApiBaseController
                 ->serializer(new KeyArraySerializer('cart'))
                 ->item($model, new CartTransformer);
 
-            // reformat output
+            // retransform output
             $data['cart']['product'][0]['image'] = $data['cart']['image'];
             $data['cart']['product'][0]['category'] = $data['cart']['category'];
             unset($data['cart']['image']);
