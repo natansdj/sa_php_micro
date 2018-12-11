@@ -9,6 +9,7 @@ class InvoiceTransformer extends TransformerAbstract
 {
     protected $availableIncludes = [
         'cart',
+        'user'
     ];
 
     protected $defaultIncludes = [];
@@ -36,5 +37,13 @@ class InvoiceTransformer extends TransformerAbstract
 
         //resourceKey -1 if you want to exclude arrayKey from the data included by the transformer when use KeyArraySerializer
         return $this->collection($carts, new CartTransformer, - 1);
+    }
+
+    public function includeUser(Invoice $model)
+    {
+        $users = $model->user()->get();
+
+        //resourceKey -1 if you want to exclude arrayKey from the data included by the transformer when use KeyArraySerializer
+        return $this->collection($users, new UserTransformer, - 1);
     }
 }

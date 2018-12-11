@@ -41,9 +41,11 @@ class ProductController extends ApiBaseController
      * @Versions({"v1"})
      * @Response(200, body={"id":1,"name":"Product Name","description":"Product Description","harga":100000,"stock":5})
      */
-    public function index()
+    public function index(Request $request)
     {
-        $models = $this->product->paginate(20);
+        $request->page = ($request->page) ? $request->page : 1;
+
+        $models = $this->product->paginate(20, ['*'], 'page', $request->page);
 
         if ($models) {
             $data = $this->api

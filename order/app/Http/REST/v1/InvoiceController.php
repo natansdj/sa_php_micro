@@ -45,14 +45,16 @@ class InvoiceController extends ApiBaseController
      */
     public function index(Request $request)
     {
+        $request->page = ($request->page) ? $request->page : 1;
+
         $models = $this->invoice->model->where([
             ['status', '!=', 'open'],
             ['user_id', '=', $request->user_id],
-        ])->paginate();
+        ])->paginate(10, ['*'], 'page', $request->page);
 
         if ($models) {
             $data = $this->api
-                ->includes(['cart'])
+                ->includes(['cart', 'user'])
                 ->serializer(new KeyArraySerializer('invoice'))
                 ->paginate($models, new InvoiceTransformer());
 
@@ -77,7 +79,7 @@ class InvoiceController extends ApiBaseController
         $model = $this->invoice->find($id);
         if ($model) {
             $data = $this->api
-                ->includes(['cart'])
+                ->includes(['cart', 'user'])
                 ->serializer(new KeyArraySerializer('invoice'))
                 ->item($model, new InvoiceTransformer);
 
