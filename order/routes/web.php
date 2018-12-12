@@ -22,7 +22,7 @@ $router->group([CONST_PREFIX => 'api/v1'], function () use ($router) {
      */
     $router->group([CONST_PREFIX => 'trolley'], function () use ($router) {
         $router->get('/{user_id}', 'v1\CartController@index');
-    });    
+    });
     $router->group([CONST_PREFIX => 'cart'], function () use ($router) {
         $router->get('/{id}', 'v1\CartController@show');
         $router->post('/', 'v1\CartController@store');
