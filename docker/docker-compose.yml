@@ -50,10 +50,16 @@ services:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: root
       MONGO_INITDB_DATABASE: dev
+      MONGO_DATA_DIR: "/data/db"
+      MONGO_LOG_DIR: "/dev/null"
+      MONGODB_USER: "dev"
+      MONGODB_PASS: "secret"
     volumes:
       - ./mongodb/data:/data/db
+#      - ./mongodb/entrypoint/entrypoint.js:/docker-entrypoint-initdb.d/entrypoint.js
+    command: mongod --smallfiles --logpath=/dev/null # --quiet
 
-  mongo-express:
+  mongo-ex:
     image: mongo-express
     container_name: lm_mongo_ex
     networks:
@@ -65,10 +71,17 @@ services:
     environment:
       ME_CONFIG_MONGODB_ADMINUSERNAME: root
       ME_CONFIG_MONGODB_ADMINPASSWORD: root
-
+    labels:
+      - "traefik.enable=true"
+      - "traefik.frontend.rule=Host:mongo.lm.local"
+      - "traefik.backend=mongo"
+      - "traefik.backend.port=8081"
+      - "traefik.port=8081"
+      - "traefik.docker.network=webgateway"
 
   adminer:
-    image: hardware/adminer
+    build:
+      context: adminer
     container_name: lm_adminer
     depends_on:
       - rdbms
