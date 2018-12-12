@@ -20,15 +20,29 @@ $factory->define(App\Models\Category::class, function (Faker\Generator $faker) {
     ];
 });
 
+//Store
+$factory->define(App\Models\Store::class, function (Faker\Generator $faker) {
+    $faker->addProvider(new \Bezhanov\Faker\Provider\Space($faker));
+
+    return [
+        'name' => $faker->spaceCompany,
+        'description' => $faker->agency,
+    ];
+});
+
 //Product
 $factory->define(App\Models\Product::class, function (Faker\Generator $faker) {
     $faker->addProvider(new \Bezhanov\Faker\Provider\Commerce($faker));
+
+    $store_ids = \DB::table('store')->select('id')->get();
+    $store_id  = $faker->randomElement($store_ids)->id;
 
     return [
         'name'        => $faker->productName,
         'description' => $faker->realText(100),
         'harga'       => $faker->randomNumber(5),
         'stock'       => $faker->numberBetween(10, 20),
+        'store_id'    => $store_id,
     ];
 });
 

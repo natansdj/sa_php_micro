@@ -23,7 +23,9 @@ class AppServiceProvider extends ServiceProvider
     /**
      * Load config
      */
-    protected function setupConfig() { }
+    protected function setupConfig() {
+        $this->app->configure('hashing');
+    }
 
     /**
      * Register system providers Kernel/Console/Filesystem etc..
