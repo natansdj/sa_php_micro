@@ -4,7 +4,7 @@ services:
   proxy:
     image: traefik:alpine
     command: --web --docker --docker.domain=lm.local --docker.exposedbydefault=false --logLevel=DEBUG --configFile=/etc/traefik/traefik.toml
-    container_name: lm_proxy    
+    container_name: lm_proxy
     networks:
       - webgateway
     ports:
@@ -37,6 +37,34 @@ services:
     volumes:
       - ./rdbms/data:/var/lib/mysql
       - ./rdbms/mysql-57-docker.cnf:/etc/mysql/conf.d/docker.cnf
+
+
+  mongo:
+    image: mongo:4.0-xenial
+    container_name: lm_mongo
+    networks:
+      - webgateway
+      - web
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+      MONGO_INITDB_DATABASE: dev
+    volumes:
+      - ./mongodb/data:/data/db
+
+  mongo-express:
+    image: mongo-express
+    container_name: lm_mongo_ex
+    networks:
+      - webgateway
+      - web
+    restart: always
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: root
 
 
   adminer:
