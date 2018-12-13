@@ -43,4 +43,15 @@ $router->group([CONST_PREFIX => 'api/v1'], function () use ($router) {
         $router->get('/detail/{id}', 'v1\WishlistController@show');
         $router->get('/delete/{id}', 'v1\WishlistController@delete');
     });
+
+    /**
+     * Store routes
+     */
+    $router->group([CONST_PREFIX => 'store'], function () use ($router) {
+        $router->get('/', 'v1\StoreController@index');
+        $router->get('/{id}', 'v1\StoreController@show');
+        $router->post('/', 'v1\StoreController@store');
+        $router->post('/update/{id}', 'v1\StoreController@update');
+        $router->get('/delete/{id}', 'v1\StoreController@delete');
+    });
 });

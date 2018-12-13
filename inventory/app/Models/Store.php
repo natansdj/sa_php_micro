@@ -20,6 +20,7 @@ class Store extends Model
         'user_id',
         'name',
         'description',
+        'image',
     ];
 
     /**

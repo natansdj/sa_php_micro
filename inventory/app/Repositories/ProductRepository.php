@@ -16,12 +16,16 @@ class ProductRepository extends BaseRepository
         'description' => 'required|min:5',
         'harga'       => 'required|numeric',
         'stock'       => 'required|numeric',
+        'store_id'    => 'required|exists:store,id',
     ];
 
     protected static $rules_update = [
         'user_id'     => 'exists:users,id',
         'name'        => 'min:5|max:255',
-        'description' => 'min:5'
+        'description' => 'min:5',
+        'harga'       => 'numeric',
+        'stock'       => 'numeric',
+        'store_id'    => 'exists:store,id',
     ];
 
     /**

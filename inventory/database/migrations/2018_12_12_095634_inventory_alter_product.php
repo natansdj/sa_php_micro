@@ -28,6 +28,7 @@ class InventoryAlterProduct extends Migration
     public function down()
     {
         Schema::table('product', function($table) {
+            $table->dropForeign('product_store_id_foreign');
             $table->dropColumn('store_id');
         });
     }
