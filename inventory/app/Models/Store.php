@@ -5,11 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use ResponseHTTP\Response\Traits\ModelREST;
 
-class Product extends Model
+class Store extends Model
 {
     use ModelREST;
 
-    protected $table = 'product';
+    protected $table = 'store';
 
     /**
      * The attributes that are mass assignable.
@@ -17,7 +17,10 @@ class Product extends Model
      * @var array
      */
     protected $fillable = [
-        'name', 'description', 'harga', 'stock'
+        'user_id',
+        'name',
+        'description',
+        'image',
     ];
 
     /**
@@ -38,11 +41,6 @@ class Product extends Model
         $this->setBasicPath();
         $this->setLinks([
             [
-                $this->rel('category'),
-                $this->href('category'),
-                $this->method('GET')
-            ],
-            [
                 'self',
                 $this->href(),
                 $this->method('GET')
@@ -51,26 +49,10 @@ class Product extends Model
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-     */
-    public function category()
-    {
-        return $this->belongsToMany(\App\Models\Category::class, 'product_category');
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function image()
-    {
-        return $this->hasMany(\App\Models\ProductImage::class);
-    }
-
-    /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function store()
+    public function user()
     {
-        return $this->belongsTo(\App\Models\Store::class);
+        return $this->belongsTo(\App\Models\User::class);
     }
 }

@@ -49,7 +49,7 @@ class ProductController extends ApiBaseController
 
         if ($models) {
             $data = $this->api
-                ->includes(['image', 'category'])
+                ->includes(['image', 'category', 'store'])
                 ->serializer(new KeyArraySerializer('product'))
                 ->paginate($models, new ProductTransformer());
 
@@ -74,7 +74,7 @@ class ProductController extends ApiBaseController
         $model = $this->product->find($id);
         if ($model) {
             $data = $this->api
-                ->includes(['image', 'category'])
+                ->includes(['image', 'category', 'store'])
                 ->serializer(new KeyArraySerializer('product'))
                 ->item($model, new ProductTransformer);
 

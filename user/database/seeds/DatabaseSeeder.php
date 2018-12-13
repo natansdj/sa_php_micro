@@ -17,7 +17,7 @@ class DatabaseSeeder extends Seeder
         \App\Models\User::truncate();
 
         factory(\App\Models\User::class, 'admin')->create();
-        factory(\App\Models\User::class, 5)->create();
+        factory(\App\Models\User::class, 10)->create();
 
         // Enable it back
         DB::statement('SET FOREIGN_KEY_CHECKS = 1');

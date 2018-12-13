@@ -22,14 +22,18 @@ class DatabaseSeeder extends Seeder
             }
         }
 
+        \App\Models\Store::truncate();
         \App\Models\Category::truncate();
         \App\Models\Product::truncate();
         \App\Models\ProductImage::truncate();
         \App\Models\ProductCategory::truncate();
+        \App\Models\Wishlist::truncate();
+
+        factory(\App\Models\Store::class, 10)->create();
 
         factory(\App\Models\Category::class, 20)->create()->each(
             function ($category) {
-                factory(\App\Models\Product::class, 50)->create()->each(
+                factory(\App\Models\Product::class, 10)->create()->each(
                     function ($product) use ($category) {
                         factory(App\Models\ProductImage::class)->create(['product_id' => $product->id]);
                         factory(\App\Models\ProductCategory::class)->create([
@@ -41,6 +45,7 @@ class DatabaseSeeder extends Seeder
             }
         );
 
+        factory(\App\Models\Wishlist::class, 50)->create();
 
         // Enable it back
         DB::statement('SET FOREIGN_KEY_CHECKS = 1');
