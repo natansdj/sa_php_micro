@@ -23,7 +23,8 @@ class AppServiceProvider extends ServiceProvider
     /**
      * Load config
      */
-    protected function setupConfig() {
+    protected function setupConfig()
+    {
         $this->app->configure('hashing');
     }
 
