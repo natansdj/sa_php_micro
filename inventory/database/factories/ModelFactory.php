@@ -60,11 +60,9 @@ $factory->define(App\Models\ProductCategory::class, function (Faker\Generator $f
 
 //Wishlist
 $factory->define(App\Models\Wishlist::class, function (Faker\Generator $faker) {
-    $user_ids = \DB::table('users')->select('id')->get();
-    $user_id  = $faker->randomElement($user_ids)->id;
 
     return [
-        'user_id'       => $user_id,
+        'user_id'       => $faker->numberBetween(2, 6),
         'product_id'    => $faker->unique()->numberBetween(1, 200),
     ];
 });
@@ -73,7 +71,7 @@ $factory->define(App\Models\Wishlist::class, function (Faker\Generator $faker) {
 $factory->define(App\Models\Store::class, function (Faker\Generator $faker) {
 
     return [
-        'user_id'       => $faker->unique()->numberBetween(2, 11),
+        'user_id'       => $faker->unique()->numberBetween(7, 21),
         'name'          => $faker->company,
         'description'   => $faker->sentence(),
         'image' => $faker->image('public/storage', '640', '480', 'transport', false),

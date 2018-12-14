@@ -7,6 +7,8 @@ $factory->define(\App\Models\User::class, function (Faker\Generator $faker) {
         'password' => '123456', //automatically hashed from User->setPasswordAttribute
         'username' => $faker->userName,
         'name'     => $faker->name,
+        'address'  => $faker->address,
+        'phone'    => $faker->phoneNumber,
     ];
 });
 
