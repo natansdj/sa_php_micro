@@ -14,6 +14,12 @@ if ( ! defined('CONST_REDIS')) {
 if ( ! defined('CONST_MYSQL')) {
     define('CONST_MYSQL', 'mysql');
 }
+if ( ! defined('CONST_MONGO')) {
+    define('CONST_MONGO', 'mongodb');
+}
+if ( ! defined('CONST_IMAGE')) {
+    define('CONST_IMAGE', 'image');
+}
 
 /*
 |--------------------------------------------------------------------------
@@ -35,7 +41,7 @@ $app->instance('path.storage', app()->basePath() . DIRECTORY_SEPARATOR . 'storag
 
 $app->withFacades();
 
-//$app->register(Jenssegers\Mongodb\MongodbServiceProvider::class);
+$app->register(Jenssegers\Mongodb\MongodbServiceProvider::class);
 
 $app->withEloquent();
 

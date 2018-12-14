@@ -11,6 +11,10 @@ RUN apt-get update -yqq && \
 # Extensions PHP
 RUN docker-php-ext-install pdo_mysql intl
 
+# Run install php mongo extension
+RUN apt-get install -y libcurl4-openssl-dev pkg-config libssl-dev
+RUN pecl install mongodb && docker-php-ext-enable mongodb
+
 # Run install php redis extension
 RUN printf "\n" | pecl install -o -f redis \
     &&  rm -rf /tmp/pear \
