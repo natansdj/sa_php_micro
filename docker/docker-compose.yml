@@ -79,6 +79,38 @@ services:
       - "traefik.port=8081"
       - "traefik.docker.network=webgateway"
 
+
+  elastic:
+    image: elasticsearch:5-alpine
+    container_name: dev_elastic
+    ports:
+      - 9200:9200
+      - 9300:9300
+    volumes:
+      - ./elastic/data/data/:/usr/share/elasticsearch/data
+      - ./elastic/data/config/:/usr/share/elasticsearch/config
+      - ./elastic/data/plugins/:/usr/share/elasticsearch/plugins
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    mem_limit: 2g
+    environment:
+      - cluster.name=docker-cluster
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.frontend.rule=Host:elastic.lm.local"
+      - "traefik.backend=elastic"
+      - "traefik.port=9200"
+      - "traefik.backend.port=9200"
+      - "traefik.docker.network=webgateway"
+    networks:
+      - webgateway
+      - web
+
+
   adminer:
     build:
       context: adminer
