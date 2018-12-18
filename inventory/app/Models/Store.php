@@ -55,4 +55,12 @@ class Store extends Model
     {
         return $this->belongsTo(\App\Models\User::class);
     }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function product()
+    {
+        return $this->hasMany(\App\Models\Product::class);
+    }
 }

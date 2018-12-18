@@ -7,6 +7,10 @@ use Core\Helpers\Serializer\KeyArraySerializer;
 
 use App\Repositories\StoreRepository as Store;
 use App\Transformers\StoreTransformer;
+
+use App\Repositories\ProductRepository as Product;
+use App\Transformers\ProductTransformer;
+
 use Illuminate\Http\Request;
 use Gate;
 
@@ -28,10 +32,11 @@ class StoreController extends ApiBaseController
      * @Request Store
      *
      */
-    public function __construct(Store $store)
+    public function __construct(Store $store, Product $product)
     {
         parent::__construct();
         $this->store = $store;
+        $this->product = $product;
     }
 
     /**
@@ -71,9 +76,21 @@ class StoreController extends ApiBaseController
         $model = $this->store->find($id);
         if ($model) {
             $data = $this->api
-                //->includes('product')
+                ->includes(['user', 'product'])
                 ->serializer(new KeyArraySerializer('store'))
                 ->item($model, new StoreTransformer);
+
+            foreach ($data['store']['product'] as $k => $v) {
+                $productModel = $this->product->find($v['id']);
+                if ($productModel) {
+                    $productData = $this->api
+                        ->includes(['image', 'category'])
+                        ->serializer(new KeyArraySerializer('product'))
+                        ->item($productModel, new ProductTransformer);
+
+                    $data['store']['product'][$k] = $productData['product'];
+                }
+            }
 
             return $this->response->data($data, 200);
         }
@@ -119,10 +136,12 @@ class StoreController extends ApiBaseController
      */
     public function update(Request $request)
     {
+        $request->request->remove('name', 'user_id');
+
         $failed = false;
-        if (Gate::denies('store.update', $request)) {
+        /*if (Gate::denies('store.update', $request)) {
             $failed = true;
-        }
+        }*/
 
         $validator = $this->store->validateRequest($request->all(), "update");
         if ( ! $failed && $validator->status() == "200") {
@@ -153,9 +172,9 @@ class StoreController extends ApiBaseController
      */
     public function delete(Request $request)
     {
-        if (Gate::denies('store.delete', $request)) {
+        /*if (Gate::denies('store.delete', $request)) {
             return $this->response->errorInternal();
-        }
+        }*/
 
         $task = $this->store->delete($request->id);
         if ($task) {
