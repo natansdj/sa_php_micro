@@ -54,7 +54,18 @@ class WishlistController extends ApiBaseController
                 ->includes(['user', 'product', 'category', 'image'])
                 ->serializer(new KeyArraySerializer('wishlist'))
                 ->collection($models, new WishlistTransformer);
-            return $this->response->addModelLinks(new $this->wishlist->model())->data($data, 200);
+
+            // retransform output
+            $new_data = array();
+            foreach($data['wishlist'] as $k => $v) {
+                $new_data['wishlist'][$k] = $v;
+                $new_data['wishlist'][$k]['product'][0]['image'] = $v['image'];
+                $new_data['wishlist'][$k]['product'][0]['category'] = $v['category'];
+                unset($new_data['wishlist'][$k]['image']);
+                unset($new_data['wishlist'][$k]['category']);
+            }
+
+            return $this->response->addModelLinks(new $this->wishlist->model())->data($new_data, 200);
         }
 
         return $this->response->errorNotFound();
@@ -78,6 +89,12 @@ class WishlistController extends ApiBaseController
                 ->includes(['user', 'product', 'category' ,'image'])
                 ->serializer(new KeyArraySerializer('wishlist'))
                 ->item($model, new WishlistTransformer);
+
+            // retransform output
+            $data['wishlist']['product'][0]['image'] = $data['wishlist']['image'];
+            $data['wishlist']['product'][0]['category'] = $data['wishlist']['category'];
+            unset($data['wishlist']['image']);
+            unset($data['wishlist']['category']);
 
             return $this->response->data($data, 200);
         }

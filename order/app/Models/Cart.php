@@ -59,7 +59,7 @@ class Cart extends Model
      */
     public function image()
     {
-        return $this->hasMany(\App\Models\ProductImage::class, 'id', 'product_id');
+        return $this->hasMany(\App\Models\ProductImage::class, 'product_id', 'product_id');
     }
 
     /**

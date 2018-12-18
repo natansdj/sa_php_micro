@@ -17,7 +17,7 @@ class InventoryCreateStore extends Migration
             $table->increments('id');
 
             $table->integer('user_id')->unsigned();
-            $table->string('name', 128);
+            $table->string('name', 128)->unique();
             $table->mediumText('description')->nullable();
             $table->string('image')->nullable();
 
