@@ -42,6 +42,7 @@ $router->group([CONST_PREFIX => 'api/v1'], function () use ($router) {
         $router->get('/{user_id}', 'v1\WishlistController@index');
         $router->get('/detail/{id}', 'v1\WishlistController@show');
         $router->get('/delete/{id}', 'v1\WishlistController@delete');
+        $router->post('/', 'v1\WishlistController@store');
     });
 
     /**
