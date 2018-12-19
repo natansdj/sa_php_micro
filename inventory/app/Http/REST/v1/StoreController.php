@@ -184,4 +184,22 @@ class StoreController extends ApiBaseController
         return $this->response->errorInternal();
     }
 
+    public function search(Request $request)
+    {
+        $models = $this->store->model->where([
+            ['name', 'like', '%' . urldecode($request->s) . '%'],
+        ])->orWhere([
+            ['description', 'like', '%' . urldecode($request->s) . '%'],
+        ])->get();
+
+        if ($models) {
+            $data = $this->api
+                ->serializer(new KeyArraySerializer('store'))
+                ->collection($models, new StoreTransformer);
+            return $this->response->addModelLinks(new $this->store->model())->data($data, 200);
+        }
+
+        return $this->response->errorNotFound();
+    }
+
 }
