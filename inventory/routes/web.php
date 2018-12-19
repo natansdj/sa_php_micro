@@ -54,5 +54,6 @@ $router->group([CONST_PREFIX => 'api/v1'], function () use ($router) {
         $router->post('/', 'v1\StoreController@store');
         $router->post('/update/{id}', 'v1\StoreController@update');
         $router->get('/delete/{id}', 'v1\StoreController@delete');
+        $router->get('/search/{s}', 'v1\StoreController@search');
     });
 });
