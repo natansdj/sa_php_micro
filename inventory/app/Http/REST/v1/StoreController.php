@@ -192,7 +192,7 @@ class StoreController extends ApiBaseController
             ['description', 'like', '%' . urldecode($request->s) . '%'],
         ])->get();
 
-        if ($models) {
+        if ($models->count()) {
             $data = $this->api
                 ->serializer(new KeyArraySerializer('store'))
                 ->collection($models, new StoreTransformer);

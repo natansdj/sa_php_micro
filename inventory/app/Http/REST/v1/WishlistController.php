@@ -49,7 +49,7 @@ class WishlistController extends ApiBaseController
             ['user_id', '=', $request->user_id],
         ])->get();
 
-        if ($models) {
+        if ($models->count()) {
             $data = $this->api
                 ->includes(['user', 'product', 'category', 'image'])
                 ->serializer(new KeyArraySerializer('wishlist'))
