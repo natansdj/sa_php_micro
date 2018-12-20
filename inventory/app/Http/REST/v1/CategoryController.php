@@ -7,6 +7,10 @@ use Core\Helpers\Serializer\KeyArraySerializer;
 
 use App\Repositories\CategoryRepository as Category;
 use App\Transformers\CategoryTransformer;
+
+use App\Repositories\ProductRepository as Product;
+use App\Transformers\ProductTransformer;
+
 use Illuminate\Http\Request;
 use Gate;
 
@@ -28,10 +32,11 @@ class CategoryController extends ApiBaseController
      * @Request Category
      *
      */
-    public function __construct(Category $category)
+    public function __construct(Category $category, Product $product)
     {
         parent::__construct();
         $this->category = $category;
+        $this->product = $product;
     }
 
     /**
@@ -48,7 +53,6 @@ class CategoryController extends ApiBaseController
         $models = $this->category->all();
         if ($models) {
             $data = $this->api
-                //->includes('product')
                 ->serializer(new KeyArraySerializer('category'))
                 ->collection($models, new CategoryTransformer);
             return $this->response->addModelLinks(new $this->category->model())->data($data, 200);
@@ -75,6 +79,18 @@ class CategoryController extends ApiBaseController
                 ->includes('product')
                 ->serializer(new KeyArraySerializer('category'))
                 ->item($model, new CategoryTransformer);
+
+            foreach ($data['category']['product'] as $k => $v) {
+                $productModel = $this->product->find($v['id']);
+                if ($productModel) {
+                    $productData = $this->api
+                        ->includes('image')
+                        ->serializer(new KeyArraySerializer('product'))
+                        ->item($productModel, new ProductTransformer);
+
+                    $data['category']['product'][$k] = $productData['product'];
+                }
+            }
 
             return $this->response->data($data, 200);
         }
