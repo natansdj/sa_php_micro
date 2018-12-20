@@ -61,7 +61,7 @@ class CartController extends ApiBaseController
             ['user_id', '=', $request->user_id],
         ])->get();
 
-        if ($models) {
+        if ($models->count()) {
             $data = $this->api
                 ->includes(['product', 'image', 'category'])
                 ->serializer(new KeyArraySerializer('cart'))
@@ -139,7 +139,7 @@ class CartController extends ApiBaseController
         ]);
 
         // update
-        if ($models) {
+        if ($models->count()) {
             $request->qty = ($request->qty) ? $request->qty : 1;
             $task = $this->cart->update([
                 'qty' => ((int) $models->qty + (int) $request->qty)

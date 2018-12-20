@@ -150,7 +150,7 @@ class BookController extends ApiBaseController
             ['user_id', '=', $request->user_id],
         ])->get();
 
-        if ($models) {
+        if ($models->count()) {
             $data = $this->api
                 ->includes(['product', 'image', 'category', 'user'])
                 ->serializer(new KeyArraySerializer('cart'))
