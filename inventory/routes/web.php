@@ -46,17 +46,6 @@ $router->group([CONST_PREFIX => 'api/v1'], function () use ($router) {
     });
 
     /**
-     * Promo routes
-     */
-    $router->group([CONST_PREFIX => 'promo'], function () use ($router) {
-        $router->get('/', 'v1\PromoController@index');
-        $router->get('/{code}', 'v1\PromoController@show');
-        $router->post('/', 'v1\PromoController@store');
-        $router->post('/update/{code}', 'v1\PromoController@update');
-        $router->delete('/{code}', 'v1\PromoController@delete');
-    });
-
-    /**
      * Store routes
      */
     $router->group([CONST_PREFIX => 'store'], function () use ($router) {

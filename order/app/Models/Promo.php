@@ -53,6 +53,6 @@ class Promo extends Model
      */
     public function invoice()
     {
-        return $this->hasMany(\App\Models\Invoice::class);
+        return $this->hasMany(\App\Models\Invoice::class, 'promo_code', 'code');
     }
 }
