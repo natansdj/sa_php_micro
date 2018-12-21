@@ -24,8 +24,8 @@ class PromoTransformer extends TransformerAbstract
             'value'         => $model->value,
             'begin_date'    => $model->begin_date,
             'end_date'      => $model->end_date,
-            //'created_at'    => $model->created_at,
-            //'updated_at'    => $model->updated_at,
+            'created_at'    => $model->created_at,
+            'updated_at'    => $model->updated_at,
         ];
     }
 
