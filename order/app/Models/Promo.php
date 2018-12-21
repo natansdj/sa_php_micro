@@ -5,11 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use ResponseHTTP\Response\Traits\ModelREST;
 
-class Invoice extends Model
+class Promo extends Model
 {
     use ModelREST;
 
-    protected $table = 'invoice';
+    protected $table = 'promo';
 
     /**
      * The attributes that are mass assignable.
@@ -17,7 +17,10 @@ class Invoice extends Model
      * @var array
      */
     protected $fillable = [
-        'total', 'user_id', 'address', 'status', 'method', 'promo_code'
+        'code',
+        'value',
+        'begin_date',
+        'end_date',
     ];
 
     /**
@@ -25,9 +28,7 @@ class Invoice extends Model
      *
      * @var array
      */
-    protected $hidden = ['created_at'];
-
-    public $timestamps = false;
+    protected $hidden = ['created_at', 'updated_at'];
 
     public function __construct(array $attributes = [])
     {
@@ -40,11 +41,6 @@ class Invoice extends Model
         $this->setBasicPath();
         $this->setLinks([
             [
-                $this->rel('cart'),
-                $this->href('cart'),
-                $this->method('GET')
-            ],
-            [
                 'self',
                 $this->href(),
                 $this->method('GET')
@@ -55,24 +51,8 @@ class Invoice extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function cart()
+    public function invoice()
     {
-        return $this->hasMany(\App\Models\Cart::class);
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function user()
-    {
-        return $this->belongsTo(\App\Models\User::class);
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function promo()
-    {
-        return $this->belongsTo(\App\Models\Promo::class, 'promo_code', 'code');
+        return $this->hasMany(\App\Models\Invoice::class);
     }
 }
