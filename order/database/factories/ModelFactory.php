@@ -11,6 +11,17 @@
 |
 */
 
+//Promo Code
+$factory->define(App\Models\Promo::class, function (Faker\Generator $faker) {
+
+    return [
+        'code' =>  strtoupper($faker->colorName),
+        'value' => $faker->randomNumber(5),
+        'begin_date' => $faker->date(),
+        'end_date' => $faker->date(),
+    ];
+});
+
 //Invoice
 $factory->define(App\Models\Invoice::class, function (Faker\Generator $faker) {
     $user_ids = \DB::table('users')->select('id')->get();
@@ -18,10 +29,14 @@ $factory->define(App\Models\Invoice::class, function (Faker\Generator $faker) {
 
     $user = \DB::table('users')->select('address')->find($user_id);
 
+    $promo = \DB::table('promo')->select('code')->get();
+    $promo_code  = $faker->randomElement($promo)->code;
+
     return [
         'user_id' => $user_id,
         'address' => $user->address,
         'method' => $faker->randomElement(array('atm transfer', 'internet banking', 'credit')),
+        'promo_code' => $promo_code,
     ];
 });
 
