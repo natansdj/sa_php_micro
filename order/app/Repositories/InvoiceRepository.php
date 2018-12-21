@@ -19,6 +19,7 @@ class InvoiceRepository extends RepositoryAbstract
         'address' => 'min:5',
         'status' => 'min:3|max:255',
         'method' => 'min:5|max:255',
+        'promo_code' => 'exists:promo,code',
     ];
 
     private static $rules_update = [
@@ -27,6 +28,7 @@ class InvoiceRepository extends RepositoryAbstract
         'address' => 'min:5',
         'status' => 'min:3|max:255',
         'method' => 'min:5|max:255',
+        'promo_code' => 'exists:promo,code',
     ];
 
     /**

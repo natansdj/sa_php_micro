@@ -39,7 +39,7 @@ class DatabaseSeeder extends Seeder
         $date = new DateTime('2019-12-31');
         factory(\App\Models\Promo::class, 1)->create(['end_date' => $date->format('Y-m-d')])->each(
             function ($promo) {
-                factory(\App\Models\Cart::class, 1)->create(['status' => 'pending', 'qty' => 2, 'invoice_id' => 1])->each(
+                factory(\App\Models\Cart::class, 1)->create(['status' => 'pending', 'qty' => 2, 'invoice_id' => 2])->each(
                     function ($cart) use ($promo) {
                         factory(\App\Models\Invoice::class, 1)->create([
                             'total' => ($cart->price * $cart->qty) - $promo->value,

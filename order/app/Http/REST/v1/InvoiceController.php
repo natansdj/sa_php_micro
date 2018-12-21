@@ -54,7 +54,7 @@ class InvoiceController extends ApiBaseController
 
         if ($models) {
             $data = $this->api
-                ->includes(['cart', 'user'])
+                ->includes(['cart', 'user', 'promo'])
                 ->serializer(new KeyArraySerializer('invoice'))
                 ->paginate($models, new InvoiceTransformer());
 
@@ -79,7 +79,7 @@ class InvoiceController extends ApiBaseController
         $model = $this->invoice->find($id);
         if ($model) {
             $data = $this->api
-                ->includes(['cart', 'user'])
+                ->includes(['cart', 'user', 'promo'])
                 ->serializer(new KeyArraySerializer('invoice'))
                 ->item($model, new InvoiceTransformer);
 
