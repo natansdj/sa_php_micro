@@ -7,12 +7,12 @@ use Core\Helpers\Serializer\KeyArraySerializer;
 
 use App\Repositories\InvoiceRepository as Invoice;
 use App\Transformers\InvoiceTransformer;
-
 use App\Repositories\CartRepository as Cart;
 use App\Transformers\CartTransformer;
-
 use App\Repositories\UserRepository as User;
 use App\Transformers\UserTransformer;
+use App\Repositories\PromoRepository as Promo;
+use App\Transformers\PromoTransformer;
 
 use Gate;
 use Illuminate\Http\Request;
@@ -40,19 +40,25 @@ class BookController extends ApiBaseController
     private $user;
 
     /**
+     * @var Promo
+     */
+    private $promo;
+
+    /**
      * UserController constructor.
      *
      * @param Invoice $invoice
      * @param Cart $cart
      * @param User $user
      */
-    public function __construct(Invoice $invoice, Cart $cart, User $user)
+    public function __construct(Invoice $invoice, Cart $cart, User $user, Promo $promo)
     {
         parent::__construct();
 
         $this->invoice = $invoice;
         $this->cart = $cart;
         $this->user = $user;
+        $this->promo = $promo;
     }
 
     public function showInvoice($id)
@@ -195,6 +201,21 @@ class BookController extends ApiBaseController
         $total = 0;
         foreach($cart as $v) {
             $total += (float) $v->price * (int) $v->qty;
+        }
+
+        if ($request->promo_code) {
+            $current_date = date("Y-m-d");
+            $promo = $this->promo->model->where([
+                ['code', '=', $request->promo_code],
+                ['begin_date', '<=', $current_date],
+                ['end_date', '>=', $current_date],
+            ])->first();
+
+            if ($promo) {
+                $total -= (float) $promo->value;
+            } else {
+                return $this->response->error("Promo Code not valid");
+            }
         }
 
         $request->request->add([
