@@ -113,7 +113,20 @@ class StoreController extends ApiBaseController
         $validator = $this->store->validateRequest($request->all());
 
         if ($validator->status() == "200") {
-            $task = $this->store->create($request->all());
+
+            $data = $request->all();
+
+            if ($request->hasFile('image')) {
+                if ($request->file('image')->isValid()) {
+                    $fileName = md5(time()) . "." . $request->file('image')->getClientOriginalExtension();
+                    
+                    $request->file('image')->move('storage/images', $fileName);
+
+                    $data['image'] = $fileName;
+                }
+            }
+
+            $task = $this->store->create($data);
             if ($task) {
                 return $this->response->success("Store created");
             }

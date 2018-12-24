@@ -91,6 +91,10 @@ return [
     'policies'  => [
         \Illuminate\Http\Request::class => \App\Http\Policies\ProductPolicy::class,
         \App\Models\Product::class      => \App\Http\Policies\ProductPolicy::class,
+        \Illuminate\Http\Request::class => \App\Http\Policies\StorePolicy::class,
+        \App\Models\Store::class        => \App\Http\Policies\StorePolicy::class,
+        \Illuminate\Http\Request::class => \App\Http\Policies\WishlistPolicy::class,
+        \App\Models\Wishlist::class     => \App\Http\Policies\WishlistPolicy::class,
     ],
 
     'defines' => [

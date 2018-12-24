@@ -25,7 +25,7 @@ class StoreTransformer extends TransformerAbstract
             'user_id'       => $model->user_id,
             'name'          => $model->name,
             'description'   => $model->description,
-            'image'         => $model->image,
+            'image'         => \Storage::url("images/" . $model->image),
             'created_at'    => $model->created_at,
             'updated_at'    => $model->updated_at
         ];
