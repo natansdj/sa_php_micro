@@ -2,10 +2,10 @@
 
 namespace App\Transformers;
 
-use App\Models\User;
+use App\Models\UserMg;
 use League\Fractal\TransformerAbstract;
 
-class UserTransformer extends TransformerAbstract
+class UserMgTransformer extends TransformerAbstract
 {
     protected $availableIncludes = [];
 
@@ -15,7 +15,7 @@ class UserTransformer extends TransformerAbstract
      * @Request User
      * @Response array
      */
-    public function transform(User $model)
+    public function transform(UserMg $model)
     {
         return [
             'id'                => $model->id,
