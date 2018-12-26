@@ -36,7 +36,7 @@ class ProductTransformer extends TransformerAbstract
         $images = $model->image()->get();
 
         //resourceKey -1 if you want to exclude arrayKey from the data included by the transformer when use KeyArraySerializer
-        return $this->collection($images, new ImageTransformer, - 1);
+        return $this->collection($images, new ImageTransformer(), - 1);
     }
 
     public function includeCategory(Product $model)

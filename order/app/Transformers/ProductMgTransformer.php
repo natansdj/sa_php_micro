@@ -2,10 +2,10 @@
 
 namespace App\Transformers;
 
-use App\Models\Product;
+use App\Models\ProductMg;
 use League\Fractal\TransformerAbstract;
 
-class ProductTransformer extends TransformerAbstract
+class ProductMgTransformer extends TransformerAbstract
 {
     protected $availableIncludes = [
         'image',
@@ -15,10 +15,10 @@ class ProductTransformer extends TransformerAbstract
     protected $defaultIncludes = [];
 
     /**
-     * @Request Product
+     * @Request ProductMg
      * @Response array
      */
-    public function transform(Product $model)
+    public function transform(ProductMg $model)
     {
         return [
             'id'          => $model->id,
@@ -30,19 +30,19 @@ class ProductTransformer extends TransformerAbstract
         ];
     }
 
-    public function includeImage(Product $model)
+    public function includeImage(ProductMg $model)
     {
         $images = $model->image()->get();
 
         //resourceKey -1 if you want to exclude arrayKey from the data included by the transformer when use KeyArraySerializer
-        return $this->collection($images, new ImageTransformer(), - 1);
+        return $this->collection($images, new ImageMgTransformer(), - 1);
     }
 
-    public function includeCategory(Product $model)
+    public function includeCategory(ProductMg $model)
     {
         $categories = $model->category()->get();
 
         //resourceKey -1 if you want to exclude arrayKey from the data included by the transformer when use KeyArraySerializer
-        return $this->collection($categories, new CategoryTransformer(), - 1);
+        return $this->collection($categories, new CategoryMgTransformer(), - 1);
     }
 }

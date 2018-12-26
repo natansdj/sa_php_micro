@@ -2,10 +2,10 @@
 
 namespace App\Transformers;
 
-use App\Models\Invoice;
+use App\Models\InvoiceMg;
 use League\Fractal\TransformerAbstract;
 
-class InvoiceTransformer extends TransformerAbstract
+class InvoiceMgTransformer extends TransformerAbstract
 {
     protected $availableIncludes = [
         'cart',
@@ -16,10 +16,10 @@ class InvoiceTransformer extends TransformerAbstract
     protected $defaultIncludes = [];
 
     /**
-     * @Request Invoice
+     * @Request InvoiceMg
      * @Response array
      */
-    public function transform(Invoice $model)
+    public function transform(InvoiceMg $model)
     {
         return [
             'id'            => $model->id,
@@ -33,27 +33,27 @@ class InvoiceTransformer extends TransformerAbstract
         ];
     }
 
-    public function includeCart(Invoice $model)
+    public function includeCart(InvoiceMg $model)
     {
         $carts = $model->cart()->get();
 
         //resourceKey -1 if you want to exclude arrayKey from the data included by the transformer when use KeyArraySerializer
-        return $this->collection($carts, new CartTransformer(), - 1);
+        return $this->collection($carts, new CartMgTransformer(), - 1);
     }
 
-    public function includeUser(Invoice $model)
+    public function includeUser(InvoiceMg $model)
     {
         $users = $model->user()->get();
 
         //resourceKey -1 if you want to exclude arrayKey from the data included by the transformer when use KeyArraySerializer
-        return $this->collection($users, new UserTransformer(), - 1);
+        return $this->collection($users, new UserMgTransformer(), - 1);
     }
 
-    public function includePromo(Invoice $model)
+    public function includePromo(InvoiceMg $model)
     {
         $promo = $model->promo()->get();
 
         //resourceKey -1 if you want to exclude arrayKey from the data included by the transformer when use KeyArraySerializer
-        return $this->collection($promo, new PromoTransformer(), - 1);
+        return $this->collection($promo, new PromoMgTransformer(), - 1);
     }
 }

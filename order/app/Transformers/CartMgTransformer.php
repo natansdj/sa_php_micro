@@ -2,10 +2,10 @@
 
 namespace App\Transformers;
 
-use App\Models\Cart;
+use App\Models\CartMg;
 use League\Fractal\TransformerAbstract;
 
-class CartTransformer extends TransformerAbstract
+class CartMgTransformer extends TransformerAbstract
 {
     protected $availableIncludes = [
         'product',
@@ -17,10 +17,10 @@ class CartTransformer extends TransformerAbstract
     protected $defaultIncludes = [];
 
     /**
-     * @Request Cart
+     * @Request CartMg
      * @Response array
      */
-    public function transform(Cart $model)
+    public function transform(CartMg $model)
     {
         return [
             'id'            => $model->id,
@@ -34,35 +34,35 @@ class CartTransformer extends TransformerAbstract
         ];
     }
 
-    public function includeProduct(Cart $model)
+    public function includeProduct(CartMg $model)
     {
         $products = $model->product()->get();
 
         //resourceKey -1 if you want to exclude arrayKey from the data included by the transformer when use KeyArraySerializer
-        return $this->collection($products, new ProductTransformer(), - 1);
+        return $this->collection($products, new ProductMgTransformer(), - 1);
     }
 
-    public function includeImage(Cart $model)
+    public function includeImage(CartMg $model)
     {
         $images = $model->image()->get();
 
         //resourceKey -1 if you want to exclude arrayKey from the data included by the transformer when use KeyArraySerializer
-        return $this->collection($images, new ImageTransformer(), - 1);
+        return $this->collection($images, new ImageMgTransformer(), - 1);
     }
 
-    public function includeCategory(Cart $model)
+    public function includeCategory(CartMg $model)
     {
         $categories = $model->category()->get();
 
         //resourceKey -1 if you want to exclude arrayKey from the data included by the transformer when use KeyArraySerializer
-        return $this->collection($categories, new CategoryTransformer(), - 1);
+        return $this->collection($categories, new CategoryMgTransformer(), - 1);
     }
 
-    public function includeUser(Cart $model)
+    public function includeUser(CartMg $model)
     {
         $users = $model->user()->get();
 
         //resourceKey -1 if you want to exclude arrayKey from the data included by the transformer when use KeyArraySerializer
-        return $this->collection($users, new UserTransformer(), - 1);
+        return $this->collection($users, new UserMgTransformer(), - 1);
     }
 }
