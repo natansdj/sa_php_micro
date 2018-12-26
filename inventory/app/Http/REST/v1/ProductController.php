@@ -4,8 +4,11 @@ namespace App\Http\REST\v1;
 
 use Core\Http\REST\Controller\ApiBaseController;
 use Core\Helpers\Serializer\KeyArraySerializer;
+
 use App\Repositories\ProductRepository as Product;
 use App\Transformers\ProductTransformer;
+use App\Transformers\ProductMgTransformer;
+
 use Gate;
 use Illuminate\Http\Request;
 
@@ -50,8 +53,12 @@ class ProductController extends ApiBaseController
         if ($models) {
             $data = $this->api
                 ->includes(['image', 'category', 'store'])
-                ->serializer(new KeyArraySerializer('product'))
-                ->paginate($models, new ProductTransformer());
+                ->serializer(new KeyArraySerializer('product'));
+            if (env('DB_CONNECTION', CONST_MYSQL) == CONST_MYSQL) {
+                $data = $data->paginate($models, new ProductTransformer());
+            } else {
+                $data = $data->paginate($models, new ProductMgTransformer());
+            }
 
             return $this->response->addModelLinks(new $this->product->model())->data($data, 200);
         }
@@ -75,8 +82,12 @@ class ProductController extends ApiBaseController
         if ($model) {
             $data = $this->api
                 ->includes(['image', 'category', 'store'])
-                ->serializer(new KeyArraySerializer('product'))
-                ->item($model, new ProductTransformer);
+                ->serializer(new KeyArraySerializer('product'));
+            if (env('DB_CONNECTION', CONST_MYSQL) == CONST_MYSQL) {
+                $data = $data->item($model, new ProductTransformer());
+            } else {
+                $data = $data->item($model, new ProductMgTransformer());
+            }
 
             return $this->response->data($data, 200);
         }

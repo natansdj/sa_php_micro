@@ -19,7 +19,7 @@ class ImageMgTransformer extends TransformerAbstract
     {
         return [
             'id'         => $model->id,
-            'image'      => \Storage::url($model->image),
+            'image'      => \Storage::url("images/" . $model->image),
             'created_at' => $model->created_at
         ];
     }

@@ -7,6 +7,8 @@ use Core\Helpers\Serializer\KeyArraySerializer;
 
 use App\Repositories\InvoiceRepository as Invoice;
 use App\Transformers\InvoiceTransformer;
+use App\Transformers\InvoiceMgTransformer;
+
 use Gate;
 use Illuminate\Http\Request;
 
@@ -55,8 +57,12 @@ class InvoiceController extends ApiBaseController
         if ($models) {
             $data = $this->api
                 ->includes(['cart', 'user', 'promo'])
-                ->serializer(new KeyArraySerializer('invoice'))
-                ->paginate($models, new InvoiceTransformer());
+                ->serializer(new KeyArraySerializer('invoice'));
+            if (env('DB_CONNECTION', CONST_MYSQL) == CONST_MYSQL) {
+                $data = $data->paginate($models, new InvoiceTransformer());
+            } else {
+                $data = $data->paginate($models, new InvoiceMgTransformer());
+            }
 
             return $this->response->addModelLinks(new $this->invoice->model())->data($data, 200);
         }
@@ -80,8 +86,12 @@ class InvoiceController extends ApiBaseController
         if ($model) {
             $data = $this->api
                 ->includes(['cart', 'user', 'promo'])
-                ->serializer(new KeyArraySerializer('invoice'))
-                ->item($model, new InvoiceTransformer);
+                ->serializer(new KeyArraySerializer('invoice'));
+            if (env('DB_CONNECTION', CONST_MYSQL) == CONST_MYSQL) {
+                $data = $data->item($model, new InvoiceTransformer());
+            } else {
+                $data = $data->item($model, new InvoiceMgTransformer());
+            }
 
             return $this->response->data($data, 200);
         }
