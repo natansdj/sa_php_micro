@@ -1,6 +1,6 @@
 <?php
 return [
-	'user'                   => 'App/Models/User',
+	'user'                   => (env('DB_CONNECTION', CONST_MYSQL) == CONST_MYSQL) ? 'App/Models/User' : 'App/Models/UserMg',
 	/*
 	|--------------------------------------------------------------------------
 	| JWT Authentication Secret
