@@ -30,7 +30,7 @@ class StoreRepository extends BaseRepository
      */
     public function model()
     {
-        return 'App\Models\Store';
+        return (env('DB_CONNECTION', CONST_MYSQL) == CONST_MYSQL) ? 'App\Models\Store' : 'App\Models\StoreMg';
     }
 
 }

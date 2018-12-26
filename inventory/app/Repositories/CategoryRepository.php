@@ -24,7 +24,7 @@ class CategoryRepository extends BaseRepository
      */
     public function model()
     {
-        return 'App\Models\Category';
+        return (env('DB_CONNECTION', CONST_MYSQL) == CONST_MYSQL) ? 'App\Models\Category' : 'App\Models\CategoryMg';
     }
 
 }

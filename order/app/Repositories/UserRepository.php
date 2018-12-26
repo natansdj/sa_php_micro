@@ -42,7 +42,7 @@ class UserRepository extends RepositoryAbstract
      */
     public function model()
     {
-        return 'App\Models\User';
+        return (env('DB_CONNECTION', CONST_MYSQL) == CONST_MYSQL) ? 'App\Models\User' : 'App\Models\UserMg';
     }
 
     /**

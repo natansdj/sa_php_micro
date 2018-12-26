@@ -26,7 +26,7 @@ class WishlistRepository extends BaseRepository
      */
     public function model()
     {
-        return 'App\Models\Wishlist';
+        return (env('DB_CONNECTION', CONST_MYSQL) == CONST_MYSQL) ? 'App\Models\Wishlist' : 'App\Models\WishlistMg';
     }
 
 }
