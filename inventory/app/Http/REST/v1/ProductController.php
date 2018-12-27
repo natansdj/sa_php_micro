@@ -8,6 +8,12 @@ use Core\Helpers\Serializer\KeyArraySerializer;
 use App\Repositories\ProductRepository as Product;
 use App\Transformers\ProductTransformer;
 use App\Transformers\ProductMgTransformer;
+use App\Repositories\ProductCategoryRepository as ProductCategory;
+use App\Transformers\ProductCategoryTransformer;
+use App\Transformers\ProductCategoryMgTransformer;
+use App\Repositories\ProductImageRepository as ProductImage;
+use App\Transformers\ProductImageTransformer;
+use App\Transformers\ProductImageMgTransformer;
 
 use Gate;
 use Illuminate\Http\Request;
@@ -29,10 +35,12 @@ class ProductController extends ApiBaseController
      *
      * @param Product $product
      */
-    public function __construct(Product $product)
+    public function __construct(Product $product, ProductCategory $productCategory, ProductImage $productImage)
     {
         parent::__construct();
         $this->product = $product;
+        $this->productCategory = $productCategory;
+        $this->productImage = $productImage;
     }
 
     /**
@@ -112,6 +120,37 @@ class ProductController extends ApiBaseController
         if ($validator->status() == "200") {
             $task = $this->product->create($request->all());
             if ($task) {
+
+                foreach($request->category_id as $v) {
+                    $this->productCategory->create([
+                        'product_id' => $task->id,
+                        'category_id' => $v,
+                    ]);
+                }
+
+                if ($request->hasFile('image')) {
+                    $i = 0;
+                    foreach($request->file('image') as $v) {
+                        if (!$v->isValid()) {
+                            continue;
+                        }
+                        if ($i == 5) {
+                            break;
+                        }
+
+                        $fileName = md5(time() . $i) . "." . $v->getClientOriginalExtension();
+                
+                        $v->move('storage/images', $fileName);
+
+                        $this->productImage->create([
+                            'product_id' => $task->id,
+                            'image' => $fileName
+                        ]);
+
+                        $i++;
+                    }
+                }
+
                 return $this->response->success("Product created");
             }
 
