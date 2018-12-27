@@ -67,6 +67,8 @@ class WishlistController extends ApiBaseController
                 $new_data['wishlist'][$k] = $v;
                 $new_data['wishlist'][$k]['product'][0]['image'] = $v['image'];
                 $new_data['wishlist'][$k]['product'][0]['category'] = $v['category'];
+                $new_data['wishlist'][$k]['product'] = $new_data['wishlist'][$k]['product'][0];
+                $new_data['wishlist'][$k]['user'] = $new_data['wishlist'][$k]['user'][0];
                 unset($new_data['wishlist'][$k]['image']);
                 unset($new_data['wishlist'][$k]['category']);
             }
@@ -103,6 +105,8 @@ class WishlistController extends ApiBaseController
             // retransform output
             $data['wishlist']['product'][0]['image'] = $data['wishlist']['image'];
             $data['wishlist']['product'][0]['category'] = $data['wishlist']['category'];
+            $data['wishlist']['user'] = $data['wishlist']['user'][0];
+            $data['wishlist']['product'] = $data['wishlist']['product'][0];
             unset($data['wishlist']['image']);
             unset($data['wishlist']['category']);
 
