@@ -73,7 +73,7 @@ services:
       ME_CONFIG_MONGODB_ADMINPASSWORD: root
     labels:
       - "traefik.enable=true"
-      - "traefik.frontend.rule=Host:mongo.lm.local"
+      - "traefik.frontend.rule=Host:mongo.sa-php.indovti.com"
       - "traefik.backend=mongo"
       - "traefik.backend.port=8081"
       - "traefik.port=8081"
@@ -96,7 +96,7 @@ services:
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
     labels:
       - "traefik.enable=true"
-      - "traefik.frontend.rule=Host:elastic.lm.local"
+      - "traefik.frontend.rule=Host:elastic.sa-php.indovti.com"
       - "traefik.backend=elastic"
       - "traefik.port=9200"
       - "traefik.backend.port=9200"
