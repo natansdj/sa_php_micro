@@ -4,6 +4,7 @@ namespace App\Http\REST\v1;
 
 use App\Repositories\UserRepository as User;
 use App\Transformers\UserTransformer;
+use App\Transformers\UserMgTransformer;
 use Core\Helpers\Serializer\KeyArraySerializer;
 use Core\Http\REST\Controller\ApiBaseController;
 use Gate;
@@ -49,8 +50,12 @@ class UserController extends ApiBaseController
 
         if ($models) {
             $data = $this->api
-                ->serializer(new KeyArraySerializer('users'))
-                ->paginate($models, new UserTransformer());
+                ->serializer(new KeyArraySerializer('users'));
+            if (env('DB_CONNECTION', CONST_MYSQL) == CONST_MYSQL) {
+                $data = $data->paginate($models, new UserTransformer());
+            } else {
+                $data = $data->paginate($models, new UserMgTransformer());
+            }
 
             return $this->response->addModelLinks(new $this->user->model())->data($data, 200);
         }
@@ -73,8 +78,12 @@ class UserController extends ApiBaseController
         $model = $this->user->find($id);
         if ($model) {
             $data = $this->api
-                ->serializer(new KeyArraySerializer('user'))
-                ->item($model, new UserTransformer);
+                ->serializer(new KeyArraySerializer('user'));
+            if (env('DB_CONNECTION', CONST_MYSQL) == CONST_MYSQL) {
+                $data = $data->item($model, new UserTransformer());
+            } else {
+                $data = $data->item($model, new UserMgTransformer());
+            }
 
             return $this->response->data($data, 200);
         }

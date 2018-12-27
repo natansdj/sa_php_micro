@@ -7,9 +7,7 @@ use Core\Helpers\Serializer\KeyArraySerializer;
 
 use App\Repositories\CartRepository as Cart;
 use App\Transformers\CartTransformer;
-
-use App\Repositories\ProductRepository as Product;
-use App\Transformers\ProductTransformer;
+use App\Transformers\CartMgTransformer;
 
 use Illuminate\Http\Request;
 use Gate;
@@ -27,21 +25,15 @@ class CartController extends ApiBaseController
     private $cart;
 
     /**
-     * @var Product
-     */
-    private $product;
-
-    /**
      * Initialize @var Cart
      *
      * @Request Cart
      *
      */
-    public function __construct(Cart $cart, Product $product)
+    public function __construct(Cart $cart)
     {
         parent::__construct();
         $this->cart = $cart;
-        $this->product = $product;
     }
 
     /**
@@ -64,8 +56,12 @@ class CartController extends ApiBaseController
         if ($models->count()) {
             $data = $this->api
                 ->includes(['product', 'image', 'category'])
-                ->serializer(new KeyArraySerializer('cart'))
-                ->collection($models, new CartTransformer);
+                ->serializer(new KeyArraySerializer('cart'));
+            if (env('DB_CONNECTION', CONST_MYSQL) == CONST_MYSQL) {
+                $data = $data->collection($models, new CartTransformer());
+            } else {
+                $data = $data->collection($models, new CartMgTransformer());
+            }
 
             // retransform output
             $new_data = array();
@@ -99,8 +95,12 @@ class CartController extends ApiBaseController
         if ($model) {
             $data = $this->api
                 ->includes(['product', 'image', 'category'])
-                ->serializer(new KeyArraySerializer('cart'))
-                ->item($model, new CartTransformer);
+                ->serializer(new KeyArraySerializer('cart'));
+            if (env('DB_CONNECTION', CONST_MYSQL) == CONST_MYSQL) {
+                $data = $data->item($model, new CartTransformer());
+            } else {
+                $data = $data->item($model, new CartMgTransformer());
+            }
 
             // retransform output
             $data['cart']['product'][0]['image'] = $data['cart']['image'];

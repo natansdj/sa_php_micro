@@ -31,7 +31,7 @@ class ProductRepository extends BaseRepository
      */
     public function model()
     {
-        return 'App\Models\Product';
+        return (env('DB_CONNECTION', CONST_MYSQL) == CONST_MYSQL) ? 'App\Models\Product' : 'App\Models\ProductMg';
     }
 
 }

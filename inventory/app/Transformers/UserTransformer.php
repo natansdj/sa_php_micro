@@ -15,13 +15,19 @@ class UserTransformer extends TransformerAbstract
      * @Request User
      * @Response array
      */
-    public function transform(User $user)
+    public function transform(User $model)
     {
         return [
-            'id'       => $user->id,
-            'email'    => $user->email,
-            'name'     => $user->name,
-            'username' => $user->username,
+            'id'                => $model->id,
+            'email'             => $model->email,
+            //'password'          => $model->password,
+            'username'          => $model->username,
+            'name'              => $model->name,
+            'phone'             => $model->phone,
+            'address'           => $model->address,
+            //'remember_token'    => $model->remember_token,
+            'created_at'        => $model->created_at,
+            'updated_at'        => $model->updated_at
         ];
     }
 }

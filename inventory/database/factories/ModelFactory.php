@@ -40,7 +40,7 @@ $factory->define(App\Models\Product::class, function (Faker\Generator $faker) {
 $factory->define(App\Models\ProductImage::class, function (Faker\Generator $faker) {
     return [
         //'product_id' => $faker->numberBetween(1, 5),
-        'image' => $faker->image('public/storage', '640', '480', 'transport', false),
+        'image' => $faker->image('public/storage/images', '640', '480', 'transport', false),
     ];
 });
 
@@ -74,6 +74,6 @@ $factory->define(App\Models\Store::class, function (Faker\Generator $faker) {
         'user_id'       => $faker->unique()->numberBetween(7, 21),
         'name'          => $faker->company,
         'description'   => $faker->sentence(),
-        'image' => $faker->image('public/storage', '640', '480', 'transport', false),
+        'image'         => $faker->image('public/storage/images', '640', '480', 'transport', false),
     ];
 });

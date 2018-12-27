@@ -7,9 +7,10 @@ use Core\Helpers\Serializer\KeyArraySerializer;
 
 use App\Repositories\StoreRepository as Store;
 use App\Transformers\StoreTransformer;
-
+use App\Transformers\StoreMgTransformer;
 use App\Repositories\ProductRepository as Product;
 use App\Transformers\ProductTransformer;
+use App\Transformers\ProductMgTransformer;
 
 use Illuminate\Http\Request;
 use Gate;
@@ -25,6 +26,11 @@ class StoreController extends ApiBaseController
      * @var Store
      */
     private $store;
+
+    /**
+     * @var Product
+     */
+    private $product;
 
     /**
      * Initialize @var Store
@@ -53,8 +59,13 @@ class StoreController extends ApiBaseController
         $models = $this->store->all();
         if ($models) {
             $data = $this->api
-                ->serializer(new KeyArraySerializer('store'))
-                ->collection($models, new StoreTransformer);
+                ->serializer(new KeyArraySerializer('store'));
+            if (env('DB_CONNECTION', CONST_MYSQL) == CONST_MYSQL) {
+                $data = $data->collection($models, new StoreTransformer());
+            } else {
+                $data = $data->collection($models, new StoreMgTransformer());
+            }
+
             return $this->response->addModelLinks(new $this->store->model())->data($data, 200);
         }
 
@@ -77,16 +88,24 @@ class StoreController extends ApiBaseController
         if ($model) {
             $data = $this->api
                 ->includes(['user', 'product'])
-                ->serializer(new KeyArraySerializer('store'))
-                ->item($model, new StoreTransformer);
+                ->serializer(new KeyArraySerializer('store'));
+            if (env('DB_CONNECTION', CONST_MYSQL) == CONST_MYSQL) {
+                $data = $data->item($model, new StoreTransformer());
+            } else {
+                $data = $data->item($model, new StoreMgTransformer());
+            }
 
             foreach ($data['store']['product'] as $k => $v) {
                 $productModel = $this->product->find($v['id']);
                 if ($productModel) {
                     $productData = $this->api
                         ->includes(['image', 'category'])
-                        ->serializer(new KeyArraySerializer('product'))
-                        ->item($productModel, new ProductTransformer);
+                        ->serializer(new KeyArraySerializer('product'));
+                    if (env('DB_CONNECTION', CONST_MYSQL) == CONST_MYSQL) {
+                        $productData = $productData->item($productModel, new ProductTransformer());
+                    } else {
+                        $productData = $productData->item($productModel, new ProductMgTransformer());
+                    }
 
                     $data['store']['product'][$k] = $productData['product'];
                 }
@@ -113,7 +132,20 @@ class StoreController extends ApiBaseController
         $validator = $this->store->validateRequest($request->all());
 
         if ($validator->status() == "200") {
-            $task = $this->store->create($request->all());
+
+            $data = $request->all();
+
+            if ($request->hasFile('image')) {
+                if ($request->file('image')->isValid()) {
+                    $fileName = md5(time()) . "." . $request->file('image')->getClientOriginalExtension();
+                    
+                    $request->file('image')->move('storage/images', $fileName);
+
+                    $data['image'] = $fileName;
+                }
+            }
+
+            $task = $this->store->create($data);
             if ($task) {
                 return $this->response->success("Store created");
             }
@@ -194,8 +226,13 @@ class StoreController extends ApiBaseController
 
         if ($models->count()) {
             $data = $this->api
-                ->serializer(new KeyArraySerializer('store'))
-                ->collection($models, new StoreTransformer);
+                ->serializer(new KeyArraySerializer('store'));
+            if (env('DB_CONNECTION', CONST_MYSQL) == CONST_MYSQL) {
+                $data = $data->collection($models, new StoreTransformer());
+            } else {
+                $data = $data->collection($models, new StoreMgTransformer());
+            }
+
             return $this->response->addModelLinks(new $this->store->model())->data($data, 200);
         }
 

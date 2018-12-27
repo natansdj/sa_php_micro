@@ -39,7 +39,7 @@ class CartTransformer extends TransformerAbstract
         $products = $model->product()->get();
 
         //resourceKey -1 if you want to exclude arrayKey from the data included by the transformer when use KeyArraySerializer
-        return $this->collection($products, new ProductTransformer, - 1);
+        return $this->collection($products, new ProductTransformer(), - 1);
     }
 
     public function includeImage(Cart $model)
@@ -47,7 +47,7 @@ class CartTransformer extends TransformerAbstract
         $images = $model->image()->get();
 
         //resourceKey -1 if you want to exclude arrayKey from the data included by the transformer when use KeyArraySerializer
-        return $this->collection($images, new ImageTransformer, - 1);
+        return $this->collection($images, new ImageTransformer(), - 1);
     }
 
     public function includeCategory(Cart $model)
@@ -63,6 +63,6 @@ class CartTransformer extends TransformerAbstract
         $users = $model->user()->get();
 
         //resourceKey -1 if you want to exclude arrayKey from the data included by the transformer when use KeyArraySerializer
-        return $this->collection($users, new UserTransformer, - 1);
+        return $this->collection($users, new UserTransformer(), - 1);
     }
 }

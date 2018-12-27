@@ -26,7 +26,7 @@ class ProductImageRepository extends BaseRepository
      */
     public function model()
     {
-        return 'App\Models\ProductImage';
+        return (env('DB_CONNECTION', CONST_MYSQL) == CONST_MYSQL) ? 'App\Models\ProductImage' : 'App\Models\ProductImageMg';
     }
     
 }

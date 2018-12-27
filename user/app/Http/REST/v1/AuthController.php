@@ -7,7 +7,6 @@ use Core\Services\ACL\ACLService;
 use Core\Services\Auth\AuthService;
 use Illuminate\Http\Request;
 use Core\Http\REST\Controller\ApiBaseController;
-use App\Models\User;
 
 class AuthController extends ApiBaseController
 {
@@ -64,7 +63,6 @@ class AuthController extends ApiBaseController
      */
     public function register(Request $request)
     {
-
         $validator = $this->model->validateRequest($request->all(), "store");
 
         if ($validator->status() != "200") {

@@ -7,7 +7,6 @@ use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 
 use Illuminate\Database\Eloquent\Model;
-//use Jenssegers\Mongodb\Eloquent\Model;
 
 use Illuminate\Support\Facades\Hash;
 use Laravel\Lumen\Auth\Authorizable;
@@ -26,6 +25,8 @@ class User extends Model implements
     JWTSubject
 {
     use Authenticatable, Authorizable, HasRoles, ModelREST;
+
+    protected $table = 'users';
 
     const CONST_WORD = 'password';
 

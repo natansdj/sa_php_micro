@@ -7,12 +7,16 @@ use Core\Helpers\Serializer\KeyArraySerializer;
 
 use App\Repositories\InvoiceRepository as Invoice;
 use App\Transformers\InvoiceTransformer;
+use App\Transformers\InvoiceMgTransformer;
 use App\Repositories\CartRepository as Cart;
 use App\Transformers\CartTransformer;
+use App\Transformers\CartMgTransformer;
 use App\Repositories\UserRepository as User;
 use App\Transformers\UserTransformer;
+use App\Transformers\UserMgTransformer;
 use App\Repositories\PromoRepository as Promo;
 use App\Transformers\PromoTransformer;
+use App\Transformers\PromoMgTransformer;
 
 use Gate;
 use Illuminate\Http\Request;
@@ -66,8 +70,12 @@ class BookController extends ApiBaseController
         $model = $this->invoice->find($id);
         if ($model) {
             $data = $this->api->includes(['cart'])
-                ->serializer(new KeyArraySerializer('invoice'))
-                ->item($model, new InvoiceTransformer);
+                ->serializer(new KeyArraySerializer('invoice'));
+            if (env('DB_CONNECTION', CONST_MYSQL) == CONST_MYSQL) {
+                $data = $data->item($model, new InvoiceTransformer());
+            } else {
+                $data = $data->item($model, new InvoiceMgTransformer());
+            }
 
             return $this->response->data($data, 200);
         }
@@ -130,8 +138,12 @@ class BookController extends ApiBaseController
         $model = $this->user->find($id);
         if ($model) {
             $data = $this->api
-                ->serializer(new KeyArraySerializer('user'))
-                ->item($model, new UserTransformer);
+                ->serializer(new KeyArraySerializer('user'));
+            if (env('DB_CONNECTION', CONST_MYSQL) == CONST_MYSQL) {
+                $data = $data->item($model, new UserTransformer());
+            } else {
+                $data = $data->item($model, new UserMgTransformer());
+            }
 
             return $data;
         }
@@ -159,8 +171,12 @@ class BookController extends ApiBaseController
         if ($models->count()) {
             $data = $this->api
                 ->includes(['product', 'image', 'category', 'user'])
-                ->serializer(new KeyArraySerializer('cart'))
-                ->collection($models, new CartTransformer);
+                ->serializer(new KeyArraySerializer('cart'));
+            if (env('DB_CONNECTION', CONST_MYSQL) == CONST_MYSQL) {
+                $data = $data->collection($models, new CartTransformer());
+            } else {
+                $data = $data->collection($models, new CartMgTransformer());
+            }
 
             $user = array('user' => $data['cart'][0]['user']);
 

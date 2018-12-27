@@ -7,6 +7,8 @@ use Core\Helpers\Serializer\KeyArraySerializer;
 
 use App\Repositories\WishlistRepository as Wishlist;
 use App\Transformers\WishlistTransformer;
+use App\Transformers\WishlistMgTransformer;
+
 use Illuminate\Http\Request;
 use Gate;
 
@@ -52,8 +54,12 @@ class WishlistController extends ApiBaseController
         if ($models->count()) {
             $data = $this->api
                 ->includes(['user', 'product', 'category', 'image'])
-                ->serializer(new KeyArraySerializer('wishlist'))
-                ->collection($models, new WishlistTransformer);
+                ->serializer(new KeyArraySerializer('wishlist'));
+            if (env('DB_CONNECTION', CONST_MYSQL) == CONST_MYSQL) {
+                $data = $data->collection($models, new WishlistTransformer());
+            } else {
+                $data = $data->collection($models, new WishlistMgTransformer());
+            }
 
             // retransform output
             $new_data = array();
@@ -87,8 +93,12 @@ class WishlistController extends ApiBaseController
         if ($model) {
             $data = $this->api
                 ->includes(['user', 'product', 'category' ,'image'])
-                ->serializer(new KeyArraySerializer('wishlist'))
-                ->item($model, new WishlistTransformer);
+                ->serializer(new KeyArraySerializer('wishlist'));
+            if (env('DB_CONNECTION', CONST_MYSQL) == CONST_MYSQL) {
+                $data = $data->item($model, new WishlistTransformer());
+            } else {
+                $data = $data->item($model, new WishlistMgTransformer());
+            }
 
             // retransform output
             $data['wishlist']['product'][0]['image'] = $data['wishlist']['image'];

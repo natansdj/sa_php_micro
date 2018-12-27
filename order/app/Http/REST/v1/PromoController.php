@@ -7,6 +7,7 @@ use Core\Helpers\Serializer\KeyArraySerializer;
 
 use App\Repositories\PromoRepository as Promo;
 use App\Transformers\PromoTransformer;
+use App\Transformers\PromoMgTransformer;
 
 use Illuminate\Http\Request;
 use Gate;
@@ -53,8 +54,12 @@ class PromoController extends ApiBaseController
         if ($models) {
             $data = $this->api
                 //->includes(['invoice'])
-                ->serializer(new KeyArraySerializer('promo'))
-                ->paginate($models, new PromoTransformer());
+                ->serializer(new KeyArraySerializer('promo'));
+            if (env('DB_CONNECTION', CONST_MYSQL) == CONST_MYSQL) {
+                $data = $data->paginate($models, new PromoTransformer());
+            } else {
+                $data = $data->paginate($models, new PromoMgTransformer());
+            }
 
             return $this->response->addModelLinks(new $this->promo->model())->data($data, 200);
         }
@@ -80,8 +85,12 @@ class PromoController extends ApiBaseController
         if ($model) {
             $data = $this->api
                 //->includes('invoice')
-                ->serializer(new KeyArraySerializer('promo'))
-                ->item($model, new PromoTransformer);
+                ->serializer(new KeyArraySerializer('promo'));
+            if (env('DB_CONNECTION', CONST_MYSQL) == CONST_MYSQL) {
+                $data = $data->item($model, new PromoTransformer());
+            } else {
+                $data = $data->item($model, new PromoMgTransformer());
+            }
 
             return $this->response->data($data, 200);
         }

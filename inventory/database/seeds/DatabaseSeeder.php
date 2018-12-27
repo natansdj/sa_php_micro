@@ -15,7 +15,7 @@ class DatabaseSeeder extends Seeder
         DB::statement('SET FOREIGN_KEY_CHECKS = 0');
 
         //Clean Storage from all images
-        $files = Storage::allFiles();
+        $files = Storage::allFiles("images");
         foreach ($files as $file) {
             if (preg_match('/(\.jpg|\.png|\.jpeg)$/', $file)) {
                 Storage::delete($file);
