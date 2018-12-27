@@ -65,4 +65,12 @@ class Product extends Model
     {
         return $this->hasMany(\App\Models\ProductImage::class);
     }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function store()
+    {
+        return $this->belongsTo(\App\Models\Store::class);
+    }
 }

@@ -25,6 +25,6 @@ return [
 	],
 
 	'alias' => [
-		//
+        'Eloquent' => (env('DB_CONNECTION', CONST_MYSQL) == CONST_MYSQL) ? Illuminate\Database\Eloquent\Model::class : Jenssegers\Mongodb\Eloquent\Model::class,
 	],
 ];

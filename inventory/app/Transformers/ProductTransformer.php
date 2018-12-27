@@ -10,6 +10,7 @@ class ProductTransformer extends TransformerAbstract
     protected $availableIncludes = [
         'image',
         'category',
+        'store',
     ];
 
     protected $defaultIncludes = [];
@@ -35,7 +36,7 @@ class ProductTransformer extends TransformerAbstract
         $images = $model->image()->get();
 
         //resourceKey -1 if you want to exclude arrayKey from the data included by the transformer when use KeyArraySerializer
-        return $this->collection($images, new ImageTransformer, - 1);
+        return $this->collection($images, new ImageTransformer(), - 1);
     }
 
     public function includeCategory(Product $model)
@@ -44,5 +45,13 @@ class ProductTransformer extends TransformerAbstract
 
         //resourceKey -1 if you want to exclude arrayKey from the data included by the transformer when use KeyArraySerializer
         return $this->collection($categories, new CategoryTransformer(), - 1);
+    }
+
+    public function includeStore(Product $model)
+    {
+        $store = $model->store()->get();
+
+        //resourceKey -1 if you want to exclude arrayKey from the data included by the transformer when use KeyArraySerializer
+        return $this->collection($store, new StoreTransformer(), - 1);
     }
 }

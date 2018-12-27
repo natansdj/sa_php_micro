@@ -18,9 +18,10 @@ class OrderCreateInvoice extends Migration
 
             $table->double('total');
             $table->integer('user_id')->unsigned();
-            $table->text('address');
-            $table->string('status')->default('open');
-            $table->string('method');
+            $table->text('address')->nullable();
+            $table->string('status')->default('waiting payment')
+                  ->comment = 'waiting payment, packaging, sent, returned';
+            $table->string('method')->nullable();
 
             $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'))
                   ->attributes(DB::raw('on update CURRENT_TIMESTAMP'))

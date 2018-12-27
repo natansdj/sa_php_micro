@@ -4,8 +4,11 @@ namespace App\Http\REST\v1;
 
 use Core\Http\REST\Controller\ApiBaseController;
 use Core\Helpers\Serializer\KeyArraySerializer;
+
 use App\Repositories\ProductRepository as Product;
 use App\Transformers\ProductTransformer;
+use App\Transformers\ProductMgTransformer;
+
 use Gate;
 use Illuminate\Http\Request;
 
@@ -41,15 +44,21 @@ class ProductController extends ApiBaseController
      * @Versions({"v1"})
      * @Response(200, body={"id":1,"name":"Product Name","description":"Product Description","harga":100000,"stock":5})
      */
-    public function index()
+    public function index(Request $request)
     {
-        $models = $this->product->paginate();
+        $request->page = ($request->page) ? $request->page : 1;
+
+        $models = $this->product->paginate(20, ['*'], 'page', $request->page);
 
         if ($models) {
             $data = $this->api
-                ->includes(['image', 'category'])
-                ->serializer(new KeyArraySerializer('product'))
-                ->paginate($models, new ProductTransformer());
+                ->includes(['image', 'category', 'store'])
+                ->serializer(new KeyArraySerializer('product'));
+            if (env('DB_CONNECTION', CONST_MYSQL) == CONST_MYSQL) {
+                $data = $data->paginate($models, new ProductTransformer());
+            } else {
+                $data = $data->paginate($models, new ProductMgTransformer());
+            }
 
             return $this->response->addModelLinks(new $this->product->model())->data($data, 200);
         }
@@ -72,9 +81,13 @@ class ProductController extends ApiBaseController
         $model = $this->product->find($id);
         if ($model) {
             $data = $this->api
-                ->includes(['image', 'category'])
-                ->serializer(new KeyArraySerializer('product'))
-                ->item($model, new ProductTransformer);
+                ->includes(['image', 'category', 'store'])
+                ->serializer(new KeyArraySerializer('product'));
+            if (env('DB_CONNECTION', CONST_MYSQL) == CONST_MYSQL) {
+                $data = $data->item($model, new ProductTransformer());
+            } else {
+                $data = $data->item($model, new ProductMgTransformer());
+            }
 
             return $this->response->data($data, 200);
         }

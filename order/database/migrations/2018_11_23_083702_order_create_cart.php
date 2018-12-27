@@ -21,10 +21,11 @@ class OrderCreateCart extends Migration
                   ->extra(DB::raw('ON UPDATE CURRENT_TIMESTAMP'));
 
             $table->double('total');
-            $table->string('status')->default('incomplete');
+            $table->string('status')->default('incomplete')
+                  ->comment = 'incomplete, pending, processed, shipping, shipped, returned, canceled';
             $table->integer('product_id')->unsigned();
-            $table->integer('user_id')->unsigned();
-            $table->integer('stock');
+            $table->integer('user_id')->unsigned()->nullable();
+            $table->integer('stock')->default(1);
             $table->integer('invoice_id')->unsigned()
                   ->nullable();
 

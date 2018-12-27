@@ -56,6 +56,12 @@ return [
             CONST_DRIVER => CONST_LOCAL,
             'root'       => storage_path('app'),
         ],
+        CONST_PUBLIC => [
+            CONST_DRIVER => CONST_LOCAL,
+            'root'       => storage_path('app/public'),
+            'url'        => env('APP_URL') . '/storage',
+            'visibility' => CONST_PUBLIC,
+        ],
         'root'      => [
             CONST_DRIVER => CONST_LOCAL,
             'root'       => '.',

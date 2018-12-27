@@ -11,41 +11,46 @@
 |
 */
 
+//Promo Code
+$factory->define(App\Models\Promo::class, function (Faker\Generator $faker) {
+
+    return [
+        'code' =>  strtoupper($faker->colorName),
+        'value' => $faker->randomNumber(5),
+        'begin_date' => $faker->date(),
+        'end_date' => $faker->date(),
+    ];
+});
+
 //Invoice
 $factory->define(App\Models\Invoice::class, function (Faker\Generator $faker) {
-    $faker->addProvider(new \Bezhanov\Faker\Provider\Commerce($faker));
-
     $user_ids = \DB::table('users')->select('id')->get();
     $user_id  = $faker->randomElement($user_ids)->id;
 
+    $user = \DB::table('users')->select('address')->find($user_id);
+
+    $promo = \DB::table('promo')->select('code')->get();
+    $promo_code  = $faker->randomElement($promo)->code;
+
     return [
-        'total' => $faker->randomNumber(5),
-        'user_id' => $faker->user_id,
-        'address' => $faker->realText(50),
-        'status' => $faker->realText(15),
-        'method' => $faker->realText(15),
+        'user_id' => $user_id,
+        'address' => $user->address,
+        'method' => $faker->randomElement(array('atm transfer', 'internet banking', 'credit')),
+        'promo_code' => $promo_code,
     ];
 });
 
 //Cart
 $factory->define(App\Models\Cart::class, function (Faker\Generator $faker) {
-    $faker->addProvider(new \Bezhanov\Faker\Provider\Commerce($faker));
-
-    $user_ids = \DB::table('users')->select('id')->get();
-    $user_id  = $faker->randomElement($user_ids)->id;
-
-    $invoice_ids = \DB::table('invoice')->select('id')->get();
-    $invoice_id  = $faker->randomElement($invoice_ids)->id;
-
     $product_ids = \DB::table('product')->select('id')->get();
     $product_id  = $faker->randomElement($product_ids)->id;
 
+    $product = \DB::table('product')->select('harga')->find($product_id);
+
     return [
-        'total' =>  $faker->randomNumber(5),
-        'status' => $faker->realText(15),
-        'product_id' => $faker->product_id,
-        'user_id' => $faker->user_id,
-        'stock' => $faker->numberBetween(10, 20),
-        'invoice_id' => $faker->invoice_id,
+        'price' =>  $product->harga,
+        'product_id' => $product_id,
+        'user_id' => $faker->numberBetween(2, 6),
+        'qty' => $faker->numberBetween(1, 9)
     ];
 });

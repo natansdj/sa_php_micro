@@ -21,7 +21,7 @@
     "spatie/laravel-permission": "^2.13",
     "tymon/jwt-auth": "1.0.*@dev",
     "natansdj/microservice-lumen-framework": "^2.0@dev",
-    "koenhoeijmakers/laravel-argon2": "^1.1"
+    "jenssegers/mongodb": "^3.4"
   },
   "require-dev": {
     "fzaninotto/faker": "~1.4",

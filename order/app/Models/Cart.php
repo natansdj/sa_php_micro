@@ -16,7 +16,7 @@ class Cart extends Model
      * @var array
      */
     protected $fillable = [
-        'total', 'product_id', 'user_id', 'stock'
+        'price', 'product_id', 'user_id', 'qty', 'invoice_id'
     ];
 
     /**
@@ -24,7 +24,7 @@ class Cart extends Model
      *
      * @var array
      */
-    protected $hidden = ['status', 'invoice_id', 'created_at'];
+    protected $hidden = ['created_at'];
 
     public $timestamps = false;
 
@@ -44,5 +44,37 @@ class Cart extends Model
                 $this->method('GET')
             ]
         ]);
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function product()
+    {
+        return $this->belongsTo(\App\Models\Product::class);
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\hasMany
+     */
+    public function image()
+    {
+        return $this->hasMany(\App\Models\ProductImage::class, 'product_id', 'product_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function category()
+    {
+        return $this->BelongsToMany(\App\Models\Category::class, 'product_category', 'product_id', 'category_id', 'product_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function user()
+    {
+        return $this->belongsTo(\App\Models\User::class);
     }
 }
