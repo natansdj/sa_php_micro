@@ -54,3 +54,19 @@ $factory->define(App\Models\Cart::class, function (Faker\Generator $faker) {
         'qty' => $faker->numberBetween(1, 9)
     ];
 });
+
+//Review
+$factory->define(App\Models\ProductReview::class, function (Faker\Generator $faker) {
+    $product_ids = \DB::table('product')->select('id')->get();
+    $product_id  = $faker->randomElement($product_ids)->id;
+
+    $user_ids = \DB::table('users')->select('id')->get();
+    $user_id  = $faker->randomElement($user_ids)->id;
+
+    return [
+        'product_id' => $product_id,
+        'user_id' => $user_id,
+        'review' => $faker->realText(),
+        'rating' => $faker->numberBetween(1, 5)
+    ];
+});
