@@ -8,6 +8,9 @@ use Core\Helpers\Serializer\KeyArraySerializer;
 use App\Repositories\CartRepository as Cart;
 use App\Transformers\CartTransformer;
 use App\Transformers\CartMgTransformer;
+use App\Repositories\ProductRepository as Product;
+use App\Transformers\ProductTransformer;
+use App\Transformers\ProductMgTransformer;
 
 use Illuminate\Http\Request;
 use Gate;
@@ -25,15 +28,21 @@ class CartController extends ApiBaseController
     private $cart;
 
     /**
+     * @var Product
+     */
+    private $product;
+
+    /**
      * Initialize @var Cart
      *
      * @Request Cart
      *
      */
-    public function __construct(Cart $cart)
+    public function __construct(Cart $cart, Product $product)
     {
         parent::__construct();
         $this->cart = $cart;
+        $this->product = $product;
     }
 
     /**
@@ -128,7 +137,7 @@ class CartController extends ApiBaseController
     {
         $product = $this->product->find($request->product_id);
 
-        $models = $this->cart->model->where([
+        $model = $this->cart->model->where([
             ['status', '=', 'incomplete'],
             ['user_id', '=', $request->user_id],
             ['product_id', '=', $request->product_id]
@@ -139,11 +148,11 @@ class CartController extends ApiBaseController
         ]);
 
         // update
-        if ($models->count()) {
+        if ($model) {
             $request->qty = ($request->qty) ? $request->qty : 1;
             $task = $this->cart->update([
-                'qty' => ((int) $models->qty + (int) $request->qty)
-            ], $models->id);
+                'qty' => ((int) $model->qty + (int) $request->qty)
+            ], $model->id);
             if ($task) {
                 return $this->response->success("Cart updated");
             }
