@@ -53,6 +53,22 @@ class ProductReview extends Model
     }
 
     /**
+     * @return \Illuminate\Database\Eloquent\Relations\hasMany
+     */
+    public function image()
+    {
+        return $this->hasMany(\App\Models\ProductImage::class, 'product_id', 'product_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function category()
+    {
+        return $this->BelongsToMany(\App\Models\Category::class, 'product_category', 'product_id', 'category_id', 'product_id');
+    }
+
+    /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function user()

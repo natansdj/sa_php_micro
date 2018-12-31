@@ -56,4 +56,13 @@ $router->group([CONST_PREFIX => 'api/v1'], function () use ($router) {
         $router->get('/history/{user_id}', 'v1\InvoiceController@index');
         $router->get('/{id}', 'v1\InvoiceController@show');
     });
+
+    /**
+     * Product Review routes
+     */
+    $router->group([CONST_PREFIX => 'review'], function () use ($router) {
+        $router->post('/', 'v1\ProductReviewController@store');
+        $router->post('/update/{id}', 'v1\ProductReviewController@update');
+        $router->delete('/{id}', 'v1\ProductReviewController@delete');
+    });
 });

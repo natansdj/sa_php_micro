@@ -49,7 +49,23 @@ class ProductReviewMg extends Model
      */
     public function product()
     {
-        return $this->belongsTo(\App\Models\Product::class);
+        return $this->belongsTo(\App\Models\ProductMg::class);
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\hasMany
+     */
+    public function image()
+    {
+        return $this->hasMany(\App\Models\ProductImageMg::class, 'product_id', 'product_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function category()
+    {
+        return $this->BelongsToMany(\App\Models\CategoryMg::class, 'product_category', 'product_id', 'category_id', 'product_id');
     }
 
     /**
@@ -57,6 +73,6 @@ class ProductReviewMg extends Model
      */
     public function user()
     {
-        return $this->belongsTo(\App\Models\User::class);
+        return $this->belongsTo(\App\Models\UserMg::class);
     }
 }
