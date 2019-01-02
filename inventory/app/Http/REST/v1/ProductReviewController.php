@@ -55,6 +55,7 @@ class ProductReviewController extends ApiBaseController
 
         if ($models) {
             $data = $this->api
+                ->includes(['user'])
                 ->serializer(new KeyArraySerializer('productReview'));
             if (env('DB_CONNECTION', CONST_MYSQL) == CONST_MYSQL) {
                 $data = $data->paginate($models, new ProductReviewTransformer());
