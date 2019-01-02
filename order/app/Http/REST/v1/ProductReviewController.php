@@ -79,9 +79,13 @@ class ProductReviewController extends ApiBaseController
             $failed = true;
         }*/
 
-        $validator = $this->productReview->validateRequest($request->only('review', 'rating'), "update");
+        $data = $request->only('review', 'rating');
+        $data['rating'] = ($data['rating'] > 5) ? 5 : $data['rating'];
+        $data['rating'] = ($data['rating'] < 1) ? 1 : $data['rating'];
+
+        $validator = $this->productReview->validateRequest($data, "update");
         if ( ! $failed && $validator->status() == "200") {
-            $task = $this->productReview->update($request->only('review', 'rating'), $request->id);
+            $task = $this->productReview->update($data, $request->id);
             if ($task) {
                 return $this->response->success("Product review updated");
             }
