@@ -56,4 +56,11 @@ $router->group([CONST_PREFIX => 'api/v1'], function () use ($router) {
         $router->delete('/{id}', 'v1\StoreController@delete');
         $router->get('/search/{s}', 'v1\StoreController@search');
     });
+
+    /**
+     * Product Review routes
+     */
+    $router->group([CONST_PREFIX => 'review'], function () use ($router) {
+        $router->get('/{product_id}', 'v1\ProductReviewController@index');
+    });
 });
