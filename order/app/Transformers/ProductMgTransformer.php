@@ -27,6 +27,7 @@ class ProductMgTransformer extends TransformerAbstract
             'harga'       => $model->harga,
             'stock'       => $model->stock,
             'created_at'  => $model->created_at,
+            'updated_at'  => $model->updated_at,
         ];
     }
 
