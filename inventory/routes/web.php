@@ -33,6 +33,7 @@ $router->group([CONST_PREFIX => 'api/v1'], function () use ($router) {
         $router->get('/', 'v1\ProductController@index');
         $router->get('/{id}', 'v1\ProductController@show');
         $router->post('/', 'v1\ProductController@store');
+        $router->post('/search/{s}', 'v1\ProductController@search');
     });
 
     /**

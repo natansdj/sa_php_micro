@@ -217,4 +217,49 @@ class ProductController extends ApiBaseController
 
         return $this->response->errorInternal();
     }
+
+    public function search(Request $request)
+    {
+        $request->page = ($request->page) ? $request->page : 1;
+
+        $productIds = array();
+        if ($request->category_id) {
+            $productIds = $this->productCategory->model->where([
+                ['category_id', '=', $request->category_id],
+            ])->pluck('product_id')->toArray();
+        }
+
+        $models = $this->product->model->orWhere([
+            ['name', 'like', '%' . urldecode($request->s) . '%'],
+            ['description', 'like', '%' . urldecode($request->s) . '%'],
+        ]);
+
+        if ($productIds) {
+            $models = $models->whereIn('id', $productIds);
+        }
+
+        $sort = ($request->sort) ? $request->sort : "asc";
+        if ($request->order_by) {
+            $models = $models->orderBy("{$request->order_by}", "{$sort}");
+        } else {
+            $models = $models->orderBy("name", "{$sort}");
+        }
+
+        $models = $models->paginate(20, ['*'], 'page', $request->page);
+
+        if ($models->count()) {
+            $data = $this->api
+                ->includes(['store', 'category', 'image'])
+                ->serializer(new KeyArraySerializer('product'));
+            if (env('DB_CONNECTION', CONST_MYSQL) == CONST_MYSQL) {
+                $data = $data->paginate($models, new ProductTransformer());
+            } else {
+                $data = $data->paginate($models, new ProductMgTransformer());
+            }
+
+            return $this->response->addModelLinks(new $this->product->model())->data($data, 200);
+        }
+
+        return $this->response->errorNotFound();
+    }
 }
