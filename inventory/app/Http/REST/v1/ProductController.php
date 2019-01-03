@@ -8,6 +8,9 @@ use Core\Helpers\Serializer\KeyArraySerializer;
 use App\Repositories\ProductRepository as Product;
 use App\Transformers\ProductTransformer;
 use App\Transformers\ProductMgTransformer;
+use App\Repositories\ViewProductRepository as ViewProduct;
+use App\Transformers\ViewProductTransformer;
+use App\Transformers\ViewProductMgTransformer;
 use App\Repositories\ProductCategoryRepository as ProductCategory;
 use App\Transformers\ProductCategoryTransformer;
 use App\Transformers\ProductCategoryMgTransformer;
@@ -31,14 +34,30 @@ class ProductController extends ApiBaseController
     private $product;
 
     /**
+     * @var ViewProduct
+     */
+    private $viewProduct;
+
+    /**
+     * @var ProductCategory
+     */
+    private $productCategory;
+
+    /**
+     * @var ProductImage
+     */
+    private $productImage;
+
+    /**
      * UserController constructor.
      *
      * @param Product $product
      */
-    public function __construct(Product $product, ProductCategory $productCategory, ProductImage $productImage)
+    public function __construct(Product $product, ViewProduct $viewProduct, ProductCategory $productCategory, ProductImage $productImage)
     {
         parent::__construct();
         $this->product = $product;
+        $this->viewProduct = $viewProduct;
         $this->productCategory = $productCategory;
         $this->productImage = $productImage;
     }
@@ -229,10 +248,11 @@ class ProductController extends ApiBaseController
             ])->pluck('product_id')->toArray();
         }
 
-        $models = $this->product->model->orWhere([
-            ['name', 'like', '%' . urldecode($request->s) . '%'],
-            ['description', 'like', '%' . urldecode($request->s) . '%'],
-        ]);
+        $models = $this->viewProduct->model->where(
+            'name', 'like', '%' . urldecode($request->s) . '%'
+        )->orWhere(
+            'description', 'like', '%' . urldecode($request->s) . '%'
+        );
 
         if ($productIds) {
             $models = $models->whereIn('id', $productIds);
@@ -252,9 +272,9 @@ class ProductController extends ApiBaseController
                 ->includes(['store', 'category', 'image'])
                 ->serializer(new KeyArraySerializer('product'));
             if (env('DB_CONNECTION', CONST_MYSQL) == CONST_MYSQL) {
-                $data = $data->paginate($models, new ProductTransformer());
+                $data = $data->paginate($models, new ViewProductTransformer());
             } else {
-                $data = $data->paginate($models, new ProductMgTransformer());
+                $data = $data->paginate($models, new ViewProductMgTransformer());
             }
 
             return $this->response->addModelLinks(new $this->product->model())->data($data, 200);
