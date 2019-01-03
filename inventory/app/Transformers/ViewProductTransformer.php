@@ -2,10 +2,10 @@
 
 namespace App\Transformers;
 
-use App\Models\Product;
+use App\Models\ViewProduct;
 use League\Fractal\TransformerAbstract;
 
-class ProductTransformer extends TransformerAbstract
+class ViewProductTransformer extends TransformerAbstract
 {
     protected $availableIncludes = [
         'image',
@@ -19,21 +19,23 @@ class ProductTransformer extends TransformerAbstract
      * @Request Product
      * @Response array
      */
-    public function transform(Product $model)
+    public function transform(ViewProduct $model)
     {
         return [
-            'id'          => $model->id,
-            'name'        => $model->name,
-            'description' => $model->description,
-            'harga'       => $model->harga,
-            'stock'       => $model->stock,
-            'store_id'    => $model->store_id,
-            'created_at'  => $model->created_at,
-            'updated_at'  => $model->updated_at,
+            'id'            => $model->id,
+            'name'          => $model->name,
+            'description'   => $model->description,
+            'harga'         => $model->harga,
+            'stock'         => $model->stock,
+            'store_id'      => $model->store_id,
+            'total_sold'    => $model->total_sold,
+            'total_review'  => $model->total_review,
+            'created_at'    => $model->created_at,
+            'updated_at'    => $model->updated_at,
         ];
     }
 
-    public function includeImage(Product $model)
+    public function includeImage(ViewProduct $model)
     {
         $images = $model->image()->get();
 
@@ -41,7 +43,7 @@ class ProductTransformer extends TransformerAbstract
         return $this->collection($images, new ImageTransformer(), - 1);
     }
 
-    public function includeCategory(Product $model)
+    public function includeCategory(ViewProduct $model)
     {
         $categories = $model->category()->get();
 
@@ -49,7 +51,7 @@ class ProductTransformer extends TransformerAbstract
         return $this->collection($categories, new CategoryTransformer(), - 1);
     }
 
-    public function includeStore(Product $model)
+    public function includeStore(ViewProduct $model)
     {
         $store = $model->store()->get();
 
