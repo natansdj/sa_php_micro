@@ -9,6 +9,7 @@ class CategoryTransformer extends TransformerAbstract
 {
     protected $availableIncludes = [
         'product',
+        'relatedProduct',
     ];
 
     protected $defaultIncludes = [];
@@ -28,9 +29,17 @@ class CategoryTransformer extends TransformerAbstract
 
     public function includeProduct(Category $model)
     {
-        $images = $model->product()->get();
+        $products = $model->product()->get();
 
         //resourceKey -1 if you want to exclude arrayKey from the data included by the transformer when use KeyArraySerializer
-        return $this->collection($images, new ProductTransformer(), - 1);
+        return $this->collection($products, new ProductTransformer(), - 1);
+    }
+
+    public function includeRelatedProduct(Category $model)
+    {
+        $products = $model->product()->inRandomOrder()->limit(5)->get();
+
+        //resourceKey -1 if you want to exclude arrayKey from the data included by the transformer when use KeyArraySerializer
+        return $this->collection($products, new ProductTransformer(), - 1);
     }
 }
