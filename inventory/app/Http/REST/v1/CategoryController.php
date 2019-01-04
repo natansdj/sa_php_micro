@@ -99,7 +99,7 @@ class CategoryController extends ApiBaseController
                 $productModel = $this->product->find($v['id']);
                 if ($productModel) {
                     $productData = $this->api
-                        ->includes('image')
+                        ->includes(['image', 'category', 'store'])
                         ->serializer(new KeyArraySerializer('product'));
                     if (env('DB_CONNECTION', CONST_MYSQL) == CONST_MYSQL) {
                         $productData = $productData->item($productModel, new ProductTransformer());

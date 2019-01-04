@@ -5,6 +5,9 @@ namespace App\Http\REST\v1;
 use Core\Http\REST\Controller\ApiBaseController;
 use Core\Helpers\Serializer\KeyArraySerializer;
 
+use App\Repositories\CategoryRepository as Category;
+use App\Transformers\CategoryTransformer;
+use App\Transformers\CategoryMgTransformer;
 use App\Repositories\ProductRepository as Product;
 use App\Transformers\ProductTransformer;
 use App\Transformers\ProductMgTransformer;
@@ -28,6 +31,11 @@ use Illuminate\Http\Request;
  */
 class ProductController extends ApiBaseController
 {
+    /**
+     * @var Category
+     */
+    private $category;
+
     /**
      * @var Product
      */
@@ -53,9 +61,10 @@ class ProductController extends ApiBaseController
      *
      * @param Product $product
      */
-    public function __construct(Product $product, ViewProduct $viewProduct, ProductCategory $productCategory, ProductImage $productImage)
+    public function __construct(Category $category, Product $product, ViewProduct $viewProduct, ProductCategory $productCategory, ProductImage $productImage)
     {
         parent::__construct();
+        $this->category = $category;
         $this->product = $product;
         $this->viewProduct = $viewProduct;
         $this->productCategory = $productCategory;
@@ -115,6 +124,9 @@ class ProductController extends ApiBaseController
             } else {
                 $data = $data->item($model, new ProductMgTransformer());
             }
+
+            $categories = end($data['product']['category']);
+            $data['product']['related_product'] = $this->relatedProduct($categories['id']);
 
             return $this->response->data($data, 200);
         }
@@ -281,5 +293,40 @@ class ProductController extends ApiBaseController
         }
 
         return $this->response->errorNotFound();
+    }
+
+    public function relatedProduct($category_id) {
+        $output = array();
+        $model = $this->category->find($category_id);
+        if ($model) {
+            $data = $this->api
+                ->includes('relatedProduct')
+                ->serializer(new KeyArraySerializer('category'));
+            if (env('DB_CONNECTION', CONST_MYSQL) == CONST_MYSQL) {
+                $data = $data->item($model, new CategoryTransformer());
+            } else {
+                $data = $data->item($model, new CategoryMgTransformer());
+            }
+
+            foreach ($data['category']['relatedProduct'] as $k => $v) {
+                $productModel = $this->product->find($v['id']);
+                if ($productModel) {
+                    $productData = $this->api
+                        ->includes(['image', 'category', 'store'])
+                        ->serializer(new KeyArraySerializer('product'));
+                    if (env('DB_CONNECTION', CONST_MYSQL) == CONST_MYSQL) {
+                        $productData = $productData->item($productModel, new ProductTransformer());
+                    } else {
+                        $productData = $productData->item($productModel, new ProductMgTransformer());
+                    }
+
+                    $data['category']['relatedProduct'][$k] = $productData['product'];
+                }
+            }
+
+            $output = $data['category']['relatedProduct'];
+        }
+
+        return $output;
     }
 }
