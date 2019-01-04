@@ -62,6 +62,11 @@ $app->withEloquent();
 //Load Manager Providers of Framework
 $app->register(Core\Providers\ManagerServiceProvider::class);
 
+//Load elasticseach
+$app->register(Basemkhirat\Elasticsearch\ElasticsearchServiceProvider::class);
+$app->configure("es");
+$app->configure("scout");
+
 /*
 |--------------------------------------------------------------------------
 | Load The Application Routes
