@@ -21,6 +21,8 @@ use App\Repositories\ProductImageRepository as ProductImage;
 use App\Transformers\ProductImageTransformer;
 use App\Transformers\ProductImageMgTransformer;
 
+use App\Models\ProductEs;
+
 use Gate;
 use Illuminate\Http\Request;
 
@@ -42,6 +44,11 @@ class ProductController extends ApiBaseController
     private $product;
 
     /**
+     * @var ProductEs
+     */
+    private $productEs;
+
+    /**
      * @var ViewProduct
      */
     private $viewProduct;
@@ -61,7 +68,7 @@ class ProductController extends ApiBaseController
      *
      * @param Product $product
      */
-    public function __construct(Category $category, Product $product, ViewProduct $viewProduct, ProductCategory $productCategory, ProductImage $productImage)
+    public function __construct(Category $category, Product $product, ProductEs $productEs, ViewProduct $viewProduct, ProductCategory $productCategory, ProductImage $productImage)
     {
         parent::__construct();
         $this->category = $category;
@@ -69,6 +76,7 @@ class ProductController extends ApiBaseController
         $this->viewProduct = $viewProduct;
         $this->productCategory = $productCategory;
         $this->productImage = $productImage;
+        $this->productEs = $productEs;
     }
 
     /**
@@ -124,6 +132,8 @@ class ProductController extends ApiBaseController
             } else {
                 $data = $data->item($model, new ProductMgTransformer());
             }
+
+            $data['product']['store'] = $data['product']['store'][0];
 
             $categories = end($data['product']['category']);
             $data['product']['related_product'] = $this->relatedProduct($categories['id']);
@@ -181,6 +191,8 @@ class ProductController extends ApiBaseController
                         $i++;
                     }
                 }
+
+                $this->storeEs($task->id);
 
                 return $this->response->success("Product created");
             }
@@ -320,6 +332,8 @@ class ProductController extends ApiBaseController
                         $productData = $productData->item($productModel, new ProductMgTransformer());
                     }
 
+                    $productData['product']['store'] = $productData['product']['store'][0];
+
                     $data['category']['relatedProduct'][$k] = $productData['product'];
                 }
             }
@@ -328,5 +342,57 @@ class ProductController extends ApiBaseController
         }
 
         return $output;
+    }
+
+    public function storeEs($id)
+    {
+        $model = $this->product->find($id);
+        if ($model) {
+            $data = $this->api
+                ->includes(['image', 'category', 'store'])
+                ->serializer(new KeyArraySerializer('product'));
+            if (env('DB_CONNECTION', CONST_MYSQL) == CONST_MYSQL) {
+                $data = $data->item($model, new ProductTransformer());
+            } else {
+                $data = $data->item($model, new ProductMgTransformer());
+            }
+
+            $data['product']['store'] = $data['product']['store'][0];
+
+            $this->productEs->id = $data['product']['id'];
+            $this->productEs->name = $data['product']['name'];
+            $this->productEs->description = $data['product']['description'];
+            $this->productEs->harga = $data['product']['harga'];
+            $this->productEs->stock = $data['product']['stock'];
+            $this->productEs->store_id = $data['product']['store_id'];
+            $this->productEs->created_at = date_timestamp_get($data['product']['created_at']);
+            $this->productEs->updated_at = date_timestamp_get($data['product']['updated_at']);
+
+            $images = array();
+            foreach($data['product']['image'] as $v) {
+                $images[] = array(
+                    "id" => $v["id"],
+                    "image" => $v["image"],
+                    "created_at" => date_timestamp_get($v["created_at"])
+                );
+            }
+            $this->productEs->image = $images;
+
+            $categories = array();
+            foreach($data['product']['category'] as $v) {
+                $categories[] = array(
+                    "id" => $v["id"],
+                    "name" => $v["name"],
+                    "created_at" => date_timestamp_get($v["created_at"])
+                );
+            }
+            $this->productEs->category = $categories;
+
+            $data['product']['store']['created_at'] = date_timestamp_get($data['product']['store']['created_at']);
+            $data['product']['store']['updated_at'] = date_timestamp_get($data['product']['store']['updated_at']);
+            $this->productEs->store_detail = $data['product']['store'];
+
+            $this->productEs->save();
+        }
     }
 }
