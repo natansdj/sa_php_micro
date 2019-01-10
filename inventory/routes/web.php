@@ -64,4 +64,12 @@ $router->group([CONST_PREFIX => 'api/v1'], function () use ($router) {
     $router->group([CONST_PREFIX => 'review'], function () use ($router) {
         $router->get('/{product_id}', 'v1\ProductReviewController@index');
     });
+
+    /**
+     * Export routes
+     */
+    $router->group([CONST_PREFIX => 'export'], function () use ($router) {
+        $router->get('/excel/{store_id}', 'v1\ExportController@excel');
+        $router->get('/csv/{store_id}', 'v1\ExportController@csv');
+    });
 });
