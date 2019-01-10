@@ -9,6 +9,7 @@ return [
         'graphql' => \Core\Providers\GraphQLServiceProvider::class,
         'app'     => App\Providers\AppServiceProvider::class,
         \Intervention\Image\ImageServiceProvider::class,
+        \Maatwebsite\Excel\ExcelServiceProvider::class
     ],
 
     /*
@@ -26,6 +27,7 @@ return [
     ],
 
     'alias' => [
+        'Excel'    => Maatwebsite\Excel\Facades\Excel::class,
         'Image'    => Intervention\Image\Facades\Image::class,
         'Eloquent' => (env('DB_CONNECTION', CONST_MYSQL) == CONST_MYSQL) ? Illuminate\Database\Eloquent\Model::class : Jenssegers\Mongodb\Eloquent\Model::class,
     ],
