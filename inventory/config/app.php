@@ -2,9 +2,7 @@
 
 return [
     'locale' => 'en',
-
     'aliases' => [
-
         'App'          => Illuminate\Support\Facades\App::class,
         'Artisan'      => Illuminate\Support\Facades\Artisan::class,
         'Auth'         => Illuminate\Support\Facades\Auth::class,
@@ -40,5 +38,6 @@ return [
         'Image'        => Intervention\Image\Facades\Image::class,
         'JWTAuth'      => Tymon\JWTAuth\Facades\JWTAuth::class,
         'JWTFactory'   => Tymon\JWTAuth\Facades\JWTFactory::class,
+        'Excel'        => Maatwebsite\Excel\Facades\Excel::class,
     ],
 ];
