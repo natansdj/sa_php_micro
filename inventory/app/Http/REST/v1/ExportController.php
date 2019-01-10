@@ -47,9 +47,24 @@ class ExportController extends ApiBaseController
      */
     public function excel($id)
     {
-        $dTimestamp = date_timestamp_get(date_create());
+        $YmdHis = date("YmdHis");
 
-        return (new ViewProductExport($id))->download("products-{$dTimestamp}.xlsx");
+        return (new ViewProductExport($id))->download("inventory-report-{$YmdHis}.xlsx");
+    }
+
+    /**
+     * Export to excel.
+     *
+     * Get an Excel of prodcut by store.
+     *
+     * @Get("/export/excel/{id}")
+     * @Versions({"v1"})
+     */
+    public function csv($id)
+    {
+        $YmdHis = date("YmdHis");
+
+        return (new ViewProductExport($id))->download("inventory-report-{$YmdHis}.csv");
     }
 
 }
