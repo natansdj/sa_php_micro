@@ -63,6 +63,8 @@ class BookController extends ApiBaseController
         $this->cart = $cart;
         $this->user = $user;
         $this->promo = $promo;
+
+        $this->middleware('jwt.verify', ['except' => ['showInvoice', 'storeInvoice', 'assignCartInvoice', 'getUser']]);
     }
 
     public function showInvoice($id)

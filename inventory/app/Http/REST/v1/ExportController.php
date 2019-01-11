@@ -35,6 +35,7 @@ class ExportController extends ApiBaseController
     {
         parent::__construct();
         $this->excel = $excel;
+        $this->middleware('jwt.verify');
     }
 
     /**

@@ -43,6 +43,7 @@ class CategoryController extends ApiBaseController
         parent::__construct();
         $this->category = $category;
         $this->product = $product;
+        $this->middleware('jwt.verify', ['except' => ['index', 'show']]);
     }
 
     /**

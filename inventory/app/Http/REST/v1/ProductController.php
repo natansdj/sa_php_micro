@@ -77,6 +77,7 @@ class ProductController extends ApiBaseController
         $this->productCategory = $productCategory;
         $this->productImage = $productImage;
         $this->productEs = $productEs;
+        $this->middleware('jwt.verify', ['except' => ['index', 'show', 'search', 'relatedProduct']]);
     }
 
     /**
