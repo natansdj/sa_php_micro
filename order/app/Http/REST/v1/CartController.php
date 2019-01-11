@@ -43,6 +43,8 @@ class CartController extends ApiBaseController
         parent::__construct();
         $this->cart = $cart;
         $this->product = $product;
+
+        $this->middleware('jwt.verify');
     }
 
     /**

@@ -34,6 +34,8 @@ class PromoController extends ApiBaseController
     {
         parent::__construct();
         $this->promo = $promo;
+
+        $this->middleware('jwt.verify', ['except' => ['index', 'show']]);
     }
 
     /**

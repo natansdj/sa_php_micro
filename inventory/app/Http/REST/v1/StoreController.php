@@ -43,6 +43,7 @@ class StoreController extends ApiBaseController
         parent::__construct();
         $this->store = $store;
         $this->product = $product;
+        $this->middleware('jwt.verify', ['except' => ['index', 'show', 'search']]);
     }
 
     /**
