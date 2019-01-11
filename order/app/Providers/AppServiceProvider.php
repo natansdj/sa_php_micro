@@ -43,7 +43,9 @@ class AppServiceProvider extends ServiceProvider
         //always when routes are called
         $this->app->middleware([]);
 
-        $this->app->routeMiddleware([]);
+        $this->app->routeMiddleware([
+            'jwt.verify' => \App\Http\Middleware\JwtMiddleware::class,
+        ]);
     }
 
     /**

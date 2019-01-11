@@ -34,6 +34,7 @@ class WishlistController extends ApiBaseController
     {
         parent::__construct();
         $this->wishlist = $wishlist;
+        $this->middleware('jwt.verify');
     }
 
     /**
