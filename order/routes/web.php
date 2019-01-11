@@ -26,6 +26,7 @@ $router->group([CONST_PREFIX => 'api/v1'], function () use ($router) {
     $router->group([CONST_PREFIX => 'cart'], function () use ($router) {
         $router->get('/{id}', 'v1\CartController@show');
         $router->post('/', 'v1\CartController@store');
+        $router->post('/bulk', 'v1\CartController@storeBulk');
         $router->post('/update/{id}', 'v1\CartController@update');
         $router->delete('/{id}', 'v1\CartController@delete');
     });
