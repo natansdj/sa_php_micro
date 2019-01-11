@@ -175,6 +175,69 @@ class CartController extends ApiBaseController
         return $validator;
     }
 
+    public function storeBulk(Request $request)
+    {
+        $response = array();
+        foreach($request->product_id as $k => $v) {
+            $product = $this->product->find($v);
+
+            $model = $this->cart->model->where([
+                ['status', '=', 'incomplete'],
+                ['user_id', '=', $request->user_id],
+                ['product_id', '=', $v]
+            ])->first();
+
+            $qty = ($request->qty[$k]) ? $request->qty[$k] : 1;
+
+            $request_all = array(
+                'user_id' => $request->user_id,
+                'product_id' => $v,
+                'qty' => $qty,
+                'price' => $product->harga
+            );
+
+            $status = array(
+                'error' => "Internal Error"
+            );
+
+            // update
+            if ($model) {
+                $task = $this->cart->update([
+                    'qty' => ((int) $model->qty + (int) $qty)
+                ], $model->id);
+                if ($task) {
+                    $status = array(
+                        'success' => "Cart updated"
+                    );
+                }
+                $response[] = array(
+                    'product_id' => $model->id,
+                    'status' => $status,
+                );
+                continue;
+            }
+
+            // create
+            $validator = $this->cart->validateRequest($request_all);
+            if ($validator->status() == "200") {
+                $task = $this->cart->create($request_all);
+                if ($task) {
+                    $status = array(
+                        'success' => "Cart created"
+                    );
+                }
+            } else {
+                $status = json_decode(json)($validator);
+            }
+            $response[] = array(
+                'product_id' => $request_all['product_id'],
+                'status' => $status
+            );
+        }
+
+        return $this->response->data($response);
+    }
+
     /**
      * Update cart
      *
