@@ -17,7 +17,7 @@ class ViewProduct extends Model
      * @var array
      */
     protected $fillable = [
-        'name', 'description', 'harga', 'stock', 'store_id', 'total_sold', 'total_review'
+        'name', 'description', 'harga', 'stock', 'store_id', 'total_sold', 'total_review', 'last_review'
     ];
 
     /**
