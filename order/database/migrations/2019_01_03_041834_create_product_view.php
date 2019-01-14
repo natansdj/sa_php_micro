@@ -16,7 +16,8 @@ class CreateProductView extends Migration
         DB::statement("CREATE OR REPLACE VIEW `view_product` AS
             SELECT `p`.*,
             (SELECT COUNT(*) FROM `cart` WHERE `product_id` = `p`.`id` AND `status` = 'shipped') AS `total_sold`,
-            (SELECT COUNT(*) FROM `product_review` WHERE `product_id` = `p`.`id`) AS `total_review`
+            (SELECT COUNT(*) FROM `product_review` WHERE `product_id` = `p`.`id`) AS `total_review`,
+            (SELECT `created_at` FROM `product_review` WHERE `product_id` = `p`.`id` ORDER BY `created_at` DESC LIMIT 1) AS `last_review`
             FROM `product` `p`;");
     }
 

@@ -16,9 +16,7 @@ class ViewProductRepository extends BaseRepository
         'description'   => 'required|min:5',
         'harga'         => 'required|numeric',
         'stock'         => 'required|numeric',
-        'store_id'      => 'required|exists:store,id',
-        'total_sold'    => 'numeric',
-        'total_review'  => 'numeric',
+        'store_id'      => 'required|exists:store,id'
     ];
 
     protected static $rules_update = [
@@ -27,9 +25,7 @@ class ViewProductRepository extends BaseRepository
         'description'   => 'min:5',
         'harga'         => 'numeric',
         'stock'         => 'numeric',
-        'store_id'      => 'exists:store,id',
-        'total_sold'    => 'numeric',
-        'total_review'  => 'numeric',
+        'store_id'      => 'exists:store,id'
     ];
 
     /**

@@ -32,6 +32,7 @@ class ViewProductTransformer extends TransformerAbstract
             'total_review'  => $model->total_review,
             'created_at'    => $model->created_at,
             'updated_at'    => $model->updated_at,
+            'last_review'   => $model->last_review,
         ];
     }
 
