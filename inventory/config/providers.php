@@ -9,7 +9,8 @@ return [
         'graphql' => \Core\Providers\GraphQLServiceProvider::class,
         'app'     => App\Providers\AppServiceProvider::class,
         \Intervention\Image\ImageServiceProvider::class,
-        \Maatwebsite\Excel\ExcelServiceProvider::class
+        \Maatwebsite\Excel\ExcelServiceProvider::class,
+        \Bschmitt\Amqp\AmqpServiceProvider::class,
     ],
 
     /*

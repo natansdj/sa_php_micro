@@ -25,7 +25,8 @@
     "intervention/imagecache": "^2.3",
     "jenssegers/mongodb": "^3.4",
     "basemkhirat/elasticsearch": "^1.3",
-    "maatwebsite/excel": "^3.1"
+    "maatwebsite/excel": "^3.1",
+    "bschmitt/laravel-amqp": "^2.0"
   },
   "require-dev": {
     "fzaninotto/faker": "~1.4",
