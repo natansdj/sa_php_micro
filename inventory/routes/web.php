@@ -72,4 +72,12 @@ $router->group([CONST_PREFIX => 'api/v1'], function () use ($router) {
         $router->get('/excel/{store_id}', 'v1\ExportController@excel');
         $router->get('/csv/{store_id}', 'v1\ExportController@csv');
     });
+
+    /**
+     * Message routes
+     */
+    $router->group([CONST_PREFIX => 'message'], function () use ($router) {
+        $router->post('/rabbit', 'v1\MessageController@rabbitPush');
+        $router->post('/kafka', 'v1\MessageController@kafka');
+    });
 });

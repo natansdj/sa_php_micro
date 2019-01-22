@@ -26,6 +26,7 @@ class AppServiceProvider extends ServiceProvider
     protected function setupConfig() {
         $this->app->configure('es');
         $this->app->configure('scout');
+        $this->app->configure('amqp');
     }
 
     /**
