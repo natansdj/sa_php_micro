@@ -20,6 +20,11 @@ RUN printf "\n" | pecl install -o -f redis \
     &&  rm -rf /tmp/pear \
     &&  docker-php-ext-enable redis
 
+# Run install memcached
+RUN apt-get install -y libmemcached-dev zlib1g-dev \
+    && pecl install memcached \
+    && docker-php-ext-enable memcached
+
 # Run install xdebug
 RUN pecl install xdebug \
     && docker-php-ext-enable xdebug

@@ -132,6 +132,33 @@ services:
       - "traefik.backend.port=15672"
       - "traefik.docker.network=webgateway"
 
+  zookeeper:
+    image: 'bitnami/zookeeper:latest'
+    container_name: lm_zookeeper
+    ports:
+      - '2181:2181'
+    networks:
+      - webgateway
+      - web
+    environment:
+      - ALLOW_ANONYMOUS_LOGIN=yes
+    volumes:
+      - 'zookeeper_data:/bitnami'
+
+  kafka:
+    image: 'bitnami/kafka:latest'
+    container_name: lm_kafka
+    ports:
+      - '9092:9092'
+    volumes:
+      - 'kafka_data:/bitnami'
+    networks:
+      - webgateway
+      - web
+    environment:
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
+      - ALLOW_PLAINTEXT_LISTENER=yes
+
   adminer:
     build:
       context: adminer
@@ -245,6 +272,11 @@ services:
       - "traefik.backend=api"
       - "traefik.docker.network=webgateway"
 
+volumes:
+  zookeeper_data:
+    driver: local
+  kafka_data:
+    driver: local
 
 networks:
   webgateway:
