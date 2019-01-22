@@ -10,7 +10,7 @@ RUN apt-get update -yqq && \
     && pecl channel-update pecl.php.net
     
 # Extensions PHP
-RUN docker-php-ext-install pdo_mysql intl zip
+RUN docker-php-ext-install pdo_mysql intl zip bcmath
 
 # Run install php mongo extension
 RUN apt-get install -y libcurl4-openssl-dev pkg-config libssl-dev

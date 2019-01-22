@@ -67,6 +67,10 @@ $app->register(Basemkhirat\Elasticsearch\ElasticsearchServiceProvider::class);
 $app->configure("es");
 $app->configure("scout");
 
+//Load AMQP
+$app->configure('amqp');
+$app->register(Bschmitt\Amqp\LumenServiceProvider::class);
+
 /*
 |--------------------------------------------------------------------------
 | Load The Application Routes
