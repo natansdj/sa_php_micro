@@ -64,7 +64,7 @@ class BookController extends ApiBaseController
         $this->user = $user;
         $this->promo = $promo;
 
-        $this->middleware('jwt.verify', ['except' => ['showInvoice', 'storeInvoice', 'assignCartInvoice', 'getUser', 'checkout']]);
+        //$this->middleware('jwt.verify', ['except' => ['showInvoice', 'storeInvoice', 'assignCartInvoice', 'getUser']]);
     }
 
     public function showInvoice($id)
@@ -172,7 +172,8 @@ class BookController extends ApiBaseController
 
         if ($models->count()) {
             $data = $this->api
-                ->includes(['product', 'image', 'category', 'user'])
+                //->includes(['product', 'image', 'category', 'user'])
+                ->includes(['product', 'category', 'user'])
                 ->serializer(new KeyArraySerializer('cart'));
             if (env('DB_CONNECTION', CONST_MYSQL) == CONST_MYSQL) {
                 $data = $data->collection($models, new CartTransformer());
@@ -187,7 +188,7 @@ class BookController extends ApiBaseController
             foreach($data['cart'] as $k => $v) {
                 unset($v['user']);
                 $new_data['cart'][$k] = $v;
-                $new_data['cart'][$k]['product'][0]['image'] = $v['image'];
+                //$new_data['cart'][$k]['product'][0]['image'] = $v['image'];
                 $new_data['cart'][$k]['product'][0]['category'] = $v['category'];
                 unset($new_data['cart'][$k]['image']);
                 unset($new_data['cart'][$k]['category']);
