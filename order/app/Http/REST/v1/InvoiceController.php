@@ -34,7 +34,7 @@ class InvoiceController extends ApiBaseController
         parent::__construct();
         $this->invoice = $invoice;
 
-        $this->middleware('jwt.verify');
+        //$this->middleware('jwt.verify');
     }
 
     /**

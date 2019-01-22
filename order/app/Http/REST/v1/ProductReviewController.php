@@ -35,7 +35,7 @@ class ProductReviewController extends ApiBaseController
         parent::__construct();
         $this->productReview = $productReview;
 
-        $this->middleware('jwt.verify');
+        //$this->middleware('jwt.verify');
     }
 
     /**

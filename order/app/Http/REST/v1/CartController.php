@@ -44,7 +44,7 @@ class CartController extends ApiBaseController
         $this->cart = $cart;
         $this->product = $product;
 
-        $this->middleware('jwt.verify', ['except' => ['index']]);
+        //$this->middleware('jwt.verify');
     }
 
     /**
@@ -66,7 +66,8 @@ class CartController extends ApiBaseController
 
         if ($models->count()) {
             $data = $this->api
-                ->includes(['product', 'image', 'category'])
+                //->includes(['product', 'image', 'category'])
+                ->includes(['product', 'category'])
                 ->serializer(new KeyArraySerializer('cart'));
             if (env('DB_CONNECTION', CONST_MYSQL) == CONST_MYSQL) {
                 $data = $data->collection($models, new CartTransformer());
@@ -78,9 +79,9 @@ class CartController extends ApiBaseController
             $new_data = array();
             foreach($data['cart'] as $k => $v) {
                 $new_data['cart'][$k] = $v;
-                $new_data['cart'][$k]['product'][0]['image'] = $v['image'];
+                //$new_data['cart'][$k]['product'][0]['image'] = $v['image'];
                 $new_data['cart'][$k]['product'][0]['category'] = $v['category'];
-                unset($new_data['cart'][$k]['image']);
+                //unset($new_data['cart'][$k]['image']);
                 unset($new_data['cart'][$k]['category']);
             }
 
