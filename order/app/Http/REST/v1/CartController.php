@@ -44,7 +44,7 @@ class CartController extends ApiBaseController
         $this->cart = $cart;
         $this->product = $product;
 
-        $this->middleware('jwt.verify');
+        $this->middleware('jwt.verify', ['except' => ['index']]);
     }
 
     /**
