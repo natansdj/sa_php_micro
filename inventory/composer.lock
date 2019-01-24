@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "abe69325188bfb7ec28972476f74add3",
+    "content-hash": "2c8bbe2e8c1f1c294c9917a06485b605",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -1278,7 +1278,7 @@
         },
         {
             "name": "illuminate/console",
-            "version": "v5.7.21",
+            "version": "v5.7.22",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/console.git",
@@ -1328,7 +1328,7 @@
         },
         {
             "name": "illuminate/container",
-            "version": "v5.7.21",
+            "version": "v5.7.22",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/container.git",
@@ -1373,7 +1373,7 @@
         },
         {
             "name": "illuminate/contracts",
-            "version": "v5.7.21",
+            "version": "v5.7.22",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/contracts.git",
@@ -1417,7 +1417,7 @@
         },
         {
             "name": "illuminate/database",
-            "version": "v5.7.21",
+            "version": "v5.7.22",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/database.git",
@@ -1567,7 +1567,7 @@
         },
         {
             "name": "illuminate/filesystem",
-            "version": "v5.7.21",
+            "version": "v5.7.22",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/filesystem.git",
@@ -1842,7 +1842,7 @@
         },
         {
             "name": "illuminate/queue",
-            "version": "v5.7.21",
+            "version": "v5.7.22",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/queue.git",
@@ -1995,7 +1995,7 @@
         },
         {
             "name": "illuminate/support",
-            "version": "v5.7.20",
+            "version": "v5.7.22",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/support.git",
@@ -4041,57 +4041,6 @@
             "time": "2017-10-23T01:57:42+00:00"
         },
         {
-            "name": "rapide/laravel-queue-kafka",
-            "version": "1.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/rapideinternet/laravel-queue-kafka.git",
-                "reference": "409eb0366c2cde0c3831ced521f5e5ed1f0e2835"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/rapideinternet/laravel-queue-kafka/zipball/409eb0366c2cde0c3831ced521f5e5ed1f0e2835",
-                "reference": "409eb0366c2cde0c3831ced521f5e5ed1f0e2835",
-                "shasum": ""
-            },
-            "require": {
-                "ext-rdkafka": "*",
-                "illuminate/database": "5.4.*|5.5.*||5.6.*|5.7.*",
-                "illuminate/queue": "5.4.*|5.5.*|5.6.*|5.7.*",
-                "illuminate/support": "5.4.*|5.5.*|5.6.*|5.7.*",
-                "php": ">=5.6.4"
-            },
-            "require-dev": {
-                "mockery/mockery": "^0.9.5",
-                "phpunit/phpunit": "^5.5"
-            },
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "Rapide\\LaravelQueueKafka\\LaravelQueueKafkaServiceProvider"
-                    ]
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Rapide\\LaravelQueueKafka\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Peter Mein",
-                    "email": "petermein@gmail.com"
-                }
-            ],
-            "description": "Kafka driver for Laravel Queue",
-            "time": "2018-11-10T14:58:14+00:00"
-        },
-        {
             "name": "react/promise",
             "version": "v2.7.0",
             "source": {
@@ -4201,6 +4150,100 @@
                 "spatie"
             ],
             "time": "2018-11-21T16:41:38+00:00"
+        },
+        {
+            "name": "superbalist/php-pubsub",
+            "version": "2.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Superbalist/php-pubsub.git",
+                "reference": "f6ee71596edc824241cb6138af20ae440e613f35"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Superbalist/php-pubsub/zipball/f6ee71596edc824241cb6138af20ae440e613f35",
+                "reference": "f6ee71596edc824241cb6138af20ae440e613f35",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.6.0"
+            },
+            "require-dev": {
+                "mockery/mockery": "^0.9.5",
+                "phpunit/phpunit": "^5.5"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Superbalist\\PubSub\\": "src/",
+                    "Tests\\": "tests/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Superbalist.com a division of Takealot Online (Pty) Ltd",
+                    "email": "info@superbalist.com"
+                }
+            ],
+            "description": "An adapter based PubSub package for PHP",
+            "time": "2017-05-16T09:52:04+00:00"
+        },
+        {
+            "name": "superbalist/php-pubsub-kafka",
+            "version": "2.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Superbalist/php-pubsub-kafka.git",
+                "reference": "75c7a166ff71a6089255eeb38499dcc69cd175e7"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Superbalist/php-pubsub-kafka/zipball/75c7a166ff71a6089255eeb38499dcc69cd175e7",
+                "reference": "75c7a166ff71a6089255eeb38499dcc69cd175e7",
+                "shasum": ""
+            },
+            "require": {
+                "ext-rdkafka": "*",
+                "php": ">=5.6.0",
+                "superbalist/php-pubsub": "^2.0"
+            },
+            "require-dev": {
+                "mockery/mockery": "^0.9.5",
+                "phpunit/phpunit": "^5.5"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Superbalist\\PubSub\\Kafka\\": "src/",
+                    "Tests\\": "tests/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Superbalist.com a division of Takealot Online (Pty) Ltd",
+                    "email": "info@superbalist.com"
+                }
+            ],
+            "description": "A Kafka adapter for the php-pubsub package",
+            "time": "2017-05-18T12:48:23+00:00"
         },
         {
             "name": "symfony/console",
