@@ -89,6 +89,7 @@ services:
     volumes:
       - ./elastic/data/data/:/usr/share/elasticsearch/data
       - ./elastic/data/plugins/:/usr/share/elasticsearch/plugins
+      - ./elastic/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
     mem_limit: 2g
     environment:
       - cluster.name=docker-cluster
