@@ -113,8 +113,6 @@ services:
     ports:
       - "5672:5672"
       - "15672:15672"
-    labels:
-      NAME: "rabbitmq"
     volumes:
       - ./rabbitmq/rabbitmq-isolated.conf:/etc/rabbitmq/rabbitmq.config
     environment:
@@ -190,13 +188,6 @@ services:
     networks:
       - webgateway
       - web
-    labels:
-      - "traefik.enable=true"
-      - "traefik.frontend.rule=Host:zookeeper.lm.local"
-      - "traefik.backend=zookeeper"
-      - "traefik.port=2181"
-      - "traefik.backend.port=2181"
-      - "traefik.docker.network=webgateway"
 
 
   kafka:
@@ -214,13 +205,6 @@ services:
     networks:
       - webgateway
       - web
-    labels:
-      - "traefik.enable=true"
-      - "traefik.frontend.rule=Host:kafka.lm.local"
-      - "traefik.backend=kafka"
-      - "traefik.port=9092"
-      - "traefik.backend.port=9092"
-      - "traefik.docker.network=webgateway"
 
 
   order:
