@@ -56,8 +56,9 @@ services:
       MONGODB_PASS: "secret"
     volumes:
       - ./mongodb/data:/data/db
-#      - ./mongodb/entrypoint/entrypoint.js:/docker-entrypoint-initdb.d/entrypoint.js
+      #- ./mongodb/entrypoint/entrypoint.js:/docker-entrypoint-initdb.d/entrypoint.js
     command: mongod --smallfiles --logpath=/dev/null # --quiet
+
 
   mongo-ex:
     image: mongo-express
@@ -106,6 +107,7 @@ services:
       - webgateway
       - web
 
+
   rabbitmq:
     image: "rabbitmq:3-management"
     container_name: lm_rabbit
@@ -132,7 +134,6 @@ services:
       - "traefik.docker.network=webgateway"
 
   
-
   adminer:
     build:
       context: adminer
