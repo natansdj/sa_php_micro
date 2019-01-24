@@ -48,7 +48,37 @@ class MessageController extends ApiBaseController
 
     public function kafka(Request $request)
     {
-        
+        // create consumer
+        $topicConf = new \RdKafka\TopicConf();
+        $topicConf->set('auto.offset.reset', 'largest');
+
+        $conf = new \RdKafka\Conf();
+        $conf->set('group.id', 'php-pubsub');
+        $conf->set('metadata.broker.list', '127.0.0.1');
+        $conf->set('enable.auto.commit', 'false');
+        $conf->set('offset.store.method', 'broker');
+        $conf->set('socket.blocking.max.ms', 50);
+        $conf->setDefaultTopicConf($topicConf);
+
+        $consumer = new \RdKafka\KafkaConsumer($conf);
+
+        // create producer
+        $conf = new \RdKafka\Conf();
+        $conf->set('socket.blocking.max.ms', 50);
+        $conf->set('queue.buffering.max.ms', 20);
+
+        $producer = new \RdKafka\Producer($conf);
+        $producer->addBrokers('127.0.0.1');
+
+        $adapter = new \Superbalist\PubSub\Kafka\KafkaPubSubAdapter($producer, $consumer);
+
+        // publish messages
+        //$adapter->publish('my_channel', 'HELLO WORLD');
+        //$adapter->publish('my_channel', ['hello' => 'world']);
+        //$adapter->publish('my_channel', 1);
+        //$adapter->publish('my_channel', false);
+
+        return $this->response->success();   
     }
 
 }
