@@ -26,6 +26,15 @@ RUN apt-get install -y libmemcached-dev zlib1g-dev \
     && pecl install memcached \
     && docker-php-ext-enable memcached
 
+# Run install kafka
+ENV LIBRDKAFKA_VERSION 0.11.6
+RUN curl -Lk -o /root/librdkafka-${LIBRDKAFKA_VERSION}.tar.gz https://github.com/edenhill/librdkafka/archive/v${LIBRDKAFKA_VERSION}.tar.gz && \
+    tar -xzf /root/librdkafka-${LIBRDKAFKA_VERSION}.tar.gz -C /root && \
+    cd /root/librdkafka-${LIBRDKAFKA_VERSION} && \
+    ./configure --prefix /usr && make && make install && make clean && ./configure --clean
+RUN pecl install rdkafka \
+    && docker-php-ext-enable rdkafka
+
 # Run install xdebug
 RUN pecl install xdebug \
     && docker-php-ext-enable xdebug
