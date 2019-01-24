@@ -1,56 +1,44 @@
-FROM bitnami/oraclelinux-extras:7-r238
-LABEL maintainer "Bitnami <containers@bitnami.com>"
+FROM openjdk:8u181-jre-alpine
 
-ENV BITNAMI_PKG_CHMOD="-R g+rwX" \
-    HOME="/"
+ARG kafka_version=2.1.0
+ARG scala_version=2.12
+ARG glibc_version=2.28-r0
+ARG vcs_ref=unspecified
+ARG build_date=unspecified
 
-# Install required system packages and dependencies
-RUN install_packages glibc libgcc
-RUN bitnami-pkg install java-1.8.191-21 --checksum 2021c68dea11b0805161e15d5f1ee6e0670e148f262138fede55d41b488993fb
-RUN bitnami-pkg unpack kafka-2.1.0-24 --checksum 4815de0cf80d2ae60b276ce73deea6ce7aa7cc5fd6a27ab2fe483b7e628f85f0
+LABEL org.label-schema.name="kafka" \
+      org.label-schema.description="Apache Kafka" \
+      org.label-schema.build-date="${build_date}" \
+      org.label-schema.vcs-ref="${vcs_ref}" \
+      org.label-schema.version="${scala_version}_${kafka_version}" \
+      org.label-schema.schema-version="1.0" 
 
-COPY rootfs /
-ENV ALLOW_PLAINTEXT_LISTENER="no" \
-    BITNAMI_APP_NAME="kafka" \
-    BITNAMI_IMAGE_VERSION="2.1.0-ol-7-r71" \
-    KAFKA_ADVERTISED_LISTENERS="PLAINTEXT://:9092" \
-    KAFKA_BROKER_ID="-1" \
-    KAFKA_BROKER_PASSWORD="bitnami" \
-    KAFKA_BROKER_USER="user" \
-    KAFKA_CERTIFICATE_PASSWORD="" \
-    KAFKA_DELETE_TOPIC_ENABLE="false" \
-    KAFKA_HEAP_OPTS="-Xmx1024m -Xms1024m" \
-    KAFKA_INTER_BROKER_LISTENER_NAME="" \
-    KAFKA_INTER_BROKER_PASSWORD="bitnami" \
-    KAFKA_INTER_BROKER_USER="admin" \
-    KAFKA_LISTENERS="PLAINTEXT://:9092" \
-    KAFKA_LISTENER_SECURITY_PROTOCOL_MAP="PLAINTEXT:PLAINTEXT,SSL:SSL,SASL_PLAINTEXT:SASL_PLAINTEXT,SASL_SSL:SASL_SSL" \
-    KAFKA_LOGS_DIRS="/opt/bitnami/kafka/data" \
-    KAFKA_LOG_FLUSH_INTERVAL_MESSAGES="10000" \
-    KAFKA_LOG_FLUSH_INTERVAL_MS="1000" \
-    KAFKA_LOG_MESSAGE_FORMAT_VERSION="" \
-    KAFKA_LOG_RETENTION_BYTES="1073741824" \
-    KAFKA_LOG_RETENTION_CHECK_INTERVALS_MS="300000" \
-    KAFKA_LOG_RETENTION_HOURS="168" \
-    KAFKA_MAX_MESSAGE_BYTES="1000012" \
-    KAFKA_NUM_IO_THREADS="8" \
-    KAFKA_NUM_NETWORK_THREADS="3" \
-    KAFKA_NUM_PARTITIONS="1" \
-    KAFKA_NUM_RECOVERY_THREADS_PER_DATA_DIR="1" \
-    KAFKA_PORT_NUMBER="9092" \
-    KAFKA_SEGMENT_BYTES="1073741824" \
-    KAFKA_SOCKET_RECEIVE_BUFFER_BYTES="102400" \
-    KAFKA_SOCKET_REQUEST_MAX_BYTES="104857600" \
-    KAFKA_SOCKET_SEND_BUFFER_BYTES="102400" \
-    KAFKA_ZOOKEEPER_CONNECT="localhost:2181" \
-    KAFKA_ZOOKEEPER_CONNECT_TIMEOUT_MS="6000" \
-    KAFKA_ZOOKEEPER_PASSWORD="" \
-    KAFKA_ZOOKEEPER_USER="" \
-    NAMI_PREFIX="/.nami" \
-    PATH="/opt/bitnami/java/bin:/opt/bitnami/kafka/bin:$PATH"
+ENV KAFKA_VERSION=$kafka_version \
+    SCALA_VERSION=$scala_version \
+    KAFKA_HOME=/opt/kafka \
+    GLIBC_VERSION=$glibc_version
 
-EXPOSE 9092
+ENV PATH=${PATH}:${KAFKA_HOME}/bin
 
-USER 1001
-ENTRYPOINT [ "/app-entrypoint.sh" ]
-CMD [ "/run.sh" ]
+WORKDIR ./kafka
+COPY download-kafka.sh start-kafka.sh broker-list.sh create-topics.sh versions.sh /tmp/
+
+RUN apk add --no-cache bash curl jq docker \
+ && mkdir /opt \
+ && chmod a+x /tmp/*.sh \
+ && mv /tmp/start-kafka.sh /tmp/broker-list.sh /tmp/create-topics.sh /tmp/versions.sh /usr/bin \
+ && sync && /tmp/download-kafka.sh \
+ && tar xfz /tmp/kafka_${SCALA_VERSION}-${KAFKA_VERSION}.tgz -C /opt \
+ && rm /tmp/kafka_${SCALA_VERSION}-${KAFKA_VERSION}.tgz \
+ && ln -s /opt/kafka_${SCALA_VERSION}-${KAFKA_VERSION} /opt/kafka \
+ && rm /tmp/* \
+ && wget https://github.com/sgerrand/alpine-pkg-glibc/releases/download/${GLIBC_VERSION}/glibc-${GLIBC_VERSION}.apk \
+ && apk add --no-cache --allow-untrusted glibc-${GLIBC_VERSION}.apk \
+ && rm glibc-${GLIBC_VERSION}.apk
+
+COPY overrides /opt/overrides
+
+VOLUME ["/kafka"]
+
+# Use "exec" form so that it runs as PID 1 (useful for graceful shutdown)
+CMD ["start-kafka.sh"]
