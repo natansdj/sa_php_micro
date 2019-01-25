@@ -178,15 +178,16 @@ class CartController extends ApiBaseController
 
     public function storeBulk(Request $request)
     {
+        // delete
+        $this->cart->model->where([
+            ['status', '=', 'incomplete'],
+            ['user_id', '=', $request->user_id]
+        ])->delete();
+
+        // create
         $response = array();
         foreach($request->product_id as $k => $v) {
             $product = $this->product->find($v);
-
-            $model = $this->cart->model->where([
-                ['status', '=', 'incomplete'],
-                ['user_id', '=', $request->user_id],
-                ['product_id', '=', $v]
-            ])->first();
 
             $qty = ($request->qty[$k]) ? $request->qty[$k] : 1;
 
@@ -200,23 +201,6 @@ class CartController extends ApiBaseController
             $status = array(
                 'error' => "Internal Error"
             );
-
-            // update
-            if ($model) {
-                $task = $this->cart->update([
-                    'qty' => ((int) $model->qty + (int) $qty)
-                ], $model->id);
-                if ($task) {
-                    $status = array(
-                        'success' => "Cart updated"
-                    );
-                }
-                $response[] = array(
-                    'product_id' => $model->id,
-                    'status' => $status,
-                );
-                continue;
-            }
 
             // create
             $validator = $this->cart->validateRequest($request_all);
